@@ -64,11 +64,8 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, initialEmail }) => {
       setStatus('success');
     } catch (error) {
       console.error('Error submitting form:', error);
-      // Ideally show an error message to the user here, but for now we'll just reset or keep 'submitting' if you want to handle error states UI
-      // pushing back to idle or keeping at submitting/error? 
-      // Let's just log for now as requested, maybe set status back to idle or a new 'error' state if we had one.
-      // For this implementation, let's keep it simple and maybe alert or just log.
-      alert('Something went wrong. Please try again.');
+      // Show the actual error message to help debugging
+      alert(`Error: ${(error as any).message || 'Something went wrong. Please try again.'}`);
       setStatus('idle');
     }
   };
