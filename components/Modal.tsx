@@ -179,9 +179,10 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, initialEmail }) => {
                 >
                   <option value="" disabled>Professional Role</option>
                   <option value="lawyer" className="text-slate-900 dark:text-slate-200 bg-white dark:bg-slate-800">Lawyer</option>
-                  <option value="student" className="text-slate-900 dark:text-slate-200 bg-white dark:bg-slate-800">Law Student</option>
+                  <option value="student" className="text-slate-900 dark:text-slate-200 bg-white dark:bg-slate-800">Student</option>
                   <option value="corporate" className="text-slate-900 dark:text-slate-200 bg-white dark:bg-slate-800">Corporate Counsel</option>
                   <option value="paralegal" className="text-slate-900 dark:text-slate-200 bg-white dark:bg-slate-800">Paralegal</option>
+                  <option value="entrepreneur" className="text-slate-900 dark:text-slate-200 bg-white dark:bg-slate-800">Entrepreneur</option>
                   <option value="other" className="text-slate-900 dark:text-slate-200 bg-white dark:bg-slate-800">Other</option>
                 </select>
                 <div className="absolute inset-y-0 right-0 flex items-center px-4 pointer-events-none text-slate-400">
