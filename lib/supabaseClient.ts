@@ -5,11 +5,17 @@ const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
 
-if (!supabaseUrl || !supabaseAnonKey) {
+let client = null;
+
+if (supabaseUrl && supabaseAnonKey) {
+    try {
+        client = createClient(supabaseUrl, supabaseAnonKey);
+    } catch (error) {
+        console.warn('Failed to initialize Supabase client:', error);
+    }
+} else {
     console.warn('Missing Supabase environment variables. Supabase client will not be initialized.');
 }
 
-export const supabase = (supabaseUrl && supabaseAnonKey)
-    ? createClient(supabaseUrl, supabaseAnonKey)
-    : null;
+export const supabase = client;
 
