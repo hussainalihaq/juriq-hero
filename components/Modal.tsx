@@ -40,6 +40,13 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, initialEmail }) => {
     e.preventDefault();
     setStatus('submitting');
 
+    if (!supabase) {
+      console.error('Supabase client is not initialized. Check your environment variables.');
+      alert('Waitlist is currently unavailable. Please try again later.');
+      setStatus('idle');
+      return;
+    }
+
     try {
       const { error } = await supabase
         .from('waitlist')
