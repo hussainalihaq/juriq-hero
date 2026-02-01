@@ -196,9 +196,9 @@ const SignUp = () => {
                             </div>
                         </form>
                         <div className="mt-8 text-center border-t border-slate-50 dark:border-slate-800 pt-6">
-                            <p className="text-sm text-slate-500">
+                            <p className="text-sm text-slate-500 dark:text-slate-400">
                                 Already have an account?
-                                <Link to="/login" className="text-primary font-bold hover:text-navy-deep hover:underline decoration-2 underline-offset-2 transition-all ml-1">Log In</Link>
+                                <Link to="/login" className="text-primary dark:text-blue-400 font-bold hover:text-navy-deep dark:hover:text-blue-300 hover:underline decoration-2 underline-offset-2 transition-all ml-1">Log In</Link>
                             </p>
                         </div>
                     </div>
