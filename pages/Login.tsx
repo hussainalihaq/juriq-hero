@@ -29,8 +29,8 @@ const Login = () => {
 
             if (error) throw error;
 
-            // Redirect to dashboard (for now just Home page)
-            navigate('/');
+            // Redirect to dashboard
+            navigate('/dashboard');
 
         } catch (err: any) {
             console.error("Login error:", err);

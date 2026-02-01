@@ -39,7 +39,7 @@ const SignUp = () => {
             // If successful, maybe redirect to login or show check email message
             // For now, let's assume auto-login or redirect to dashboard (Home)
             alert("Sign up successful! Please check your email to confirm your account.");
-            navigate('/');
+            navigate('/dashboard');
 
         } catch (err: any) {
             console.error("Sign up error:", err);
