@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 interface HeaderProps {
   onGetAccess: () => void;
@@ -42,9 +43,9 @@ const Header: React.FC<HeaderProps> = ({ onGetAccess, darkMode, toggleDarkMode }
             </span>
           </button>
 
-          <a href="/login" className="text-sm font-bold text-slate-600 dark:text-slate-300 hover:text-primary dark:hover:text-white transition-colors">
+          <Link to="/login" className="text-sm font-bold text-slate-600 dark:text-slate-300 hover:text-primary dark:hover:text-white transition-colors">
             Log In
-          </a>
+          </Link>
 
           <button
             onClick={onGetAccess}
