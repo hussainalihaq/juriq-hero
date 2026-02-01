@@ -62,7 +62,7 @@ const SignUp = () => {
 
 
     return (
-        <div className="bg-off-white font-sans text-slate-900 min-h-screen flex items-stretch overflow-x-hidden">
+        <div className="bg-off-white dark:bg-navy-deep font-sans text-slate-900 dark:text-slate-100 min-h-screen flex items-stretch overflow-x-hidden transition-colors duration-300">
             <div className="hidden lg:flex flex-col relative w-1/2 bg-grand-courtroom bg-cover bg-center text-white justify-between overflow-hidden">
                 <div className="absolute inset-0 bg-gradient-to-t from-navy-deep via-navy-deep/20 to-transparent opacity-90"></div>
                 <div className="relative z-10 p-12 xl:p-16">
@@ -111,9 +111,9 @@ const SignUp = () => {
                 </div>
 
                 <div className="w-full max-w-[480px] z-10 relative">
-                    <div className="bg-white rounded-2xl shadow-[0_20px_60px_-15px_rgba(0,0,0,0.08)] border border-slate-100 p-8 sm:p-12 relative overflow-hidden backdrop-blur-sm">
+                    <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-[0_20px_60px_-15px_rgba(0,0,0,0.08)] border border-slate-100 dark:border-slate-800 p-8 sm:p-12 relative overflow-hidden backdrop-blur-sm transition-colors duration-300">
                         <div className="text-center mb-8">
-                            <h3 className="text-lg font-medium text-slate-900">Create your account</h3>
+                            <h3 className="text-lg font-medium text-slate-900 dark:text-white">Create your account</h3>
                             <p className="text-slate-500 text-sm mt-1">Start your 14-day free trial.</p>
                         </div>
 
@@ -129,14 +129,14 @@ const SignUp = () => {
                         </button>
 
                         <div className="relative flex items-center gap-4 mb-6">
-                            <div className="h-px bg-slate-200 flex-1"></div>
-                            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest bg-white px-2">Or with email</span>
-                            <div className="h-px bg-slate-200 flex-1"></div>
+                            <div className="h-px bg-slate-200 dark:bg-slate-700 flex-1"></div>
+                            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest bg-white dark:bg-slate-900 px-2 transition-colors duration-300">Or with email</span>
+                            <div className="h-px bg-slate-200 dark:bg-slate-700 flex-1"></div>
                         </div>
 
                         <form onSubmit={handleSignUp} className="space-y-5">
                             <div className="space-y-1.5">
-                                <label className="text-xs font-bold text-slate-600 uppercase tracking-wider ml-1" htmlFor="name">Full Name</label>
+                                <label className="text-xs font-bold text-slate-600 dark:text-slate-400 uppercase tracking-wider ml-1" htmlFor="name">Full Name</label>>
                                 <input
                                     autoComplete="name"
                                     className="input-field"
@@ -149,7 +149,7 @@ const SignUp = () => {
                                 />
                             </div>
                             <div className="space-y-1.5">
-                                <label className="text-xs font-bold text-slate-600 uppercase tracking-wider ml-1" htmlFor="email">Email Address</label>
+                                <label className="text-xs font-bold text-slate-600 dark:text-slate-400 uppercase tracking-wider ml-1" htmlFor="email">Email Address</label>>
                                 <input
                                     autoComplete="email"
                                     className="input-field"
@@ -162,7 +162,7 @@ const SignUp = () => {
                                 />
                             </div>
                             <div className="space-y-1.5">
-                                <label className="text-xs font-bold text-slate-600 uppercase tracking-wider ml-1" htmlFor="password">Password</label>
+                                <label className="text-xs font-bold text-slate-600 dark:text-slate-400 uppercase tracking-wider ml-1" htmlFor="password">Password</label>>
                                 <div className="relative group">
                                     <input
                                         className="input-field pr-10"
@@ -185,7 +185,7 @@ const SignUp = () => {
                                 </button>
                             </div>
                         </form>
-                        <div className="mt-8 text-center border-t border-slate-50 pt-6">
+                        <div className="mt-8 text-center border-t border-slate-50 dark:border-slate-800 pt-6">
                             <p className="text-sm text-slate-500">
                                 Already have an account?
                                 <Link to="/login" className="text-primary font-bold hover:text-navy-deep hover:underline decoration-2 underline-offset-2 transition-all ml-1">Log In</Link>
