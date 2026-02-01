@@ -15,6 +15,7 @@ export default {
                 "navy-deep": "#020617", // Slate 950
                 "silver": "#94a3b8",
                 "off-white": "#f8fafc",
+                "slate-border": "#e2e8f0",
             },
             fontFamily: {
                 "sans": ["Plus Jakarta Sans", "Inter", "sans-serif"],
