@@ -125,7 +125,7 @@ const Login = () => {
 
                         <form onSubmit={handleLogin} className="space-y-5">
                             <div className="space-y-1.5">
-                                <label className="text-xs font-bold text-slate-600 dark:text-slate-400 uppercase tracking-wider ml-1" htmlFor="email">Email Address</label>>
+                                <label className="text-xs font-bold text-slate-600 dark:text-slate-400 uppercase tracking-wider ml-1" htmlFor="email">Email Address</label>
                                 <input
                                     autoComplete="email"
                                     className="input-field w-full px-4 py-3.5 rounded-lg bg-slate-50 border border-slate-200"
@@ -138,7 +138,7 @@ const Login = () => {
                                 />
                             </div>
                             <div className="space-y-1.5">
-                                <label className="text-xs font-bold text-slate-600 dark:text-slate-400 uppercase tracking-wider ml-1" htmlFor="password">Password</label>>
+                                <label className="text-xs font-bold text-slate-600 dark:text-slate-400 uppercase tracking-wider ml-1" htmlFor="password">Password</label>
                                 <div className="relative group">
                                     <input
                                         className="input-field w-full px-4 py-3.5 rounded-lg bg-slate-50 border border-slate-200 pr-10"
