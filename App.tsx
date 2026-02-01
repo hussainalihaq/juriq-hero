@@ -1,13 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import Header from './components/Header';
-import Hero from './components/Hero';
-import Footer from './components/Footer';
-import Modal from './components/Modal';
-import BackgroundElements from './components/BackgroundElements';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Home from './pages/Home';
+import SignUp from './pages/SignUp';
+import Login from './pages/Login';
 
 const App: React.FC = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [prefilledEmail, setPrefilledEmail] = useState('');
   const [darkMode, setDarkMode] = useState(false);
 
   useEffect(() => {
@@ -22,39 +19,14 @@ const App: React.FC = () => {
     setDarkMode(!darkMode);
   };
 
-  const handleOpenModal = (email?: string) => {
-    if (email) setPrefilledEmail(email);
-    setIsModalOpen(true);
-  };
-
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
-    // Reset email after a short delay so the transition is smooth
-    setTimeout(() => setPrefilledEmail(''), 300);
-  };
-
   return (
-    <>
-      <BackgroundElements />
-      
-      <Header 
-        onGetAccess={() => handleOpenModal()} 
-        darkMode={darkMode} 
-        toggleDarkMode={toggleDarkMode} 
-      />
-      
-      <main className="relative flex flex-col items-center justify-center min-h-[calc(100vh-64px)] px-6 pt-12 pb-24">
-        <Hero onGetAccess={handleOpenModal} />
-      </main>
-      
-      <Footer />
-      
-      <Modal 
-        isOpen={isModalOpen} 
-        onClose={handleCloseModal} 
-        initialEmail={prefilledEmail}
-      />
-    </>
+    <Router>
+      <Routes>
+        <Route path="/" element={<Home darkMode={darkMode} toggleDarkMode={toggleDarkMode} />} />
+        <Route path="/signup" element={<SignUp />} />
+        <Route path="/login" element={<Login />} />
+      </Routes>
+    </Router>
   );
 };
 
