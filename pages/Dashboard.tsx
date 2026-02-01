@@ -1,10 +1,61 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabaseClient';
 
+// --- Types for API Integration ---
+interface Message {
+    id: string;
+    role: 'user' | 'ai';
+    content: string;
+    timestamp: Date;
+    isError?: boolean;
+}
+
+interface Document {
+    id: string;
+    name: string;
+    type: 'pdf' | 'docx';
+    snippet?: string; // Short preview text
+}
+
+interface Conversation {
+    id: string;
+    title: string;
+    lastActive: Date;
+}
+
 const Dashboard = () => {
     const navigate = useNavigate();
+
+    // --- State Management ---
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const [inputValue, setInputValue] = useState('');
+    const [messages, setMessages] = useState<Message[]>([]);
+    const [isLoading, setIsLoading] = useState(false);
+
+    // Mock Data (Replace with API calls)
+    const [documents, setDocuments] = useState<Document[]>([
+        { id: '1', name: 'Service_Agreement_v4.pdf', type: 'pdf' },
+        { id: '2', name: 'Vendor_DPA_2024.pdf', type: 'pdf' }
+    ]);
+    const [conversations, setConversations] = useState<Conversation[]>([
+        { id: '1', title: 'MSA Review - TechCorp', lastActive: new Date() },
+        { id: '2', title: 'IP Indemnity Clause Check', lastActive: new Date() }
+    ]);
+    const [activeDocId, setActiveDocId] = useState<string | null>('1');
+
+    const messagesEndRef = useRef<HTMLDivElement>(null);
+
+    // Auto-scroll to bottom of chat
+    const scrollToBottom = () => {
+        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    };
+
+    useEffect(() => {
+        scrollToBottom();
+    }, [messages]);
+
+    // --- Actions ---
 
     const handleLogout = async () => {
         if (supabase) {
@@ -13,10 +64,59 @@ const Dashboard = () => {
         navigate('/login');
     };
 
+    const handleSendMessage = async (text: string = inputValue) => {
+        if (!text.trim()) return;
+
+        // 1. Add User Message
+        const tempId = Date.now().toString();
+        const userMsg: Message = {
+            id: tempId,
+            role: 'user',
+            content: text,
+            timestamp: new Date()
+        };
+
+        setMessages(prev => [...prev, userMsg]);
+        setInputValue('');
+        setIsLoading(true);
+
+        // TODO: Replace with real API Call
+        try {
+            // Simulator API delay
+            await new Promise(resolve => setTimeout(resolve, 1500));
+
+            const aiResponse: Message = {
+                id: (Date.now() + 1).toString(),
+                role: 'ai',
+                content: "I've analyzed your request. This is a placeholder for the real AI response. Once the API is integrated, I will provide legal insights based on the document text.",
+                timestamp: new Date()
+            };
+            setMessages(prev => [...prev, aiResponse]);
+        } catch (error) {
+            console.error("API Error", error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const handleKeyDown = (e: React.KeyboardEvent) => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            handleSendMessage();
+        }
+    };
+
+    const handleChipClick = (prompt: string) => {
+        // Option A: Auto-send
+        // handleSendMessage(prompt);
+        // Option B: Fill input for user to edit
+        setInputValue(prompt);
+    };
+
     return (
         <div className="bg-off-white font-sans text-slate-900 h-screen overflow-hidden flex selection:bg-indigo-100">
             {/* Sidebar */}
-            <aside className="w-72 bg-navy-deep h-full flex flex-col border-r border-white/5 hidden md:flex shrink-0 transition-all duration-300">
+            <aside className={`w-72 bg-navy-deep h-full flex flex-col border-r border-white/5 shrink-0 transition-all duration-300 ${isMobileMenuOpen ? 'fixed z-40' : 'hidden md:flex'}`}>
                 <div className="h-16 flex items-center px-6 border-b border-white/5">
                     <div className="flex items-center gap-2 cursor-pointer" onClick={() => navigate('/')}>
                         <div className="relative w-7 h-7 flex items-center justify-center">
@@ -31,31 +131,33 @@ const Dashboard = () => {
                     <div className="mb-8">
                         <h3 className="px-3 text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-3">Recent Conversations</h3>
                         <div className="space-y-1">
-                            <div className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-white bg-white/10 font-medium cursor-pointer select-none">
-                                <span className="material-symbols-outlined text-[18px]">chat_bubble</span>
-                                MSA Review - TechCorp
-                            </div>
-                            <div className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-400 text-sm hover:text-white hover:bg-white/5 transition-colors cursor-pointer select-none">
-                                <span className="material-symbols-outlined text-[18px]">chat_bubble</span>
-                                IP Indemnity Clause Check
-                            </div>
-                            <div className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-400 text-sm hover:text-white hover:bg-white/5 transition-colors cursor-pointer select-none">
-                                <span className="material-symbols-outlined text-[18px]">chat_bubble</span>
-                                NDA Analysis - Project X
-                            </div>
+                            {conversations.map(conv => (
+                                <div key={conv.id} className="nav-item group flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-400 text-sm hover:text-white hover:bg-white/5 transition-colors cursor-pointer select-none">
+                                    <span className="material-symbols-outlined text-[18px]">chat_bubble</span>
+                                    <span className="truncate">{conv.title}</span>
+                                </div>
+                            ))}
                         </div>
                     </div>
 
                     <div>
                         <h3 className="px-3 text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-3">Uploaded Documents</h3>
                         <div className="space-y-1">
-                            <div className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-400 text-sm hover:text-white hover:bg-white/5 transition-colors cursor-pointer select-none">
-                                <span className="material-symbols-outlined text-[18px]">description</span>
-                                Service_Agreement_v4.pdf
-                            </div>
-                            <div className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-400 text-sm hover:text-white hover:bg-white/5 transition-colors cursor-pointer select-none">
-                                <span className="material-symbols-outlined text-[18px]">description</span>
-                                Vendor_DPA_2024.pdf
+                            {documents.map(doc => (
+                                <div
+                                    key={doc.id}
+                                    className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-colors cursor-pointer select-none ${activeDocId === doc.id ? 'text-white bg-white/10' : 'text-slate-400 hover:text-white hover:bg-white/5'}`}
+                                    onClick={() => setActiveDocId(doc.id)}
+                                >
+                                    <span className="material-symbols-outlined text-[18px]">description</span>
+                                    <span className="truncate">{doc.name}</span>
+                                </div>
+                            ))}
+                            <div className="mt-3 px-3">
+                                <button className="w-full py-2 border border-dashed border-slate-600 rounded-lg text-slate-500 text-xs hover:border-slate-400 hover:text-slate-300 transition-colors flex items-center justify-center gap-2">
+                                    <span className="material-symbols-outlined text-[16px]">add</span>
+                                    Upload New
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -77,10 +179,18 @@ const Dashboard = () => {
                 </div>
             </aside>
 
+            {/* Mobile Overlay */}
+            {isMobileMenuOpen && (
+                <div
+                    className="fixed inset-0 bg-black/50 z-30 md:hidden"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                />
+            )}
+
             {/* Mobile Header */}
             <div className="md:hidden fixed top-0 w-full bg-navy-deep z-50 h-14 flex items-center justify-between px-4 border-b border-white/5">
                 <div className="flex items-center gap-2">
-                    <span className="material-symbols-outlined text-white cursor-pointer" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>menu</span>
+                    <span className="material-symbols-outlined text-white cursor-pointer" onClick={() => setIsMobileMenuOpen(true)}>menu</span>
                     <div className="flex items-center gap-2 ml-2" onClick={() => navigate('/')}>
                         <div className="relative w-5 h-5 flex items-center justify-center">
                             <div className="absolute inset-0 border-[1.5px] border-white rounded md rotate-12 opacity-90"></div>
@@ -94,114 +204,124 @@ const Dashboard = () => {
 
             {/* Main Content */}
             <main className="flex-1 flex flex-col h-full relative md:static pt-14 md:pt-0">
-                {/* PDF/Document View */}
+                {/* PDF/Document View Placeholder */}
                 <div className="h-[35%] md:h-[40%] bg-slate-100 border-b border-slate-200 p-4 md:p-6 overflow-hidden relative">
                     <div className="absolute top-4 right-4 z-10 flex gap-2">
-                        <button className="bg-white p-1.5 rounded-md shadow-sm border border-slate-200 text-slate-500 hover:text-primary transition-colors">
-                            <span className="material-symbols-outlined text-[18px]">open_in_full</span>
-                        </button>
-                        <button className="bg-white p-1.5 rounded-md shadow-sm border border-slate-200 text-slate-500 hover:text-primary transition-colors">
-                            <span className="material-symbols-outlined text-[18px]">close</span>
-                        </button>
+                        {/* Tools for Document View */}
+                        <div className="bg-white rounded-md shadow-sm border border-slate-200 flex overflow-hidden">
+                            <button className="p-1.5 text-slate-500 hover:text-primary hover:bg-slate-50 border-r border-slate-100" title="Zoom In">
+                                <span className="material-symbols-outlined text-[18px]">add</span>
+                            </button>
+                            <button className="p-1.5 text-slate-500 hover:text-primary hover:bg-slate-50" title="Zoom Out">
+                                <span className="material-symbols-outlined text-[18px]">remove</span>
+                            </button>
+                        </div>
                     </div>
 
-                    <div className="h-full max-w-4xl mx-auto bg-white shadow-[0_4px_6px_-1px_rgba(0,0,0,0.1),0_2px_4px_-1px_rgba(0,0,0,0.06)] rounded-lg p-8 md:p-12 overflow-y-auto text-[10px] md:text-xs text-slate-700 font-serif leading-relaxed relative">
-                        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-red-500 via-orange-400 to-transparent opacity-50"></div>
-                        <h1 className="text-lg md:text-xl font-bold text-slate-900 mb-6 font-sans">MASTER SERVICES AGREEMENT</h1>
-                        <p className="mb-4 text-justify">
-                            This Master Services Agreement ("Agreement") is made and entered into as of [Date], by and between [Client Name] ("Client") and [Provider Name] ("Provider").
-                        </p>
-                        <p className="mb-4 text-justify">
-                            <strong>1. SERVICES.</strong> Provider agrees to perform the services described in the Statement of Work attached hereto as Exhibit A ("Services").
-                        </p>
-                        <div className="mb-4 p-1 -mx-1 rounded bg-red-500/15 border-l-2 border-red-500 relative group">
-                            <div className="absolute -right-2 -top-2 bg-red-600 text-white text-[9px] font-bold px-1.5 py-0.5 rounded shadow-sm opacity-0 group-hover:opacity-100 transition-opacity">HIGH RISK</div>
-                            <p className="text-justify text-slate-800">
-                                <strong>2. INDEMNIFICATION.</strong> Client agrees to indemnify, defend, and hold harmless Provider from any and all claims, damages, liabilities, costs, and expenses (including reasonable attorneys' fees) arising out of or related to Client's use of the Services, <span className="bg-red-100 text-red-800 font-bold px-0.5">regardless of Provider's negligence or misconduct.</span>
-                            </p>
+                    <div className="h-full max-w-4xl mx-auto bg-white shadow-sm rounded-lg p-8 md:p-12 overflow-y-auto text-slate-700 relative">
+                        {/* Placeholder Content for Document */}
+                        <div className="text-center mt-20 opacity-50">
+                            <span className="material-symbols-outlined text-6xl mb-4 text-slate-300">description</span>
+                            <p className="font-medium">Select a document to view</p>
+                            <p className="text-sm text-slate-500 mt-2">API Integration Point: Render PDF/Text here</p>
                         </div>
-                        <p className="mb-4 text-justify">
-                            <strong>3. TERM AND TERMINATION.</strong> This Agreement shall commence on the Effective Date and continue for a period of five (5) years. Client may not terminate for convenience during the first 36 months.
-                        </p>
-                        <p className="text-justify text-slate-400 blur-[1px]">
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                        </p>
                     </div>
                 </div>
 
                 {/* Chat Interface */}
                 <div className="flex-1 flex flex-col relative bg-off-white overflow-hidden">
-                    <div className="flex-1 overflow-y-auto p-4 md:p-8 space-y-8 scrollbar-hide">
-                        <div className="max-w-3xl mx-auto space-y-8 pb-32">
-                            <div className="flex justify-center">
-                                <span className="text-[10px] font-bold text-slate-400 bg-slate-100 px-3 py-1 rounded-full uppercase tracking-wide">Today, 10:23 AM</span>
-                            </div>
-
-                            {/* User Message */}
-                            <div className="flex justify-end">
-                                <div className="bg-slate-200 text-slate-800 px-5 py-3.5 rounded-2xl rounded-tr-sm max-w-[85%] md:max-w-[70%] shadow-sm">
-                                    <p className="text-sm md:text-base leading-relaxed">Can you review the indemnification clause in section 2? It looks incredibly one-sided. Does this expose us to liability even if they are at fault?</p>
+                    <div className="flex-1 overflow-y-auto p-4 md:p-8 space-y-6 scrollbar-hide">
+                        <div className="max-w-3xl mx-auto pb-32">
+                            {messages.length === 0 ? (
+                                <div className="text-center mt-10 p-6">
+                                    <div className="w-12 h-12 bg-indigo-100 text-indigo-600 rounded-xl flex items-center justify-center mx-auto mb-4">
+                                        <span className="material-symbols-outlined text-2xl">auto_awesome</span>
+                                    </div>
+                                    <h3 className="text-lg font-bold text-slate-800 mb-2">How can I help with your legal documents?</h3>
+                                    <p className="text-slate-500 text-sm max-w-md mx-auto">Upload a contract, NDA, or agreement to get started. I can summarize, find risks, or answer specific questions.</p>
                                 </div>
-                            </div>
-
-                            {/* AI Response */}
-                            <div className="flex items-start gap-4">
-                                <div className="w-8 h-8 rounded-lg bg-primary flex-shrink-0 flex items-center justify-center mt-1 shadow-md text-white">
-                                    <div className="w-4 h-4 border border-white rounded rotate-12 opacity-90"></div>
-                                </div>
-                                <div className="flex-1 space-y-3">
-                                    <div className="bg-primary text-white px-6 py-5 rounded-2xl rounded-tl-sm shadow-md max-w-[95%]">
-                                        <p className="text-sm md:text-base leading-relaxed mb-4">
-                                            Yes, you are absolutely correct to be concerned.
-                                        </p>
-                                        <p className="text-sm md:text-base leading-relaxed mb-4">
-                                            The clause in Section 2 is an <strong>unlimited indemnity</strong> in favor of the Provider. Specifically, the phrase <span className="text-red-300 font-mono text-xs bg-white/10 px-1 py-0.5 rounded">"regardless of Provider's negligence or misconduct"</span> is highly unusual and presents a <span className="text-red-400 font-bold">Critical Risk</span>.
-                                        </p>
-                                        <div className="bg-white/5 border border-white/10 rounded-lg p-3 text-xs md:text-sm text-slate-300">
-                                            <div className="flex items-center gap-2 text-red-400 font-bold mb-1 uppercase text-[10px] tracking-wider">
-                                                <span className="material-symbols-outlined text-sm">warning</span> Risk Identified
+                            ) : (
+                                messages.map((msg) => (
+                                    <div key={msg.id} className={`flex gap-4 mb-6 ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+                                        {msg.role === 'ai' && (
+                                            <div className="w-8 h-8 rounded-lg bg-primary flex-shrink-0 flex items-center justify-center mt-1 shadow-md text-white">
+                                                <div className="w-4 h-4 border border-white rounded rotate-12 opacity-90"></div>
                                             </div>
-                                            It requires you to pay for their mistakes, even gross negligence. Most jurisdictions might find this unenforceable for gross negligence, but it creates significant contractual exposure.
+                                        )}
+
+                                        <div className={`px-5 py-3.5 rounded-2xl max-w-[85%] md:max-w-[70%] shadow-sm leading-relaxed text-sm md:text-base ${msg.role === 'user'
+                                                ? 'bg-white text-slate-800 rounded-tr-sm border border-slate-100'
+                                                : 'bg-primary text-white rounded-tl-sm'
+                                            }`}>
+                                            {msg.content}
                                         </div>
+
+                                        {msg.role === 'user' && (
+                                            <div className="w-8 h-8 rounded-full bg-indigo-600 text-white flex-shrink-0 flex items-center justify-center text-xs font-bold mt-1">JD</div>
+                                        )}
                                     </div>
-                                    <div className="flex flex-wrap gap-2 pl-2">
-                                        <button className="text-xs text-primary font-semibold hover:underline flex items-center gap-1">
-                                            <span className="material-symbols-outlined text-[14px]">edit_document</span> Draft a counter-proposal
-                                        </button>
-                                        <button className="text-xs text-primary font-semibold hover:underline flex items-center gap-1">
-                                            <span className="material-symbols-outlined text-[14px]">gavel</span> Case law examples
-                                        </button>
-                                    </div>
+                                ))
+                            )}
+
+                            {isLoading && (
+                                <div className="flex gap-4 mb-6 justify-start animate-pulse">
+                                    <div className="w-8 h-8 rounded-lg bg-primary flex-shrink-0 flex items-center justify-center mt-1 opacity-50"></div>
+                                    <div className="bg-slate-200 h-12 w-32 rounded-2xl rounded-tl-sm"></div>
                                 </div>
-                            </div>
+                            )}
+                            <div ref={messagesEndRef} />
                         </div>
                     </div>
 
                     {/* Input Area */}
                     <div className="absolute bottom-0 w-full bg-gradient-to-t from-off-white via-off-white to-transparent pb-6 pt-10 px-4">
                         <div className="max-w-3xl mx-auto flex flex-col gap-3">
-                            <div className="flex items-center gap-2 overflow-x-auto scrollbar-hide pb-1">
-                                <button className="px-4 py-2 rounded-full bg-white border border-slate-200 text-xs font-semibold text-slate-600 shadow-sm hover:border-primary hover:text-primary transition-all cursor-pointer whitespace-nowrap active:scale-95">
-                                    <span className="text-indigo-500 mr-1">✨</span> Summarize obligations
-                                </button>
-                                <button className="px-4 py-2 rounded-full bg-white border border-slate-200 text-xs font-semibold text-slate-600 shadow-sm hover:border-primary hover:text-primary transition-all cursor-pointer whitespace-nowrap active:scale-95">
-                                    <span className="text-red-500 mr-1">🛡️</span> Identify risks
-                                </button>
-                                <button className="px-4 py-2 rounded-full bg-white border border-slate-200 text-xs font-semibold text-slate-600 shadow-sm hover:border-primary hover:text-primary transition-all cursor-pointer whitespace-nowrap active:scale-95">
-                                    <span className="text-orange-500 mr-1">⚖️</span> Check conflicts
-                                </button>
-                            </div>
-                            <div className="relative flex items-center gap-2 bg-white rounded-full shadow-[0_20px_25px_-5px_rgba(0,0,0,0.1),0_10px_10px_-5px_rgba(0,0,0,0.04)] border border-slate-200 p-2 pr-2 transition-all focus-within:ring-2 focus-within:ring-primary/20 focus-within:border-primary/50">
-                                <button className="w-10 h-10 flex items-center justify-center rounded-full text-slate-400 hover:bg-slate-100 hover:text-slate-600 transition-colors">
+                            {messages.length === 0 && (
+                                <div className="flex items-center gap-2 overflow-x-auto scrollbar-hide pb-1">
+                                    {[
+                                        { icon: '✨', text: 'Summarize obligations', prompt: 'Summarize the key obligations in this document.' },
+                                        { icon: '🛡️', text: 'Identify risks', prompt: 'Identify high-risk clauses in this contract.' },
+                                        { icon: '⚖️', text: 'Check conflicts', prompt: 'Check for conflicting terms in section 3.' },
+                                    ].map((chip, idx) => (
+                                        <button
+                                            key={idx}
+                                            onClick={() => handleChipClick(chip.prompt)}
+                                            className="px-4 py-2 rounded-full bg-white border border-slate-200 text-xs font-semibold text-slate-600 shadow-sm hover:border-primary hover:text-primary transition-all cursor-pointer whitespace-nowrap active:scale-95"
+                                        >
+                                            <span className="text-indigo-500 mr-1">{chip.icon}</span> {chip.text}
+                                        </button>
+                                    ))}
+                                </div>
+                            )}
+
+                            <div className="relative flex items-center gap-2 bg-white rounded-2xl shadow-[0_20px_25px_-5px_rgba(0,0,0,0.1),0_10px_10px_-5px_rgba(0,0,0,0.04)] border border-slate-200 p-2 pr-2 transition-all focus-within:ring-2 focus-within:ring-primary/20 focus-within:border-primary/50">
+                                <button className="w-10 h-10 flex items-center justify-center rounded-full text-slate-400 hover:bg-slate-100 hover:text-slate-600 transition-colors tooltip-trigger" title="Upload context">
                                     <span className="material-symbols-outlined">add</span>
                                 </button>
-                                <input className="flex-1 bg-transparent border-none focus:ring-0 text-slate-700 placeholder:text-slate-400 text-sm md:text-base focus:outline-none" placeholder="Ask juriq anything about your documents..." type="text" />
+
+                                <input
+                                    className="flex-1 bg-transparent border-none focus:ring-0 text-slate-700 placeholder:text-slate-400 text-sm md:text-base focus:outline-none"
+                                    placeholder="Ask juriq anything about your documents..."
+                                    type="text"
+                                    value={inputValue}
+                                    onChange={(e) => setInputValue(e.target.value)}
+                                    onKeyDown={handleKeyDown}
+                                    disabled={isLoading}
+                                />
+
                                 <div className="flex items-center gap-1">
-                                    <button className="w-8 h-8 flex items-center justify-center rounded-full text-slate-400 hover:text-primary transition-colors">
+                                    {/* <button className="w-8 h-8 flex items-center justify-center rounded-full text-slate-400 hover:text-primary transition-colors">
                                         <span className="material-symbols-outlined text-[20px]">mic</span>
-                                    </button>
-                                    <button className="w-10 h-10 flex items-center justify-center rounded-full bg-primary text-white shadow-md hover:bg-navy-deep hover:scale-105 active:scale-95 transition-all">
-                                        <span className="material-symbols-outlined text-[20px]">arrow_upward</span>
+                                    </button> */}
+                                    <button
+                                        onClick={() => handleSendMessage()}
+                                        disabled={!inputValue.trim() || isLoading}
+                                        className={`w-10 h-10 flex items-center justify-center rounded-full shadow-md transition-all ${inputValue.trim() && !isLoading
+                                                ? 'bg-primary text-white hover:bg-navy-deep hover:scale-105 active:scale-95'
+                                                : 'bg-slate-200 text-slate-400 cursor-not-allowed'
+                                            }`}
+                                    >
+                                        <span className="material-symbols-outlined text-[20px]">{isLoading ? 'stop' : 'arrow_upward'}</span>
                                     </button>
                                 </div>
                             </div>
