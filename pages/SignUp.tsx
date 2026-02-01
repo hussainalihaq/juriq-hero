@@ -6,6 +6,7 @@ const SignUp = () => {
     const navigate = useNavigate();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
     const [fullName, setFullName] = useState('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
@@ -173,19 +174,30 @@ const SignUp = () => {
                             </div>
                             <div className="space-y-1.5">
                                 <label className="text-xs font-bold text-slate-600 dark:text-slate-400 uppercase tracking-wider ml-1" htmlFor="password">Password</label>
+                                const [showPassword, setShowPassword] = useState(false);
+
+                                // ... (rest of the state from original file)
+
+                                // ... (inside the form)
                                 <div className="relative group">
                                     <input
                                         className="input-field pr-10"
                                         id="password"
                                         placeholder="Create a password"
-                                        type="password"
+                                        type={showPassword ? "text" : "password"}
                                         value={password}
                                         onChange={(e) => setPassword(e.target.value)}
                                         required
                                         minLength={6}
                                     />
-                                    <button className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-primary transition-colors duration-200" type="button">
-                                        <span className="material-symbols-outlined text-[20px]">visibility_off</span>
+                                    <button
+                                        className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-primary transition-colors duration-200"
+                                        type="button"
+                                        onClick={() => setShowPassword(!showPassword)}
+                                    >
+                                        <span className="material-symbols-outlined text-[20px]">
+                                            {showPassword ? 'visibility' : 'visibility_off'}
+                                        </span>
                                     </button>
                                 </div>
                             </div>
