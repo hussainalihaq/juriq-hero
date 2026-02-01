@@ -150,11 +150,7 @@ const Login = () => {
                             </div>
                             <div className="space-y-1.5">
                                 <label className="text-xs font-bold text-slate-600 dark:text-slate-400 uppercase tracking-wider ml-1" htmlFor="password">Password</label>
-                                const [showPassword, setShowPassword] = useState(false);
 
-                                // ... (rest of the state from original file)
-
-                                // ... (inside the form) 
                                 <div className="relative group">
                                     <input
                                         className="input-field w-full px-4 py-3.5 rounded-lg bg-slate-50 border border-slate-200 pr-10"
