@@ -1,126 +1,27 @@
 <!DOCTYPE html>
 <html class="light" lang="en">
+
 <head>
-    <meta charset="utf-8"/>
-    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
     <title>juriq - AI Waitlist</title>
-    
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    
+
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Playfair+Display:ital,wght@0,700;1,700&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
-    
+    <link
+        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Playfair+Display:ital,wght@0,700;1,700&amp;family=Inter:wght@400;500;600;700&amp;display=swap"
+        rel="stylesheet" />
+
     <!-- Material Symbols -->
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-    
-    <!-- Tailwind Config -->
-    <script>
-        tailwind.config = {
-            darkMode: "class",
-            theme: {
-                extend: {
-                    colors: {
-                        "primary": "#0f172a",
-                        "navy-deep": "#020617",
-                        "silver": "#94a3b8",
-                        "off-white": "#f8fafc",
-                    },
-                    fontFamily: {
-                        "sans": ["Plus Jakarta Sans", "Inter", "sans-serif"],
-                        "display": ["Plus Jakarta Sans", "sans-serif"],
-                        "serif": ["Playfair Display", "serif"]
-                    },
-                    borderRadius: {
-                        "2xl": "1.25rem",
-                        "3xl": "1.75rem",
-                        "4xl": "2.5rem",
-                        "5xl": "3.5rem",
-                    },
-                    animation: {
-                        'fade-in': 'fadeIn 0.3s ease-out forwards',
-                        'pulse-slow': 'pulse 3s ease-in-out infinite',
-                    },
-                    keyframes: {
-                        fadeIn: {
-                            '0%': { opacity: '0', transform: 'scale(0.95)' },
-                            '100%': { opacity: '1', transform: 'scale(1)' },
-                        }
-                    }
-                },
-            },
-        }
-    </script>
-    
-    <!-- Custom Styles -->
-    <style type="text/tailwindcss">
-        @layer components {
-            .logo-text {
-                @apply font-display font-bold tracking-tighter lowercase text-primary dark:text-white transition-colors duration-300;
-            }
-            .glass-morphism {
-                @apply bg-white/40 dark:bg-slate-900/40 backdrop-blur-2xl border border-white/40 dark:border-white/10 shadow-[0_32px_64px_-15px_rgba(15,23,42,0.1)];
-            }
-            .silk-wave {
-                @apply absolute pointer-events-none opacity-40;
-                filter: blur(60px);
-            }
-        }
-        :root {
-            --navy: #0f172a;
-            --silver: #cbd5e1;
-        }
-        body {
-            min-height: 100vh;
-            -webkit-font-smoothing: antialiased;
-            transition: background-color 0.3s ease;
-        }
-        .bg-premium-mesh {
-            background-color: #ffffff;
-            background-image: 
-                radial-gradient(at 0% 0%, rgba(15, 23, 42, 0.05) 0px, transparent 50%),
-                radial-gradient(at 100% 100%, rgba(148, 163, 184, 0.1) 0px, transparent 50%);
-        }
-        .dark .bg-premium-mesh {
-            background-color: #020617;
-            background-image: 
-                radial-gradient(at 0% 0%, rgba(255, 255, 255, 0.03) 0px, transparent 50%),
-                radial-gradient(at 100% 100%, rgba(99, 102, 241, 0.05) 0px, transparent 50%);
-        }
-        .glass-orb {
-            position: absolute;
-            border-radius: 50%;
-            background: linear-gradient(135deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0) 100%);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.3);
-            box-shadow: inset 0 0 20px rgba(255,255,255,0.2);
-        }
-        .dark .glass-orb {
-            background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 100%);
-            border: 1px solid rgba(255,255,255,0.1);
-            box-shadow: inset 0 0 20px rgba(255,255,255,0.05);
-        }
-        .silk-gradient {
-            background: linear-gradient(125deg, transparent 30%, var(--navy) 50%, var(--silver) 70%, transparent 100%);
-            transform: skewY(-12deg);
-            height: 400px;
-            width: 200%;
-            left: -50%;
-        }
-    </style>
-<script type="importmap">
-{
-  "imports": {
-    "react": "https://esm.sh/react@^19.2.4",
-    "react/": "https://esm.sh/react@^19.2.4/",
-    "react-dom/": "https://esm.sh/react-dom@^19.2.4/"
-  }
-}
-</script>
-<link rel="stylesheet" href="/index.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+
 </head>
-<body class="bg-premium-mesh font-sans text-slate-900 dark:text-slate-100 min-h-screen selection:bg-navy-deep/10 dark:selection:bg-white/10 overflow-x-hidden transition-colors duration-300">
+
+<body
+    class="bg-premium-mesh font-sans text-slate-900 dark:text-slate-100 min-h-screen selection:bg-navy-deep/10 dark:selection:bg-white/10 overflow-x-hidden transition-colors duration-300">
     <div id="root"></div>
-<script type="module" src="/index.tsx"></script>
+    <script type="module" src="/index.tsx"></script>
 </body>
+
 </html>
