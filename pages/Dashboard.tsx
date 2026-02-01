@@ -28,21 +28,16 @@ const Dashboard = () => {
     const navigate = useNavigate();
 
     // --- State Management ---
+    const [user, setUser] = useState<any>(null);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [inputValue, setInputValue] = useState('');
     const [messages, setMessages] = useState<Message[]>([]);
     const [isLoading, setIsLoading] = useState(false);
 
-    // Mock Data (Replace with API calls)
-    const [documents, setDocuments] = useState<Document[]>([
-        { id: '1', name: 'Service_Agreement_v4.pdf', type: 'pdf' },
-        { id: '2', name: 'Vendor_DPA_2024.pdf', type: 'pdf' }
-    ]);
-    const [conversations, setConversations] = useState<Conversation[]>([
-        { id: '1', title: 'MSA Review - TechCorp', lastActive: new Date() },
-        { id: '2', title: 'IP Indemnity Clause Check', lastActive: new Date() }
-    ]);
-    const [activeDocId, setActiveDocId] = useState<string | null>('1');
+    // Mock Data (Empty by default per request)
+    const [documents, setDocuments] = useState<Document[]>([]);
+    const [conversations, setConversations] = useState<Conversation[]>([]);
+    const [activeDocId, setActiveDocId] = useState<string | null>(null);
 
     const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -54,6 +49,14 @@ const Dashboard = () => {
     useEffect(() => {
         scrollToBottom();
     }, [messages]);
+
+    useEffect(() => {
+        const getUser = async () => {
+            const { data: { user } } = await supabase.auth.getUser();
+            setUser(user);
+        };
+        getUser();
+    }, []);
 
     // --- Actions ---
 
@@ -107,10 +110,20 @@ const Dashboard = () => {
     };
 
     const handleChipClick = (prompt: string) => {
-        // Option A: Auto-send
-        // handleSendMessage(prompt);
-        // Option B: Fill input for user to edit
         setInputValue(prompt);
+    };
+
+    const handleAddDocument = () => {
+        // Placeholder for upload logic
+        console.log("Add Document Clicked");
+        // For demo: Add a dummy document and open it
+        const newDoc: Document = {
+            id: Date.now().toString(),
+            name: `Uploaded_Doc_${documents.length + 1}.pdf`,
+            type: 'pdf'
+        };
+        setDocuments(prev => [...prev, newDoc]);
+        setActiveDocId(newDoc.id);
     };
 
     return (
@@ -131,12 +144,16 @@ const Dashboard = () => {
                     <div className="mb-8">
                         <h3 className="px-3 text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-3">Recent Conversations</h3>
                         <div className="space-y-1">
-                            {conversations.map(conv => (
-                                <div key={conv.id} className="nav-item group flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-400 text-sm hover:text-white hover:bg-white/5 transition-colors cursor-pointer select-none">
-                                    <span className="material-symbols-outlined text-[18px]">chat_bubble</span>
-                                    <span className="truncate">{conv.title}</span>
-                                </div>
-                            ))}
+                            {conversations.length === 0 ? (
+                                <p className="px-3 text-xs text-slate-600 italic">No history yet.</p>
+                            ) : (
+                                conversations.map(conv => (
+                                    <div key={conv.id} className="nav-item group flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-400 text-sm hover:text-white hover:bg-white/5 transition-colors cursor-pointer select-none">
+                                        <span className="material-symbols-outlined text-[18px]">chat_bubble</span>
+                                        <span className="truncate">{conv.title}</span>
+                                    </div>
+                                ))
+                            )}
                         </div>
                     </div>
 
@@ -154,7 +171,10 @@ const Dashboard = () => {
                                 </div>
                             ))}
                             <div className="mt-3 px-3">
-                                <button className="w-full py-2 border border-dashed border-slate-600 rounded-lg text-slate-500 text-xs hover:border-slate-400 hover:text-slate-300 transition-colors flex items-center justify-center gap-2">
+                                <button
+                                    onClick={handleAddDocument}
+                                    className="w-full py-2 border border-dashed border-slate-600 rounded-lg text-slate-500 text-xs hover:border-slate-400 hover:text-slate-300 transition-colors flex items-center justify-center gap-2"
+                                >
                                     <span className="material-symbols-outlined text-[16px]">add</span>
                                     Upload New
                                 </button>
@@ -166,10 +186,14 @@ const Dashboard = () => {
                 <div className="p-4 border-t border-white/5">
                     <div className="flex items-center justify-between p-2 rounded-lg hover:bg-white/5 transition-colors group">
                         <div className="flex items-center gap-3">
-                            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white text-xs font-bold">JD</div>
-                            <div className="flex flex-col">
-                                <span className="text-sm font-medium text-white">Jane Doe</span>
-                                <span className="text-xs text-slate-500">Premium Plan</span>
+                            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white text-xs font-bold uppercase">
+                                {user?.email?.charAt(0) || 'U'}
+                            </div>
+                            <div className="flex flex-col overflow-hidden">
+                                <span className="text-sm font-medium text-white truncate max-w-[120px]" title={user?.email}>
+                                    {user?.email ? user.email.split('@')[0] : 'User'}
+                                </span>
+                                <span className="text-xs text-slate-500">Free Plan</span>
                             </div>
                         </div>
                         <button onClick={handleLogout} className="text-slate-500 hover:text-white opacity-0 group-hover:opacity-100 transition-opacity" title="Log out">
@@ -199,38 +223,62 @@ const Dashboard = () => {
                         <h2 className="logo-text text-lg text-white font-display font-bold tracking-tighter lowercase">juriq</h2>
                     </div>
                 </div>
-                <div className="w-8 h-8 rounded-full bg-indigo-600 text-white flex items-center justify-center text-xs font-bold">JD</div>
+                <div className="w-8 h-8 rounded-full bg-indigo-600 text-white flex items-center justify-center text-xs font-bold">
+                    {user?.email?.charAt(0).toUpperCase() || 'J'}
+                </div>
             </div>
 
             {/* Main Content */}
             <main className="flex-1 flex flex-col h-full relative md:static pt-14 md:pt-0">
-                {/* PDF/Document View Placeholder */}
-                <div className="h-[35%] md:h-[40%] bg-slate-100 border-b border-slate-200 p-4 md:p-6 overflow-hidden relative">
-                    <div className="absolute top-4 right-4 z-10 flex gap-2">
-                        {/* Tools for Document View */}
-                        <div className="bg-white rounded-md shadow-sm border border-slate-200 flex overflow-hidden">
-                            <button className="p-1.5 text-slate-500 hover:text-primary hover:bg-slate-50 border-r border-slate-100" title="Zoom In">
-                                <span className="material-symbols-outlined text-[18px]">add</span>
-                            </button>
-                            <button className="p-1.5 text-slate-500 hover:text-primary hover:bg-slate-50" title="Zoom Out">
-                                <span className="material-symbols-outlined text-[18px]">remove</span>
-                            </button>
+                {/* PDF/Document View Placeholder - Conditionally Rendered */}
+                {activeDocId && (
+                    <div className="h-[35%] md:h-[40%] bg-slate-100 border-b border-slate-200 p-4 md:p-6 overflow-hidden relative">
+                        <div className="absolute top-4 right-4 z-10 flex gap-2">
+                            {/* Tools for Document View */}
+                            <div className="bg-white rounded-md shadow-sm border border-slate-200 flex overflow-hidden">
+                                <button className="p-1.5 text-slate-500 hover:text-primary hover:bg-slate-50 border-r border-slate-100" title="Zoom In">
+                                    <span className="material-symbols-outlined text-[18px]">add</span>
+                                </button>
+                                <button className="p-1.5 text-slate-500 hover:text-primary hover:bg-slate-50 border-r border-slate-100" title="Zoom Out">
+                                    <span className="material-symbols-outlined text-[18px]">remove</span>
+                                </button>
+                                <button
+                                    className="p-1.5 text-slate-500 hover:text-red-500 hover:bg-slate-50"
+                                    title="Close Document"
+                                    onClick={() => setActiveDocId(null)}
+                                >
+                                    <span className="material-symbols-outlined text-[18px]">close</span>
+                                </button>
+                            </div>
                         </div>
-                    </div>
 
-                    <div className="h-full max-w-4xl mx-auto bg-white shadow-sm rounded-lg p-8 md:p-12 overflow-y-auto text-slate-700 relative">
-                        {/* Placeholder Content for Document */}
-                        <div className="text-center mt-20 opacity-50">
-                            <span className="material-symbols-outlined text-6xl mb-4 text-slate-300">description</span>
-                            <p className="font-medium">Select a document to view</p>
-                            <p className="text-sm text-slate-500 mt-2">API Integration Point: Render PDF/Text here</p>
+                        <div className="h-full max-w-4xl mx-auto bg-white shadow-sm rounded-lg p-8 md:p-12 overflow-y-auto text-slate-700 relative">
+                            {/* Placeholder Content for Document */}
+                            <div className="text-center mt-20 opacity-50">
+                                <span className="material-symbols-outlined text-6xl mb-4 text-slate-300">description</span>
+                                <p className="font-medium">Viewing Document {activeDocId}</p>
+                                <p className="text-sm text-slate-500 mt-2">API Integration Point: Render PDF/Text here</p>
+                            </div>
                         </div>
                     </div>
-                </div>
+                )}
+
+                {/* "Add Document" Button in header when Doc View is closed */}
+                {!activeDocId && (
+                    <div className="absolute top-4 right-4 z-20 md:static md:flex md:justify-end md:p-4 md:absolute md:top-0 md:right-0 md:w-full md:pointer-events-none">
+                        <button
+                            onClick={handleAddDocument}
+                            className="bg-white pointer-events-auto border border-slate-200 text-slate-600 px-4 py-2 rounded-lg shadow-sm hover:shadow-md hover:border-primary hover:text-primary transition-all flex items-center gap-2 text-sm font-medium"
+                        >
+                            <span className="material-symbols-outlined text-[18px]">add_circle</span>
+                            Add Document
+                        </button>
+                    </div>
+                )}
 
                 {/* Chat Interface */}
-                <div className="flex-1 flex flex-col relative bg-off-white overflow-hidden">
-                    <div className="flex-1 overflow-y-auto p-4 md:p-8 space-y-6 scrollbar-hide">
+                <div className={`flex-1 flex flex-col relative bg-off-white overflow-hidden ${!activeDocId ? 'h-full' : ''}`}>
+                    <div className="flex-1 overflow-y-auto p-4 md:p-8 space-y-6 scrollbar-hide pt-16 md:pt-8"> {/* Added pt-16 for mobile header clearance if needed, or to clear the absolute add btn */}
                         <div className="max-w-3xl mx-auto pb-32">
                             {messages.length === 0 ? (
                                 <div className="text-center mt-10 p-6">
@@ -257,7 +305,9 @@ const Dashboard = () => {
                                         </div>
 
                                         {msg.role === 'user' && (
-                                            <div className="w-8 h-8 rounded-full bg-indigo-600 text-white flex-shrink-0 flex items-center justify-center text-xs font-bold mt-1">JD</div>
+                                            <div className="w-8 h-8 rounded-full bg-indigo-600 text-white flex-shrink-0 flex items-center justify-center text-xs font-bold mt-1">
+                                                {user?.email?.charAt(0).toUpperCase() || 'U'}
+                                            </div>
                                         )}
                                     </div>
                                 ))
@@ -281,7 +331,7 @@ const Dashboard = () => {
                                     {[
                                         { icon: '✨', text: 'Summarize obligations', prompt: 'Summarize the key obligations in this document.' },
                                         { icon: '🛡️', text: 'Identify risks', prompt: 'Identify high-risk clauses in this contract.' },
-                                        { icon: '⚖️', text: 'Check conflicts', prompt: 'Check for conflicting terms in section 3.' },
+                                        { icon: '⚖️', text: 'Check conflicts', prompt: 'Check for conflicting terms.' },
                                     ].map((chip, idx) => (
                                         <button
                                             key={idx}
@@ -295,7 +345,11 @@ const Dashboard = () => {
                             )}
 
                             <div className="relative flex items-center gap-2 bg-white rounded-2xl shadow-[0_20px_25px_-5px_rgba(0,0,0,0.1),0_10px_10px_-5px_rgba(0,0,0,0.04)] border border-slate-200 p-2 pr-2 transition-all focus-within:ring-2 focus-within:ring-primary/20 focus-within:border-primary/50">
-                                <button className="w-10 h-10 flex items-center justify-center rounded-full text-slate-400 hover:bg-slate-100 hover:text-slate-600 transition-colors tooltip-trigger" title="Upload context">
+                                <button
+                                    className="w-10 h-10 flex items-center justify-center rounded-full text-slate-400 hover:bg-slate-100 hover:text-slate-600 transition-colors tooltip-trigger"
+                                    title="Upload context"
+                                    onClick={handleAddDocument}
+                                >
                                     <span className="material-symbols-outlined">add</span>
                                 </button>
 
@@ -310,9 +364,6 @@ const Dashboard = () => {
                                 />
 
                                 <div className="flex items-center gap-1">
-                                    {/* <button className="w-8 h-8 flex items-center justify-center rounded-full text-slate-400 hover:text-primary transition-colors">
-                                        <span className="material-symbols-outlined text-[20px]">mic</span>
-                                    </button> */}
                                     <button
                                         onClick={() => handleSendMessage()}
                                         disabled={!inputValue.trim() || isLoading}
