@@ -34,12 +34,13 @@ const Dashboard = () => {
     const [messages, setMessages] = useState<Message[]>([]);
     const [isLoading, setIsLoading] = useState(false);
 
-    // Mock Data (Empty by default per request)
+    // Mock Data
     const [documents, setDocuments] = useState<Document[]>([]);
     const [conversations, setConversations] = useState<Conversation[]>([]);
     const [activeDocId, setActiveDocId] = useState<string | null>(null);
 
     const messagesEndRef = useRef<HTMLDivElement>(null);
+    const fileInputRef = useRef<HTMLInputElement>(null);
 
     // Auto-scroll to bottom of chat
     const scrollToBottom = () => {
@@ -95,6 +96,17 @@ const Dashboard = () => {
                 timestamp: new Date()
             };
             setMessages(prev => [...prev, aiResponse]);
+
+            // Add to conversation history if it's the first message
+            if (messages.length === 0) {
+                const newConv: Conversation = {
+                    id: tempId,
+                    title: text.length > 30 ? text.substring(0, 30) + '...' : text,
+                    lastActive: new Date()
+                };
+                setConversations(prev => [newConv, ...prev]);
+            }
+
         } catch (error) {
             console.error("API Error", error);
         } finally {
@@ -113,21 +125,52 @@ const Dashboard = () => {
         setInputValue(prompt);
     };
 
-    const handleAddDocument = () => {
-        // Placeholder for upload logic
-        console.log("Add Document Clicked");
-        // For demo: Add a dummy document and open it
+    const handleAddDocumentClick = () => {
+        fileInputRef.current?.click();
+    };
+
+    const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        // In a real app, upload to Supabase Storage here
+        // For now, client-side preview
         const newDoc: Document = {
             id: Date.now().toString(),
-            name: `Uploaded_Doc_${documents.length + 1}.pdf`,
-            type: 'pdf'
+            name: file.name,
+            type: file.name.endsWith('.docx') ? 'docx' : 'pdf'
         };
         setDocuments(prev => [...prev, newDoc]);
         setActiveDocId(newDoc.id);
+
+        // Reset input
+        e.target.value = '';
+    };
+
+    const handleDeleteConversation = (e: React.MouseEvent, id: string) => {
+        e.stopPropagation();
+        if (window.confirm("Are you sure you want to delete this conversation?")) {
+            setConversations(prev => prev.filter(c => c.id !== id));
+        }
+    };
+
+    const handleClearChat = () => {
+        if (messages.length > 0 && window.confirm("Clear current chat history?")) {
+            setMessages([]);
+        }
     };
 
     return (
         <div className="bg-off-white font-sans text-slate-900 h-screen overflow-hidden flex selection:bg-indigo-100">
+            {/* Hidden File Input */}
+            <input
+                type="file"
+                ref={fileInputRef}
+                className="hidden"
+                accept=".pdf,.docx,.txt"
+                onChange={handleFileUpload}
+            />
+
             {/* Sidebar */}
             <aside className={`w-72 bg-navy-deep h-full flex flex-col border-r border-white/5 shrink-0 transition-all duration-300 ${isMobileMenuOpen ? 'fixed z-40' : 'hidden md:flex'}`}>
                 <div className="h-16 flex items-center px-6 border-b border-white/5">
@@ -142,15 +185,29 @@ const Dashboard = () => {
 
                 <div className="flex-1 overflow-y-auto py-6 px-3 scrollbar-hide">
                     <div className="mb-8">
-                        <h3 className="px-3 text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-3">Recent Conversations</h3>
+                        <div className="flex items-center justify-between px-3 mb-3">
+                            <h3 className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Recent Conversations</h3>
+                            {conversations.length > 0 && (
+                                <button className="text-[10px] text-slate-500 hover:text-red-400" onClick={() => setConversations([])}>Clear All</button>
+                            )}
+                        </div>
                         <div className="space-y-1">
                             {conversations.length === 0 ? (
                                 <p className="px-3 text-xs text-slate-600 italic">No history yet.</p>
                             ) : (
                                 conversations.map(conv => (
-                                    <div key={conv.id} className="nav-item group flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-400 text-sm hover:text-white hover:bg-white/5 transition-colors cursor-pointer select-none">
-                                        <span className="material-symbols-outlined text-[18px]">chat_bubble</span>
-                                        <span className="truncate">{conv.title}</span>
+                                    <div key={conv.id} className="nav-item group flex items-center justify-between px-3 py-2.5 rounded-lg text-slate-400 text-sm hover:text-white hover:bg-white/5 transition-colors cursor-pointer select-none">
+                                        <div className="flex items-center gap-3 overflow-hidden">
+                                            <span className="material-symbols-outlined text-[18px] shrink-0">chat_bubble</span>
+                                            <span className="truncate">{conv.title}</span>
+                                        </div>
+                                        <button
+                                            onClick={(e) => handleDeleteConversation(e, conv.id)}
+                                            className="opacity-0 group-hover:opacity-100 text-slate-500 hover:text-red-400 transition-opacity"
+                                            title="Delete"
+                                        >
+                                            <span className="material-symbols-outlined text-[16px]">delete</span>
+                                        </button>
                                     </div>
                                 ))
                             )}
@@ -163,16 +220,18 @@ const Dashboard = () => {
                             {documents.map(doc => (
                                 <div
                                     key={doc.id}
-                                    className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-colors cursor-pointer select-none ${activeDocId === doc.id ? 'text-white bg-white/10' : 'text-slate-400 hover:text-white hover:bg-white/5'}`}
+                                    className={`flex items-center justify-between px-3 py-2.5 rounded-lg text-sm transition-colors cursor-pointer select-none ${activeDocId === doc.id ? 'text-white bg-white/10' : 'text-slate-400 hover:text-white hover:bg-white/5'}`}
                                     onClick={() => setActiveDocId(doc.id)}
                                 >
-                                    <span className="material-symbols-outlined text-[18px]">description</span>
-                                    <span className="truncate">{doc.name}</span>
+                                    <div className="flex items-center gap-3 overflow-hidden">
+                                        <span className="material-symbols-outlined text-[18px] shrink-0">description</span>
+                                        <span className="truncate">{doc.name}</span>
+                                    </div>
                                 </div>
                             ))}
                             <div className="mt-3 px-3">
                                 <button
-                                    onClick={handleAddDocument}
+                                    onClick={handleAddDocumentClick}
                                     className="w-full py-2 border border-dashed border-slate-600 rounded-lg text-slate-500 text-xs hover:border-slate-400 hover:text-slate-300 transition-colors flex items-center justify-center gap-2"
                                 >
                                     <span className="material-symbols-outlined text-[16px]">add</span>
@@ -267,7 +326,7 @@ const Dashboard = () => {
                 {!activeDocId && (
                     <div className="absolute top-4 right-4 z-20 md:static md:flex md:justify-end md:p-4 md:absolute md:top-0 md:right-0 md:w-full md:pointer-events-none">
                         <button
-                            onClick={handleAddDocument}
+                            onClick={handleAddDocumentClick}
                             className="bg-white pointer-events-auto border border-slate-200 text-slate-600 px-4 py-2 rounded-lg shadow-sm hover:shadow-md hover:border-primary hover:text-primary transition-all flex items-center gap-2 text-sm font-medium"
                         >
                             <span className="material-symbols-outlined text-[18px]">add_circle</span>
@@ -278,7 +337,19 @@ const Dashboard = () => {
 
                 {/* Chat Interface */}
                 <div className={`flex-1 flex flex-col relative bg-off-white overflow-hidden ${!activeDocId ? 'h-full' : ''}`}>
-                    <div className="flex-1 overflow-y-auto p-4 md:p-8 space-y-6 scrollbar-hide pt-16 md:pt-8"> {/* Added pt-16 for mobile header clearance if needed, or to clear the absolute add btn */}
+                    {messages.length > 0 && (
+                        <div className="absolute top-2 right-4 z-10 md:static md:flex md:justify-end md:px-8 md:pt-4">
+                            <button
+                                onClick={handleClearChat}
+                                className="text-xs text-slate-400 hover:text-red-500 flex items-center gap-1 bg-white/50 px-2 py-1 rounded backdrop-blur-sm transition-colors"
+                            >
+                                <span className="material-symbols-outlined text-[14px]">delete</span>
+                                Clear Chat
+                            </button>
+                        </div>
+                    )}
+
+                    <div className="flex-1 overflow-y-auto p-4 md:p-8 space-y-6 scrollbar-hide pt-16 md:pt-4">
                         <div className="max-w-3xl mx-auto pb-32">
                             {messages.length === 0 ? (
                                 <div className="text-center mt-10 p-6">
@@ -348,7 +419,7 @@ const Dashboard = () => {
                                 <button
                                     className="w-10 h-10 flex items-center justify-center rounded-full text-slate-400 hover:bg-slate-100 hover:text-slate-600 transition-colors tooltip-trigger"
                                     title="Upload context"
-                                    onClick={handleAddDocument}
+                                    onClick={handleAddDocumentClick}
                                 >
                                     <span className="material-symbols-outlined">add</span>
                                 </button>
