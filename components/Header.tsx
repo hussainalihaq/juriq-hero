@@ -43,9 +43,11 @@ const Header: React.FC<HeaderProps> = ({ onGetAccess, darkMode, toggleDarkMode }
             </span>
           </button>
 
-          <Link to="/login" className="text-sm font-bold text-slate-600 dark:text-slate-300 hover:text-primary dark:hover:text-white transition-colors">
+
+          {/* <Link to="/login" className="text-sm font-bold text-slate-600 dark:text-slate-300 hover:text-primary dark:hover:text-white transition-colors">
             Log In
-          </Link>
+          </Link> */}
+
 
           <button
             onClick={onGetAccess}
