@@ -38,7 +38,9 @@ const Settings = () => {
             if (user) {
                 setUser(user);
                 setFullName(user.user_metadata?.full_name || '');
-                // Load saved preferences from local storage
+                // Load role from Supabase metadata first, then localStorage as fallback
+                setRole(user.user_metadata?.role || 'student');
+                // Load other saved preferences from local storage
                 const savedPrefs = localStorage.getItem('juriq_preferences');
                 if (savedPrefs) {
                     const prefs = JSON.parse(savedPrefs);
@@ -46,23 +48,35 @@ const Settings = () => {
                     setAutoCitation(prefs.autoCitation ?? true);
                     setSelectedJurisdictions(prefs.jurisdictions ?? ['pak']);
                     setOrganization(prefs.organization ?? '');
-                    setRole(prefs.role ?? 'Student');
                 }
             }
         };
         getUser();
     }, [navigate]);
 
-    const handleSavePreferences = () => {
+    const handleSavePreferences = async () => {
+        // Save to localStorage
         const prefs = {
             outputStyle,
             autoCitation,
             jurisdictions: selectedJurisdictions,
             organization,
-            role
         };
         localStorage.setItem('juriq_preferences', JSON.stringify(prefs));
-        setMessage({ type: 'success', text: 'Preferences saved successfully!' });
+
+        // Sync role to Supabase user_metadata for API personalization
+        try {
+            const { error } = await supabase.auth.updateUser({
+                data: {
+                    full_name: fullName,
+                    role: role
+                }
+            });
+            if (error) throw error;
+            setMessage({ type: 'success', text: 'Profile and preferences saved!' });
+        } catch (err: any) {
+            setMessage({ type: 'error', text: err.message || 'Failed to update profile' });
+        }
         setTimeout(() => setMessage(null), 3000);
     };
 
@@ -168,12 +182,12 @@ const Settings = () => {
                                     onChange={(e) => setRole(e.target.value)}
                                     className="w-full px-4 py-3 rounded-xl bg-white dark:bg-midnight-card border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all appearance-none cursor-pointer"
                                 >
-                                    <option value="Student">Student</option>
-                                    <option value="Entrepreneur">Entrepreneur</option>
-                                    <option value="Junior Associate">Junior Associate</option>
-                                    <option value="Senior Partner">Senior Partner</option>
-                                    <option value="In-House Counsel">In-House Counsel</option>
-                                    <option value="Other">Other</option>
+                                    <option value="lawyer">Lawyer</option>
+                                    <option value="student">Law Student</option>
+                                    <option value="corporate">Corporate Counsel</option>
+                                    <option value="paralegal">Paralegal</option>
+                                    <option value="entrepreneur">Entrepreneur</option>
+                                    <option value="other">Other</option>
                                 </select>
                             </div>
                         </div>

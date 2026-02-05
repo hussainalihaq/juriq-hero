@@ -8,6 +8,7 @@ const SignUp = () => {
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
     const [fullName, setFullName] = useState('');
+    const [role, setRole] = useState('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
@@ -30,6 +31,7 @@ const SignUp = () => {
                 options: {
                     data: {
                         full_name: fullName,
+                        role: role, // Store role in user metadata
                     },
                 },
             });
@@ -195,6 +197,29 @@ const SignUp = () => {
                                             {showPassword ? 'visibility' : 'visibility_off'}
                                         </span>
                                     </button>
+                                </div>
+                            </div>
+                            <div className="space-y-1.5">
+                                <label className="text-xs font-bold text-slate-600 dark:text-slate-400 uppercase tracking-wider ml-1" htmlFor="role">Professional Role</label>
+                                <div className="relative">
+                                    <select
+                                        id="role"
+                                        value={role}
+                                        onChange={(e) => setRole(e.target.value)}
+                                        required
+                                        className="input-field appearance-none cursor-pointer pr-10"
+                                    >
+                                        <option value="" disabled>Select your role</option>
+                                        <option value="lawyer">Lawyer</option>
+                                        <option value="student">Law Student</option>
+                                        <option value="corporate">Corporate Counsel</option>
+                                        <option value="paralegal">Paralegal</option>
+                                        <option value="entrepreneur">Entrepreneur</option>
+                                        <option value="other">Other</option>
+                                    </select>
+                                    <div className="absolute inset-y-0 right-0 flex items-center px-3 pointer-events-none text-slate-400">
+                                        <span className="material-symbols-outlined text-lg">expand_more</span>
+                                    </div>
                                 </div>
                             </div>
                             <div className="pt-4">

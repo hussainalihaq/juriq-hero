@@ -95,14 +95,16 @@ const Dashboard: React.FC = () => {
         setIsTyping(true);
 
         try {
-            // 2. Call Real Backend API
+            // 2. Call Real Backend API with user's role from Supabase metadata
+            const userRole = user?.user_metadata?.role || 'general';
+
             const response = await fetch('http://localhost:3000/api/chat', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     history: messages.map(m => ({ role: m.role === 'model' ? 'ai' : 'user', text: m.text })), // Map model -> ai for backend consistency if needed, checking backend expectation
                     message: text,
-                    role: 'general' // Default role for now, can be 'student' or 'entrepreneur' later
+                    role: userRole // Use role from user metadata for personalized responses
                 })
             });
 
