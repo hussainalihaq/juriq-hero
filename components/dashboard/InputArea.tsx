@@ -3,9 +3,10 @@ import React, { useState } from 'react';
 interface InputAreaProps {
     onSend: (text: string) => void;
     disabled: boolean;
+    onUploadClick?: () => void;
 }
 
-export const InputArea: React.FC<InputAreaProps> = ({ onSend, disabled }) => {
+export const InputArea: React.FC<InputAreaProps> = ({ onSend, disabled, onUploadClick }) => {
     const [text, setText] = useState('');
 
     const handleSubmit = (e: React.FormEvent) => {
@@ -23,7 +24,12 @@ export const InputArea: React.FC<InputAreaProps> = ({ onSend, disabled }) => {
                 <div className="glass-input rounded-xl p-1.5 flex items-center gap-2 shadow-glass transition-all duration-300 focus-within:bg-white/5 focus-within:border-white/20 group">
 
                     {/* Add Button */}
-                    <button className="p-3 text-slate-500 hover:text-white hover:bg-white/10 transition-all rounded-lg" title="Add Document">
+                    <button
+                        type="button"
+                        onClick={onUploadClick}
+                        className="p-3 text-slate-500 hover:text-white hover:bg-white/10 transition-all rounded-lg"
+                        title="Add Document"
+                    >
                         <span className="material-symbols-outlined text-2xl">add_circle</span>
                     </button>
 
@@ -44,7 +50,7 @@ export const InputArea: React.FC<InputAreaProps> = ({ onSend, disabled }) => {
                         onClick={handleSubmit}
                         disabled={!text.trim() || disabled}
                         className={`px-4 py-2 rounded-lg flex items-center gap-2 transition-all active:scale-95 font-medium text-sm
-                ${text.trim() && !disabled ? 'bg-white text-midnight-bg hover:bg-slate-200' : 'bg-white/5 text-slate-500 cursor-not-allowed'}
+                ${text.trim() && !disabled ? 'bg-white text-midnight-bg hover:bg-slate-200' : 'bg-white text-midnight-bg hover:bg-slate-200 opacity-50 cursor-not-allowed'}
             `}>
                         <span>Run Analysis</span>
                         <span className="material-symbols-outlined text-sm">arrow_forward</span>

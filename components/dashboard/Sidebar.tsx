@@ -3,9 +3,11 @@ import { useNavigate } from 'react-router-dom';
 
 interface SidebarProps {
     userEmail?: string;
+    userName?: string;
+    onUploadClick?: () => void;
 }
 
-export const Sidebar: React.FC<SidebarProps> = ({ userEmail }) => {
+export const Sidebar: React.FC<SidebarProps> = ({ userEmail, userName, onUploadClick }) => {
     const navigate = useNavigate();
 
     return (
@@ -45,7 +47,10 @@ export const Sidebar: React.FC<SidebarProps> = ({ userEmail }) => {
                 {/* Uploaded Documents */}
                 <div>
                     <h3 className="text-[10px] font-bold text-slate-600 uppercase tracking-widest px-2 mb-3">Uploaded Documents</h3>
-                    <button className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-lg border border-white/10 text-slate-400 hover:text-white hover:border-primary/50 hover:bg-white/5 transition-all text-sm group">
+                    <button
+                        onClick={onUploadClick}
+                        className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-lg border border-white/10 text-slate-400 hover:text-white hover:border-primary/50 hover:bg-white/5 transition-all text-sm group"
+                    >
                         <span className="material-symbols-outlined text-lg text-slate-500 group-hover:text-primary transition-colors">upload_file</span>
                         <span>Upload New</span>
                     </button>
@@ -55,16 +60,22 @@ export const Sidebar: React.FC<SidebarProps> = ({ userEmail }) => {
 
             {/* User Profile */}
             <div className="p-4 border-t border-midnight-border">
-                <div className="flex items-center gap-3 p-2 rounded-lg hover:bg-white/5 cursor-pointer transition-colors group">
+                <div
+                    onClick={() => navigate('/settings')}
+                    className="flex items-center gap-3 p-2 rounded-lg hover:bg-white/5 cursor-pointer transition-colors group"
+                >
                     <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-primary to-purple-600 flex items-center justify-center text-white text-xs font-bold shadow-lg shadow-primary/20 uppercase">
-                        {userEmail?.charAt(0) || 'U'}
+                        {userName ? userName.charAt(0) : (userEmail?.charAt(0) || 'U')}
                     </div>
                     <div className="flex-1 overflow-hidden">
                         <p className="text-sm font-bold text-white group-hover:text-primary-glow transition-colors truncate" title={userEmail}>
-                            {userEmail?.split('@')[0] || 'User'}
+                            {userName || userEmail?.split('@')[0] || 'User'}
                         </p>
                         <p className="text-xs text-slate-500 truncate">Free Plan</p>
                     </div>
+                    <button className="text-slate-500 hover:text-white transition-opacity opacity-0 group-hover:opacity-100">
+                        <span className="material-symbols-outlined text-lg">settings</span>
+                    </button>
                 </div>
             </div>
         </aside>

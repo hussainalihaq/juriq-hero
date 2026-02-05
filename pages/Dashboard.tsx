@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabaseClient';
 import { Sidebar } from '../components/dashboard/Sidebar';
@@ -9,6 +9,7 @@ import { Message } from '../types/dashboard';
 
 const Dashboard: React.FC = () => {
     const navigate = useNavigate();
+    const fileInputRef = useRef<HTMLInputElement>(null);
 
     // --- State Management ---
     const [user, setUser] = useState<any>(null);
@@ -28,6 +29,40 @@ const Dashboard: React.FC = () => {
         getUser();
     }, [navigate]);
 
+    const handleUploadClick = () => {
+        fileInputRef.current?.click();
+    };
+
+    const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        // Mock upload logic
+        const userMsg: Message = {
+            id: Date.now().toString(),
+            role: 'user',
+            text: `Uploaded: ${file.name}`,
+            timestamp: new Date()
+        };
+        setMessages(prev => [...prev, userMsg]);
+
+        setIsTyping(true);
+        setTimeout(() => {
+            const aiMsg: Message = {
+                id: (Date.now() + 1).toString(),
+                role: 'model',
+                text: `I've received **${file.name}**. I'm analyzing it for key clauses and risks now.`,
+                timestamp: new Date(),
+                actions: [
+                    { label: 'Summarize', icon: 'segment', actionId: 'summarize' },
+                    { label: 'Extract Dates', icon: 'calendar_month', actionId: 'dates' }
+                ]
+            };
+            setMessages(prev => [...prev, aiMsg]);
+            setIsTyping(false);
+        }, 1500);
+    };
+
     const handleSend = useCallback(async (text: string) => {
         // 1. Add User Message
         const userMsg: Message = {
@@ -41,7 +76,6 @@ const Dashboard: React.FC = () => {
         setIsTyping(true);
 
         // 2. Simulate AI Response (Placeholder for real API)
-        // In the future, this will call the backend or use the Gemini SDK
         try {
             await new Promise(resolve => setTimeout(resolve, 2000));
 
@@ -72,6 +106,13 @@ const Dashboard: React.FC = () => {
 
     return (
         <div className="flex h-screen overflow-hidden bg-midnight-bg text-text-bright font-display selection:bg-primary/30 selection:text-white">
+            <input
+                type="file"
+                ref={fileInputRef}
+                className="hidden"
+                onChange={handleFileUpload}
+                accept=".pdf,.docx,.txt"
+            />
 
             {/* Mobile Header */}
             <div className={`md:hidden fixed top-0 w-full bg-midnight-bg/90 backdrop-blur-md z-50 h-16 flex items-center justify-between px-6 border-b border-midnight-border transition-all ${isMobileMenuOpen ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
@@ -96,12 +137,20 @@ const Dashboard: React.FC = () => {
                         >
                             <span className="material-symbols-outlined">close</span>
                         </button>
-                        <Sidebar userEmail={user?.email} />
+                        <Sidebar
+                            userEmail={user?.email}
+                            userName={user?.user_metadata?.full_name}
+                            onUploadClick={handleUploadClick}
+                        />
                     </div>
                 </div>
             )}
 
-            <Sidebar userEmail={user?.email} />
+            <Sidebar
+                userEmail={user?.email}
+                userName={user?.user_metadata?.full_name}
+                onUploadClick={handleUploadClick}
+            />
 
             {/* Main Content */}
             <main className="flex-1 flex flex-col relative min-w-0 pt-16 md:pt-0">
@@ -109,20 +158,23 @@ const Dashboard: React.FC = () => {
                 {/* Header (Desktop) */}
                 <header className="hidden md:flex h-16 items-center justify-between px-6 border-b border-midnight-border bg-midnight-bg/80 backdrop-blur-md z-10 shrink-0">
                     <div className="flex items-center gap-2">
-                        <div
+                        <button
                             onClick={handleNewChat}
                             className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/5 text-xs font-medium text-text-dim hover:text-white hover:bg-white/10 transition-all cursor-pointer select-none"
                         >
                             <span className="material-symbols-outlined text-sm">add</span>
                             <span>New Chat</span>
-                        </div>
+                        </button>
                     </div>
 
                     <div className="flex items-center gap-4">
                         <div className="px-3 py-1 bg-gradient-to-r from-primary/20 to-purple-500/20 border border-primary/30 rounded text-[10px] font-bold tracking-wider text-primary-glow uppercase shadow-glow">
                             Beta Access
                         </div>
-                        <button className="w-8 h-8 rounded-full hover:bg-white/5 flex items-center justify-center text-text-dim transition-colors">
+                        <button
+                            onClick={() => navigate('/settings')}
+                            className="w-8 h-8 rounded-full hover:bg-white/5 flex items-center justify-center text-text-dim transition-colors"
+                        >
                             <span className="material-symbols-outlined text-lg">settings</span>
                         </button>
                     </div>
@@ -136,7 +188,7 @@ const Dashboard: React.FC = () => {
                 />
 
                 {/* Floating Input */}
-                <InputArea onSend={handleSend} disabled={isTyping} />
+                <InputArea onSend={handleSend} disabled={isTyping} onUploadClick={handleUploadClick} />
 
             </main>
 
