@@ -80,28 +80,45 @@ const Dashboard: React.FC = () => {
         setMessages(prev => [...prev, userMsg]);
         setIsTyping(true);
 
-        // 2. Simulate AI Response (Placeholder for real API)
         try {
-            await new Promise(resolve => setTimeout(resolve, 2000));
+            // 2. Call Real Backend API
+            const response = await fetch('http://localhost:3000/api/chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    history: messages.map(m => ({ role: m.role === 'model' ? 'ai' : 'user', text: m.text })), // Map model -> ai for backend consistency if needed, checking backend expectation
+                    message: text,
+                    role: 'general' // Default role for now, can be 'student' or 'entrepreneur' later
+                })
+            });
 
+            if (!response.ok) throw new Error('Failed to fetch response');
+
+            const data = await response.json();
+
+            // 3. Add AI Message
             const aiMsg: Message = {
                 id: (Date.now() + 1).toString(),
                 role: 'model',
-                text: "I've analyzed your query. As Juriq (Beta), I can help you identify risks or draft clauses. However, for this specific request, I would need more context or the document text uploaded.",
+                text: data.text,
                 timestamp: new Date(),
-                actions: [
-                    { label: 'Upload Contract', icon: 'upload_file', actionId: 'upload' },
-                    { label: 'Try Mock Analysis', icon: 'science', actionId: 'mock' }
-                ]
+                // actions: [ ... ] // Can parse actions from response later if structured
             };
 
             setMessages(prev => [...prev, aiMsg]);
         } catch (error) {
             console.error(error);
+            const errorMsg: Message = {
+                id: (Date.now() + 1).toString(),
+                role: 'model',
+                text: "I'm having trouble connecting to the server. Please ensure the backend is running.",
+                timestamp: new Date()
+            };
+            setMessages(prev => [...prev, errorMsg]);
         } finally {
             setIsTyping(false);
         }
-    }, []);
+    }, [messages]);
 
     const handleNewChat = () => {
         if (messages.length > 0 && window.confirm("Start a new chat? Current history will be cleared.")) {
