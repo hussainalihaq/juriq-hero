@@ -6,9 +6,18 @@ import { ChatArea } from '../components/dashboard/ChatArea';
 import { InputArea } from '../components/dashboard/InputArea';
 import { Message } from '../types/dashboard';
 
+// API URL: Use environment variable or default to localhost for dev
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+
 const Dashboard: React.FC = () => {
     const navigate = useNavigate();
     const fileInputRef = useRef<HTMLInputElement>(null);
+    const chatContainerRef = useRef<HTMLDivElement>(null);
+
+    // Session management for multi-chat history
+    const [currentSessionId, setCurrentSessionId] = useState<string>(() => {
+        return localStorage.getItem('juriq_current_session') || Date.now().toString();
+    });
 
     // --- State Management ---
     const [user, setUser] = useState<any>(null);
@@ -29,13 +38,32 @@ const Dashboard: React.FC = () => {
 
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-    // Derive chat session from messages (for sidebar display)
+    // All saved chat sessions for sidebar
+    const [allSessions, setAllSessions] = useState<{ id: string; title: string; preview: string; timestamp: Date }[]>([]);
+
+    // Load all sessions on mount
+    useEffect(() => {
+        const sessions = localStorage.getItem('juriq_all_sessions');
+        if (sessions) {
+            try {
+                const parsed = JSON.parse(sessions).map((s: any) => ({
+                    ...s,
+                    timestamp: new Date(s.timestamp)
+                }));
+                setAllSessions(parsed);
+            } catch (e) {
+                console.error('Failed to load sessions:', e);
+            }
+        }
+    }, []);
+
+    // Derive current session for sidebar (combine with saved sessions)
     const chatSessions = messages.length > 0 ? [{
-        id: 'current',
+        id: currentSessionId,
         title: messages[0]?.text.slice(0, 40) + '...' || 'New Chat',
         preview: messages[messages.length - 1]?.text.slice(0, 50) + '...' || '',
         timestamp: messages[0]?.timestamp || new Date()
-    }] : [];
+    }, ...allSessions.filter(s => s.id !== currentSessionId)] : allSessions;
 
     useEffect(() => {
         const getUser = async () => {
@@ -124,7 +152,7 @@ const Dashboard: React.FC = () => {
             // 2. Call Real Backend API with user's role and jurisdiction
             const userRole = user?.user_metadata?.role || 'general';
 
-            const response = await fetch('http://localhost:3000/api/chat', {
+            const response = await fetch(`${API_URL}/api/chat`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -178,11 +206,38 @@ const Dashboard: React.FC = () => {
         checkBackend();
     }, []);
 
-    const handleNewChat = () => {
-        if (messages.length > 0 && window.confirm("Start a new chat? Current history will be cleared.")) {
-            setMessages([]);
-            localStorage.removeItem('juriq_chat_history');
+    // Auto-scroll to bottom when messages change
+    useEffect(() => {
+        if (chatContainerRef.current) {
+            chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
         }
+    }, [messages, isTyping]);
+
+    const handleNewChat = () => {
+        // Save current session if it has messages
+        if (messages.length > 0) {
+            const currentSession = {
+                id: currentSessionId,
+                title: messages[0]?.text.slice(0, 40) + '...',
+                preview: messages[messages.length - 1]?.text.slice(0, 50) + '...',
+                timestamp: messages[0]?.timestamp || new Date()
+            };
+
+            // Save messages for this session
+            localStorage.setItem(`juriq_session_${currentSessionId}`, JSON.stringify(messages));
+
+            // Update all sessions list
+            const updatedSessions = [currentSession, ...allSessions.filter(s => s.id !== currentSessionId)];
+            setAllSessions(updatedSessions);
+            localStorage.setItem('juriq_all_sessions', JSON.stringify(updatedSessions));
+        }
+
+        // Start new session
+        const newSessionId = Date.now().toString();
+        setCurrentSessionId(newSessionId);
+        localStorage.setItem('juriq_current_session', newSessionId);
+        setMessages([]);
+        localStorage.removeItem('juriq_chat_history');
     };
 
     return (
