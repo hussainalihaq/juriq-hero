@@ -48,6 +48,19 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, initialEmail }) => {
     }
 
     try {
+      // BETA LIMIT CHECK
+      const { count, error: countError } = await supabase
+        .from('waitlist')
+        .select('*', { count: 'exact', head: true });
+
+      if (countError) throw countError;
+
+      if (count !== null && count >= 30) {
+        alert("The Beta is currently full (Limit reached). Please check back later.");
+        setStatus('idle');
+        return;
+      }
+
       const { error } = await supabase
         .from('waitlist')
         .insert([

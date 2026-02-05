@@ -11,9 +11,9 @@ export default {
     theme: {
         extend: {
             colors: {
-                "midnight-bg": "#02040a",      // The deepest background color
-                "midnight-card": "#0b101b",    // Slightly lighter for sidebars/cards
-                "midnight-border": "#1e293b",  // Subtle borders
+                "midnight-bg": "#0f172a",      // Lighter dark (Slate 900) instead of #02040a
+                "midnight-card": "#1e293b",    // Lighter card (Slate 800) instead of #0b101b
+                "midnight-border": "#334155",  // Slate 700
                 "midnight-hover": "#161e31",
                 "text-bright": "#f8fafc",      // Primary text
                 "text-dim": "#94a3b8",         // Secondary text

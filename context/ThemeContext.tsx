@@ -11,8 +11,8 @@ interface ThemeContextType {
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export const ThemeProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-    // Default to dark mode as requested
-    const [theme, setThemeState] = useState<Theme>('dark');
+    // Default to light mode as requested
+    const [theme, setThemeState] = useState<Theme>('light');
 
     useEffect(() => {
         // Check local storage or system preference on mount if desired, 

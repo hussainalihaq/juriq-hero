@@ -22,7 +22,7 @@ export const ChatArea: React.FC<ChatAreaProps> = ({ messages, isTyping, onSugges
     ];
 
     return (
-        <div className="flex-1 overflow-y-auto p-4 md:p-12 space-y-8 pb-48 scroll-smooth">
+        <div className="flex-1 overflow-y-auto p-4 md:p-12 space-y-8 pb-64 scroll-smooth">
             {/* Welcome Placeholder if empty */}
             {messages.length === 0 && (
                 <div className="h-full flex flex-col items-center justify-center text-center select-none pb-20">

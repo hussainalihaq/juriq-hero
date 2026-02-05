@@ -120,6 +120,27 @@ const Dashboard: React.FC = () => {
         }
     }, [messages]);
 
+    // --- Backend Status & Credit Popup ---
+    const [backendStatus, setBackendStatus] = useState<'online' | 'offline' | 'checking'>('checking');
+    const [showCreditModal, setShowCreditModal] = useState(true);
+
+    useEffect(() => {
+        const checkBackend = async () => {
+            try {
+                // Try fetching health check
+                // Note: Replace with your deployed URL in production
+                const res = await fetch('http://localhost:3000/');
+                if (res.ok) setBackendStatus('online');
+                else setBackendStatus('offline');
+            } catch (e) {
+                setBackendStatus('offline');
+            }
+        };
+        checkBackend();
+        const interval = setInterval(checkBackend, 10000); // Check every 10s
+        return () => clearInterval(interval);
+    }, []);
+
     const handleNewChat = () => {
         if (messages.length > 0 && window.confirm("Start a new chat? Current history will be cleared.")) {
             setMessages([]);
@@ -128,6 +149,26 @@ const Dashboard: React.FC = () => {
 
     return (
         <div className="flex h-screen overflow-hidden bg-off-white dark:bg-midnight-bg text-slate-900 dark:text-text-bright font-display selection:bg-primary/30 selection:text-white transition-colors duration-300">
+            {/* Credit Limit Popup */}
+            {showCreditModal && (
+                <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+                    <div className="bg-white dark:bg-midnight-card border border-slate-200 dark:border-white/10 rounded-2xl p-8 max-w-sm w-full text-center shadow-2xl animate-slide-up">
+                        <div className="w-16 h-16 bg-blue-100 dark:bg-blue-500/20 rounded-full flex items-center justify-center mx-auto mb-4 text-blue-600 dark:text-blue-400">
+                            <span className="material-symbols-outlined text-3xl">bolt</span>
+                        </div>
+                        <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">Free Plan Limit</h3>
+                        <p className="text-slate-500 dark:text-slate-400 mb-6">You have <span className="font-bold text-primary">5 credits</span> remaining for this session.</p>
+                        <button
+                            onClick={() => setShowCreditModal(false)}
+                            className="bg-primary hover:bg-navy-deep text-white w-full py-3 rounded-xl font-bold transition-colors"
+                        >
+                            Continue
+                        </button>
+                        <p className="mt-4 text-[10px] text-slate-400 uppercase tracking-widest">Juriq Beta</p>
+                    </div>
+                </div>
+            )}
+
             <input
                 type="file"
                 ref={fileInputRef}
@@ -144,9 +185,8 @@ const Dashboard: React.FC = () => {
                     </button>
                     <span className="font-bold text-lg tracking-tight ml-2">juriq</span>
                 </div>
-                <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-primary-glow text-xs font-bold">
-                    {user?.email?.charAt(0) || 'U'}
-                </div>
+                {/* Status Dot Mobile */}
+                <div className={`w-2 h-2 rounded-full ${backendStatus === 'online' ? 'bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.5)]' : 'bg-red-500'}`} title={`Backend: ${backendStatus}`}></div>
             </div>
 
             {/* Mobile Sidebar Overlay */}
@@ -200,6 +240,15 @@ const Dashboard: React.FC = () => {
                             <span className="material-symbols-outlined text-sm">add</span>
                             <span>New Chat</span>
                         </button>
+
+                        {/* Backend Status Indicator */}
+                        <div className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider border transition-colors ${backendStatus === 'online'
+                            ? 'bg-green-500/10 text-green-500 border-green-500/20'
+                            : 'bg-red-500/10 text-red-500 border-red-500/20'
+                            }`}>
+                            <div className={`w-1.5 h-1.5 rounded-full ${backendStatus === 'online' ? 'bg-green-500 animate-pulse' : 'bg-red-500'}`}></div>
+                            {backendStatus === 'online' ? 'System Online' : 'System Offline'}
+                        </div>
                     </div>
 
                     <div className="flex items-center gap-4">
