@@ -22,16 +22,16 @@ app.get('/', (req, res) => {
 });
 
 // 2. Chat Endpoint
-// Accepts: { history: Message[], message: string, role?: string }
+// Accepts: { history: Message[], message: string, role?: string, jurisdictions?: string[], outputStyle?: number }
 app.post('/api/chat', async (req, res) => {
     try {
-        const { history, message, role } = req.body;
+        const { history, message, role, jurisdictions, outputStyle } = req.body;
 
         if (!message) {
             return res.status(400).json({ error: 'Message is required' });
         }
 
-        const response = await generateChatResponse(history, message, role);
+        const response = await generateChatResponse(history, message, role, jurisdictions || [], outputStyle || 50);
         res.json(response);
     } catch (error) {
         console.error('Chat API Error:', error);

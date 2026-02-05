@@ -42,14 +42,24 @@ const Dashboard: React.FC = () => {
         const file = e.target.files?.[0];
         if (!file) return;
 
-        // Add a simple message indicating file was uploaded. No auto-response.
+        // 1. Show the user's upload as a message
         const userMsg: Message = {
             id: Date.now().toString(),
             role: 'user',
             text: `📎 Uploaded: **${file.name}**`,
             timestamp: new Date()
         };
-        setMessages(prev => [...prev, userMsg]);
+
+        // 2. Show AI response asking what to do (like Claude)
+        const aiPrompt: Message = {
+            id: (Date.now() + 1).toString(),
+            role: 'model',
+            text: `I've received **${file.name}**. What would you like me to do with this document?\n\nYou can ask me to:\n- **Summarize** the key points\n- **Identify risks** or liabilities\n- **Extract dates** and deadlines\n- Ask any specific question about it`,
+            timestamp: new Date()
+        };
+
+        setMessages(prev => [...prev, userMsg, aiPrompt]);
+
         // Reset file input so the same file can be re-uploaded if needed
         if (fileInputRef.current) fileInputRef.current.value = '';
     };

@@ -26,37 +26,44 @@ const MODEL_NAME = "gemini-1.5-flash"; // Or 'gemini-pro'
  * @param {Array} history - Previous messages [{ role: 'user'|'model', parts: string }]
  * @param {string} currentMessage - The new user query
  * @param {string} [role] - Optional user role context (e.g. 'student')
+ * @param {Array} [jurisdictions] - Optional array of jurisdiction codes (e.g. ['pak', 'us'])
+ * @param {number} [outputStyle] - Optional 0-100 slider value (0=creative, 100=precise)
  */
-async function generateChatResponse(history, currentMessage, role = 'general') {
+async function generateChatResponse(history, currentMessage, role = 'general', jurisdictions = [], outputStyle = 50) {
     if (!process.env.GEMINI_API_KEY) {
         throw new Error("GEMINI_API_KEY is not set in backend .env");
     }
 
     const model = genAI.getGenerativeModel({ model: MODEL_NAME });
 
-    // 1. Construct the chat session
+    // Temperature based on output style (0 = creative = 0.9, 100 = precise = 0.3)
+    const temperature = 0.9 - (outputStyle / 100) * 0.6; // Ranges from 0.3 to 0.9
+
     const chat = model.startChat({
         history: formatHistoryForGemini(history),
         generationConfig: {
             maxOutputTokens: 2000,
-            temperature: 0.7, // Balances creativity with precision
+            temperature: temperature,
         },
     });
 
-    // 2. Prepend System Prompt logic (Context Injection)
-    // Since startChat history is strictly user/model, we often inject system instructions 
-    // into the *first* message or assume the model has been tuned. 
-    // For 1.5 Flash/Pro via API, we can just prepend it to the current message context 
-    // or rely on the `systemInstruction` param (if supported by specific SDK version) or just inject it.
-
-    // Simple Injection Strategy:
-    const specificInstruction = role === 'student' ? 'The user is a Law Student. Teach them.'
+    // Role context
+    const roleInstruction = role === 'student' ? 'The user is a Law Student. Teach them.'
         : role === 'entrepreneur' ? 'The user is an Entrepreneur. Focus on business risks.'
             : '';
 
-    const fullMessage = `${BASE_SYSTEM_PROMPT}\n\n[CONTEXT: ${specificInstruction}]\n\nUser Query: ${currentMessage}`;
+    // Jurisdiction context
+    const jurisdictionMap = {
+        pak: 'Pakistan (Federal/Provincial Law, Constitution of Pakistan 1973)',
+        us: 'United States (Federal and State Law, US Constitution)',
+        uk: 'United Kingdom (England & Wales, Common Law)'
+    };
+    const jurisdictionContext = jurisdictions.length > 0
+        ? `Primary Jurisdictions: ${jurisdictions.map(j => jurisdictionMap[j] || j).join(', ')}`
+        : '';
 
-    // 3. Send Message
+    const fullMessage = `${BASE_SYSTEM_PROMPT}\n\n[CONTEXT: ${roleInstruction} ${jurisdictionContext}]\n\nUser Query: ${currentMessage}`;
+
     const result = await chat.sendMessage(fullMessage);
     const response = await result.response;
     const text = response.text();
