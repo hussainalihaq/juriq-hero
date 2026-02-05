@@ -49,6 +49,31 @@ const Dashboard: React.FC = () => {
         getUser();
     }, [navigate]);
 
+    // Load messages from localStorage on mount
+    useEffect(() => {
+        const saved = localStorage.getItem('juriq_chat_history');
+        if (saved) {
+            try {
+                const parsed = JSON.parse(saved);
+                // Restore timestamp as Date objects
+                const restored = parsed.map((m: any) => ({
+                    ...m,
+                    timestamp: new Date(m.timestamp)
+                }));
+                setMessages(restored);
+            } catch (e) {
+                console.error('Failed to load chat history:', e);
+            }
+        }
+    }, []);
+
+    // Save messages to localStorage whenever they change
+    useEffect(() => {
+        if (messages.length > 0) {
+            localStorage.setItem('juriq_chat_history', JSON.stringify(messages));
+        }
+    }, [messages]);
+
     const handleUploadClick = () => {
         fileInputRef.current?.click();
     };
@@ -156,6 +181,7 @@ const Dashboard: React.FC = () => {
     const handleNewChat = () => {
         if (messages.length > 0 && window.confirm("Start a new chat? Current history will be cleared.")) {
             setMessages([]);
+            localStorage.removeItem('juriq_chat_history');
         }
     };
 
