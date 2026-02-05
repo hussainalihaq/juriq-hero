@@ -172,6 +172,11 @@ const Login = () => {
                                     </button>
                                 </div>
                             </div>
+
+                            <div className="flex justify-end relative z-10">
+                                <Link to="/forgot-password" className="text-sm text-slate-500 hover:text-primary transition-colors">Forgot password?</Link>
+                            </div>
+
                             <div className="pt-4">
                                 <button className="btn-primary w-full flex items-center justify-center px-4 py-4 rounded-lg bg-navy-deep text-white font-bold text-sm tracking-wide hover:bg-primary shadow-lg" type="submit" disabled={loading}>
                                     {loading ? 'Logging in...' : 'Log In'}

@@ -69,7 +69,7 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({ className }) => {
 
             {/* Activity Section */}
             <div className="p-6 flex-1 overflow-y-auto">
-                <h3 className="text-xs font-bold text-text-bright mb-4 flex items-center gap-2 uppercase tracking-wider">
+                <h3 className="text-xs font-bold text-slate-900 dark:text-text-bright mb-4 flex items-center gap-2 uppercase tracking-wider">
                     <span className="material-symbols-outlined text-lg text-primary">history</span>
                     Activity
                 </h3>
@@ -78,10 +78,10 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({ className }) => {
 
                     {activities.length === 0 ? (
                         <div className="relative">
-                            <div className={`absolute -left-[23px] top-1 w-3 h-3 rounded-full ring-4 ring-midnight-card bg-slate-500`}></div>
-                            <p className="text-xs font-bold text-slate-200">System Ready</p>
+                            <div className={`absolute -left-[23px] top-1 w-3 h-3 rounded-full ring-4 ring-white dark:ring-midnight-card bg-slate-400 dark:bg-slate-500`}></div>
+                            <p className="text-xs font-bold text-slate-700 dark:text-slate-200">System Ready</p>
                             <p className="text-[11px] text-slate-500 mt-1 leading-relaxed">Juriq is ready for your first case.</p>
-                            <p className="text-[10px] text-slate-600 mt-1.5 font-mono">NOW</p>
+                            <p className="text-[10px] text-slate-400 dark:text-slate-600 mt-1.5 font-mono">NOW</p>
                         </div>
                     ) : (
                         activities.map(activity => (

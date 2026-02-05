@@ -157,6 +157,7 @@ const Dashboard: React.FC = () => {
                 userEmail={user?.email}
                 userName={user?.user_metadata?.full_name}
                 onUploadClick={handleUploadClick}
+                onCollapse={() => setShowLeftSidebar(false)}
             />
 
             {/* Main Content */}
@@ -165,15 +166,15 @@ const Dashboard: React.FC = () => {
                 {/* Header (Desktop) */}
                 <header className="hidden md:flex h-16 items-center justify-between px-6 border-b border-midnight-border bg-midnight-bg/80 backdrop-blur-md z-10 shrink-0">
                     <div className="flex items-center gap-4">
-                        <button
-                            onClick={() => setShowLeftSidebar(!showLeftSidebar)}
-                            className={`text-slate-500 hover:text-white transition-colors ${!showLeftSidebar && 'bg-white/5 p-1 rounded'}`}
-                            title="Toggle Sidebar"
-                        >
-                            <span className="material-symbols-outlined">
-                                {showLeftSidebar ? 'dock_to_left' : 'dock_to_right'}
-                            </span>
-                        </button>
+                        {!showLeftSidebar && (
+                            <button
+                                onClick={() => setShowLeftSidebar(true)}
+                                className="text-slate-500 hover:text-slate-900 dark:text-slate-500 dark:hover:text-white transition-colors"
+                                title="Open Sidebar"
+                            >
+                                <span className="material-symbols-outlined">dock_to_right</span>
+                            </button>
+                        )}
 
                         <button
                             onClick={handleNewChat}

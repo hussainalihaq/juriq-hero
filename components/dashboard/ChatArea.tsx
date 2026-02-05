@@ -27,10 +27,11 @@ export const ChatArea: React.FC<ChatAreaProps> = ({ messages, isTyping, onSugges
             {messages.length === 0 && (
                 <div className="h-full flex flex-col items-center justify-center text-center select-none pb-20">
                     {/* Interactive Icon Animation */}
+                    {/* Interactive Icon Animation */}
                     <div className="relative mb-8 group animate-slide-up">
-                        <div className="absolute inset-0 bg-primary/20 blur-2xl rounded-full animate-pulse-slow"></div>
-                        <div className="w-20 h-20 bg-gradient-to-b from-white to-slate-200 text-midnight-bg rounded-2xl flex items-center justify-center relative shadow-glow transform transition-transform duration-700 hover:scale-105 hover:rotate-3 p-4">
-                            <svg viewBox="0 0 96 96" xmlns="http://www.w3.org/2000/svg" className="w-full h-full text-midnight-bg">
+                        <div className="absolute inset-0 bg-primary/20 blur-2xl rounded-full animate-pulse-slow opacity-50 dark:opacity-100"></div>
+                        <div className="w-20 h-20 rounded-2xl flex items-center justify-center relative transform transition-transform duration-700 hover:scale-105 hover:rotate-3 p-4">
+                            <svg viewBox="0 0 96 96" xmlns="http://www.w3.org/2000/svg" className="w-full h-full text-primary dark:text-white drop-shadow-lg">
                                 <defs>
                                     <mask id="logo-mask-chat">
                                         <rect width="24" height="24" fill="white" />
@@ -46,9 +47,9 @@ export const ChatArea: React.FC<ChatAreaProps> = ({ messages, isTyping, onSugges
                     </div>
 
                     <div className="animate-slide-up" style={{ animationDelay: '0.1s' }}>
-                        <h2 className="text-4xl md:text-5xl font-bold text-white mb-4 tracking-tight leading-tight">
+                        <h2 className="text-4xl md:text-5xl font-bold text-slate-900 dark:text-white mb-4 tracking-tight leading-tight transition-colors">
                             Understand your <br />
-                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-white to-slate-400 italic">legal world.</span>
+                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-purple-600 dark:from-white dark:to-slate-400 italic">legal world.</span>
                         </h2>
                         <p className="text-slate-400 max-w-lg mx-auto leading-relaxed text-sm md:text-base">
                             The high-fidelity intelligence platform for elite legal professional analysis.
@@ -60,7 +61,7 @@ export const ChatArea: React.FC<ChatAreaProps> = ({ messages, isTyping, onSugges
                             <button
                                 key={s.text}
                                 onClick={() => onSuggestionClick(s.text)}
-                                className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-white/5 border border-white/10 text-sm font-medium text-slate-300 shadow-sm hover:bg-white/10 hover:border-primary/40 hover:text-white transition-all active:scale-95 group"
+                                className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-white border border-slate-200 text-slate-600 dark:bg-white/5 dark:border-white/10 dark:text-slate-300 shadow-sm hover:border-primary/40 hover:text-primary dark:hover:text-white transition-all active:scale-95 group"
                             >
                                 <span className="material-symbols-outlined text-lg text-primary/70 group-hover:text-primary transition-colors">{s.icon}</span>
                                 {s.text}

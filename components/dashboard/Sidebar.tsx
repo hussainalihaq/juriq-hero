@@ -5,17 +5,18 @@ interface SidebarProps {
     userEmail?: string;
     userName?: string;
     onUploadClick?: () => void;
+    onCollapse?: () => void;
     className?: string; // Add className prop
 }
 
-export const Sidebar: React.FC<SidebarProps> = ({ userEmail, userName, onUploadClick, className }) => {
+export const Sidebar: React.FC<SidebarProps> = ({ userEmail, userName, onUploadClick, onCollapse, className }) => {
     const navigate = useNavigate();
 
     return (
         <aside className={`w-[280px] flex flex-col bg-white dark:bg-midnight-card border-r border-slate-200 dark:border-midnight-border shrink-0 text-slate-500 dark:text-text-dim h-full transition-all duration-300 ${className || 'hidden md:flex'}`}>
             {/* Brand */}
-            <div className="p-6 cursor-pointer" onClick={() => navigate('/')}>
-                <div className="flex items-center gap-3 mb-8">
+            <div className="p-6 flex items-center justify-between">
+                <div className="flex items-center gap-3">
                     <div className="w-8 h-8 text-slate-900 dark:text-white flex items-center justify-center transition-colors">
                         <svg viewBox="0 0 96 96" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
                             <defs>
@@ -32,6 +33,16 @@ export const Sidebar: React.FC<SidebarProps> = ({ userEmail, userName, onUploadC
                     </div>
                     <h1 className="text-xl font-bold tracking-tight text-slate-900 dark:text-white transition-colors">juriq</h1>
                 </div>
+
+                {onCollapse && (
+                    <button
+                        onClick={onCollapse}
+                        className="text-slate-400 hover:text-slate-700 dark:text-slate-500 dark:hover:text-white transition-colors"
+                        title="Collapse Sidebar"
+                    >
+                        <span className="material-symbols-outlined text-xl">dock_to_left</span>
+                    </button>
+                )}
             </div>
 
             {/* Navigation */}
