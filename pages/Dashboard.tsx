@@ -15,6 +15,11 @@ const Dashboard: React.FC = () => {
     const [user, setUser] = useState<any>(null);
     const [messages, setMessages] = useState<Message[]>([]);
     const [isTyping, setIsTyping] = useState(false);
+
+    // Sidebar Visibility State (Desktop)
+    const [showLeftSidebar, setShowLeftSidebar] = useState(true);
+    const [showRightSidebar, setShowRightSidebar] = useState(true);
+
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
     useEffect(() => {
@@ -146,7 +151,9 @@ const Dashboard: React.FC = () => {
                 </div>
             )}
 
+            {/* Desktop Left Sidebar */}
             <Sidebar
+                className={`${showLeftSidebar ? 'hidden md:flex' : 'hidden'} `}
                 userEmail={user?.email}
                 userName={user?.user_metadata?.full_name}
                 onUploadClick={handleUploadClick}
@@ -157,7 +164,17 @@ const Dashboard: React.FC = () => {
 
                 {/* Header (Desktop) */}
                 <header className="hidden md:flex h-16 items-center justify-between px-6 border-b border-midnight-border bg-midnight-bg/80 backdrop-blur-md z-10 shrink-0">
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-4">
+                        <button
+                            onClick={() => setShowLeftSidebar(!showLeftSidebar)}
+                            className={`text-slate-500 hover:text-white transition-colors ${!showLeftSidebar && 'bg-white/5 p-1 rounded'}`}
+                            title="Toggle Sidebar"
+                        >
+                            <span className="material-symbols-outlined">
+                                {showLeftSidebar ? 'dock_to_left' : 'dock_to_right'}
+                            </span>
+                        </button>
+
                         <button
                             onClick={handleNewChat}
                             className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/5 text-xs font-medium text-text-dim hover:text-white hover:bg-white/10 transition-all cursor-pointer select-none"
@@ -171,6 +188,17 @@ const Dashboard: React.FC = () => {
                         <div className="px-3 py-1 bg-gradient-to-r from-primary/20 to-purple-500/20 border border-primary/30 rounded text-[10px] font-bold tracking-wider text-primary-glow uppercase shadow-glow">
                             Beta Access
                         </div>
+
+                        <button
+                            onClick={() => setShowRightSidebar(!showRightSidebar)}
+                            className={`text-slate-500 hover:text-white transition-colors xl:block hidden`}
+                            title="Toggle Activity Panel"
+                        >
+                            <span className="material-symbols-outlined">
+                                {showRightSidebar ? 'dock_to_right' : 'dock_to_left'}
+                            </span>
+                        </button>
+
                         <button
                             onClick={() => navigate('/settings')}
                             className="w-8 h-8 rounded-full hover:bg-white/5 flex items-center justify-center text-text-dim transition-colors"
@@ -192,7 +220,8 @@ const Dashboard: React.FC = () => {
 
             </main>
 
-            <RightSidebar />
+            {/* Desktop Right Sidebar */}
+            <RightSidebar className={`${showRightSidebar ? 'hidden xl:flex' : 'hidden'}`} />
         </div>
     );
 };

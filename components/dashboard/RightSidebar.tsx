@@ -1,7 +1,11 @@
 import React from 'react';
 import { Deadline, Activity } from '../../types/dashboard';
 
-export const RightSidebar: React.FC = () => {
+interface RightSidebarProps {
+    className?: string;
+}
+
+export const RightSidebar: React.FC<RightSidebarProps> = ({ className }) => {
     // Mock Data - To be replaced or managed via props/state later
     const deadlines: Deadline[] = [
         // {
@@ -34,7 +38,7 @@ export const RightSidebar: React.FC = () => {
     };
 
     return (
-        <aside className="w-80 border-l border-midnight-border bg-midnight-card shrink-0 hidden xl:flex flex-col h-full">
+        <aside className={`w-80 border-l border-midnight-border bg-midnight-card shrink-0 flex-col h-full transition-all duration-300 ${className || 'hidden xl:flex'}`}>
             {/* Deadlines Section */}
             <div className="p-6 border-b border-midnight-border">
                 <h3 className="text-xs font-bold text-text-bright mb-4 flex items-center gap-2 uppercase tracking-wider">
@@ -90,18 +94,6 @@ export const RightSidebar: React.FC = () => {
                         ))
                     )}
                 </div>
-            </div>
-
-            {/* Storage Section */}
-            <div className="p-6 mt-auto border-t border-midnight-border bg-midnight-bg/30">
-                <div className="flex items-center justify-between mb-3">
-                    <h3 className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Storage Usage</h3>
-                    <span className="text-[10px] font-bold text-primary-glow">0%</span>
-                </div>
-                <div className="w-full bg-white/5 h-1.5 rounded-full overflow-hidden">
-                    <div className="bg-gradient-to-r from-primary to-purple-500 h-full w-[0%] rounded-full shadow-[0_0_10px_rgba(99,102,241,0.5)]"></div>
-                </div>
-                <p className="text-[10px] text-slate-600 mt-2 text-right">0 GB used</p>
             </div>
         </aside>
     );

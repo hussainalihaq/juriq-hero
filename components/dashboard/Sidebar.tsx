@@ -5,13 +5,14 @@ interface SidebarProps {
     userEmail?: string;
     userName?: string;
     onUploadClick?: () => void;
+    className?: string; // Add className prop
 }
 
-export const Sidebar: React.FC<SidebarProps> = ({ userEmail, userName, onUploadClick }) => {
+export const Sidebar: React.FC<SidebarProps> = ({ userEmail, userName, onUploadClick, className }) => {
     const navigate = useNavigate();
 
     return (
-        <aside className="w-[280px] flex flex-col bg-midnight-card border-r border-midnight-border shrink-0 hidden md:flex text-text-dim h-full">
+        <aside className={`w-[280px] flex flex-col bg-midnight-card border-r border-midnight-border shrink-0 text-text-dim h-full transition-all duration-300 ${className || 'hidden md:flex'}`}>
             {/* Brand */}
             <div className="p-6 cursor-pointer" onClick={() => navigate('/')}>
                 <div className="flex items-center gap-3 mb-8">

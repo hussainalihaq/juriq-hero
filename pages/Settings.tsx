@@ -86,27 +86,6 @@ const Settings = () => {
                         </div>
                     </section>
 
-                    {/* API Configuration */}
-                    <section className="space-y-4">
-                        <h2 className="text-lg font-bold text-slate-200 border-b border-white/10 pb-2">API Configuration</h2>
-                        <div className="glass-panel p-6 rounded-xl space-y-4">
-                            <div>
-                                <label className="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">OpenAI / Gemini Key</label>
-                                <div className="flex gap-2">
-                                    <input
-                                        type="password"
-                                        placeholder="sk-..."
-                                        className="flex-1 bg-midnight-bg border border-white/10 rounded-lg px-4 py-2 text-sm text-white placeholder-slate-600 focus:outline-none focus:border-primary/50 transition-colors"
-                                    />
-                                    <button className="px-4 py-2 bg-primary text-white rounded-lg text-xs font-bold hover:bg-primary-glow transition-colors">Save</button>
-                                </div>
-                                <p className="text-[10px] text-slate-500 mt-2">
-                                    Your keys are stored locally in your browser and never sent to our servers (except when making requests to the AI provider).
-                                </p>
-                            </div>
-                        </div>
-                    </section>
-
                     {/* Danger Zone */}
                     <section className="space-y-4 pt-8">
                         <button
