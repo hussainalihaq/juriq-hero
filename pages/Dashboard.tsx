@@ -164,7 +164,7 @@ const Dashboard: React.FC = () => {
             <main className="flex-1 flex flex-col relative min-w-0 pt-16 md:pt-0">
 
                 {/* Header (Desktop) */}
-                <header className="hidden md:flex h-16 items-center justify-between px-6 border-b border-midnight-border bg-midnight-bg/80 backdrop-blur-md z-10 shrink-0">
+                <header className="hidden md:flex h-16 items-center justify-between px-6 border-b border-slate-200 dark:border-midnight-border bg-white/80 dark:bg-midnight-bg/80 backdrop-blur-md z-10 shrink-0 transition-colors duration-300">
                     <div className="flex items-center gap-4">
                         {!showLeftSidebar && (
                             <button
@@ -178,7 +178,7 @@ const Dashboard: React.FC = () => {
 
                         <button
                             onClick={handleNewChat}
-                            className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/5 text-xs font-medium text-text-dim hover:text-white hover:bg-white/10 transition-all cursor-pointer select-none"
+                            className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/5 text-xs font-medium text-slate-600 dark:text-text-dim hover:text-slate-900 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-white/10 transition-all cursor-pointer select-none"
                         >
                             <span className="material-symbols-outlined text-sm">add</span>
                             <span>New Chat</span>
@@ -186,23 +186,23 @@ const Dashboard: React.FC = () => {
                     </div>
 
                     <div className="flex items-center gap-4">
-                        <div className="px-3 py-1 bg-gradient-to-r from-primary/20 to-purple-500/20 border border-primary/30 rounded text-[10px] font-bold tracking-wider text-primary-glow uppercase shadow-glow">
+                        <div className="px-3 py-1 bg-gradient-to-r from-primary/20 to-purple-500/20 border border-primary/30 rounded text-[10px] font-bold tracking-wider text-primary uppercase shadow-glow">
                             Beta Access
                         </div>
 
-                        <button
-                            onClick={() => setShowRightSidebar(!showRightSidebar)}
-                            className={`text-slate-500 hover:text-white transition-colors xl:block hidden`}
-                            title="Toggle Activity Panel"
-                        >
-                            <span className="material-symbols-outlined">
-                                {showRightSidebar ? 'dock_to_right' : 'dock_to_left'}
-                            </span>
-                        </button>
+                        {!showRightSidebar && (
+                            <button
+                                onClick={() => setShowRightSidebar(true)}
+                                className="text-slate-500 hover:text-slate-900 dark:text-slate-500 dark:hover:text-white transition-colors xl:block hidden"
+                                title="Open Activity Panel"
+                            >
+                                <span className="material-symbols-outlined">dock_to_left</span>
+                            </button>
+                        )}
 
                         <button
                             onClick={() => navigate('/settings')}
-                            className="w-8 h-8 rounded-full hover:bg-white/5 flex items-center justify-center text-text-dim transition-colors"
+                            className="w-8 h-8 rounded-full hover:bg-slate-100 dark:hover:bg-white/5 flex items-center justify-center text-slate-500 dark:text-text-dim transition-colors"
                         >
                             <span className="material-symbols-outlined text-lg">settings</span>
                         </button>
@@ -222,7 +222,10 @@ const Dashboard: React.FC = () => {
             </main>
 
             {/* Desktop Right Sidebar */}
-            <RightSidebar className={`${showRightSidebar ? 'hidden xl:flex' : 'hidden'}`} />
+            <RightSidebar
+                className={`${showRightSidebar ? 'hidden xl:flex' : 'hidden'}`}
+                onCollapse={() => setShowRightSidebar(false)}
+            />
         </div>
     );
 };

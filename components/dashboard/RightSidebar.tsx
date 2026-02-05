@@ -3,9 +3,10 @@ import { Deadline, Activity } from '../../types/dashboard';
 
 interface RightSidebarProps {
     className?: string;
+    onCollapse?: () => void;
 }
 
-export const RightSidebar: React.FC<RightSidebarProps> = ({ className }) => {
+export const RightSidebar: React.FC<RightSidebarProps> = ({ className, onCollapse }) => {
     // Mock Data - To be replaced or managed via props/state later
     const deadlines: Deadline[] = [
         // {
@@ -41,10 +42,21 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({ className }) => {
         <aside className={`w-80 border-l border-slate-200 dark:border-midnight-border bg-white dark:bg-midnight-card shrink-0 flex-col h-full transition-all duration-300 ${className || 'hidden xl:flex'}`}>
             {/* Deadlines Section */}
             <div className="p-6 border-b border-slate-200 dark:border-midnight-border">
-                <h3 className="text-xs font-bold text-slate-900 dark:text-text-bright mb-4 flex items-center gap-2 uppercase tracking-wider">
-                    <span className="material-symbols-outlined text-primary text-base">event</span>
-                    Deadlines
-                </h3>
+                <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-xs font-bold text-slate-900 dark:text-text-bright flex items-center gap-2 uppercase tracking-wider">
+                        <span className="material-symbols-outlined text-primary text-base">event</span>
+                        Deadlines
+                    </h3>
+                    {onCollapse && (
+                        <button
+                            onClick={onCollapse}
+                            className="text-slate-400 hover:text-slate-700 dark:text-slate-500 dark:hover:text-white transition-colors"
+                            title="Collapse Sidebar"
+                        >
+                            <span className="material-symbols-outlined text-xl">dock_to_right</span>
+                        </button>
+                    )}
+                </div>
                 <div className="space-y-3">
                     {deadlines.length === 0 ? (
                         <p className="text-xs text-slate-600 italic">No upcoming deadlines.</p>
