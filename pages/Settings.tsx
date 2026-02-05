@@ -120,7 +120,16 @@ const Settings = () => {
             <main className="flex-1 flex flex-col relative min-w-0 overflow-y-auto">
                 {/* Header */}
                 <header className="h-16 flex items-center justify-between px-6 border-b border-slate-200 dark:border-midnight-border bg-white/80 dark:bg-midnight-bg/80 backdrop-blur-md z-10 shrink-0 sticky top-0">
-                    <h1 className="text-xl font-bold text-slate-900 dark:text-white tracking-tight">Settings & Preferences</h1>
+                    <div className="flex items-center gap-3">
+                        <button
+                            onClick={() => navigate('/dashboard')}
+                            className="w-8 h-8 rounded-lg hover:bg-slate-100 dark:hover:bg-white/5 flex items-center justify-center text-slate-500 dark:text-slate-400 transition-colors"
+                            title="Back to Dashboard"
+                        >
+                            <span className="material-symbols-outlined text-xl">arrow_back</span>
+                        </button>
+                        <h1 className="text-xl font-bold text-slate-900 dark:text-white tracking-tight">Settings</h1>
+                    </div>
                     <button
                         onClick={handleSavePreferences}
                         className="px-5 py-2 rounded-lg bg-primary text-white font-bold text-sm hover:bg-primary-glow transition-colors"
