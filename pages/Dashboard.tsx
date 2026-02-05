@@ -169,7 +169,7 @@ const Dashboard: React.FC = () => {
                         {!showLeftSidebar && (
                             <button
                                 onClick={() => setShowLeftSidebar(true)}
-                                className="text-slate-500 hover:text-slate-900 dark:text-slate-500 dark:hover:text-white transition-colors"
+                                className="w-8 h-8 flex items-center justify-center text-slate-500 hover:text-slate-900 dark:text-slate-500 dark:hover:text-white transition-colors"
                                 title="Open Sidebar"
                             >
                                 <span className="material-symbols-outlined">dock_to_right</span>
@@ -193,7 +193,7 @@ const Dashboard: React.FC = () => {
                         {!showRightSidebar && (
                             <button
                                 onClick={() => setShowRightSidebar(true)}
-                                className="text-slate-500 hover:text-slate-900 dark:text-slate-500 dark:hover:text-white transition-colors xl:block hidden"
+                                className="w-8 h-8 flex items-center justify-center text-slate-500 hover:text-slate-900 dark:text-slate-500 dark:hover:text-white transition-colors xl:block hidden"
                                 title="Open Activity Panel"
                             >
                                 <span className="material-symbols-outlined">dock_to_left</span>
