@@ -6,8 +6,8 @@ import { ChatArea } from '../components/dashboard/ChatArea';
 import { InputArea } from '../components/dashboard/InputArea';
 import { Message } from '../types/dashboard';
 
-// API URL: Use environment variable or default to localhost for dev
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+// API URL: Use environment variable for external backend, or empty string for same-origin Vercel serverless
+const API_URL = import.meta.env.VITE_API_URL || '';
 
 const Dashboard: React.FC = () => {
     const navigate = useNavigate();
