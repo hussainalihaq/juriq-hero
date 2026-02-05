@@ -24,6 +24,9 @@ const Dashboard: React.FC = () => {
     // Sidebar Visibility State (Desktop)
     const [showLeftSidebar, setShowLeftSidebar] = useState(true);
 
+    // Jurisdiction toggle (quick switch)
+    const [jurisdiction, setJurisdiction] = useState('pak');
+
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
     // Derive chat session from messages (for sidebar display)
@@ -93,7 +96,7 @@ const Dashboard: React.FC = () => {
         setIsTyping(true);
 
         try {
-            // 2. Call Real Backend API with user's role from Supabase metadata
+            // 2. Call Real Backend API with user's role and jurisdiction
             const userRole = user?.user_metadata?.role || 'general';
 
             const response = await fetch('http://localhost:3000/api/chat', {
@@ -102,7 +105,8 @@ const Dashboard: React.FC = () => {
                 body: JSON.stringify({
                     history: messages.map(m => ({ role: m.role === 'model' ? 'ai' : 'user', text: m.text })), // Map model -> ai for backend consistency if needed, checking backend expectation
                     message: text,
-                    role: userRole // Use role from user metadata for personalized responses
+                    role: userRole, // Use role from user metadata for personalized responses
+                    jurisdictions: [jurisdiction] // Pass selected jurisdiction
                 })
             });
 
@@ -237,9 +241,25 @@ const Dashboard: React.FC = () => {
                         </button>
                     </div>
 
-                    <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-3">
+                        {/* Jurisdiction Toggle */}
+                        <div className="flex items-center bg-slate-100 dark:bg-white/5 rounded-lg p-0.5 border border-slate-200 dark:border-white/10">
+                            {['pak', 'us', 'uk'].map((jur) => (
+                                <button
+                                    key={jur}
+                                    onClick={() => setJurisdiction(jur)}
+                                    className={`px-3 py-1.5 rounded-md text-[10px] font-bold uppercase tracking-wider transition-all ${jurisdiction === jur
+                                        ? 'bg-white dark:bg-primary text-primary dark:text-white shadow-sm'
+                                        : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-white'
+                                        }`}
+                                >
+                                    {jur}
+                                </button>
+                            ))}
+                        </div>
+
                         <div className="px-3 py-1 bg-gradient-to-r from-primary/20 to-purple-500/20 border border-primary/30 rounded text-[10px] font-bold tracking-wider text-primary uppercase shadow-glow">
-                            Beta Access
+                            Beta
                         </div>
 
                         <button

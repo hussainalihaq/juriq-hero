@@ -211,7 +211,7 @@ const SignUp = () => {
                                     >
                                         <option value="" disabled>Select your role</option>
                                         <option value="lawyer">Lawyer</option>
-                                        <option value="student">Law Student</option>
+                                        <option value="student">Student</option>
                                         <option value="corporate">Corporate Counsel</option>
                                         <option value="paralegal">Paralegal</option>
                                         <option value="entrepreneur">Entrepreneur</option>

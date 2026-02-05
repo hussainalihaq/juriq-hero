@@ -192,7 +192,7 @@ const Settings = () => {
                                     className="w-full px-4 py-3 rounded-xl bg-white dark:bg-midnight-card border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all appearance-none cursor-pointer"
                                 >
                                     <option value="lawyer">Lawyer</option>
-                                    <option value="student">Law Student</option>
+                                    <option value="student">Student</option>
                                     <option value="corporate">Corporate Counsel</option>
                                     <option value="paralegal">Paralegal</option>
                                     <option value="entrepreneur">Entrepreneur</option>

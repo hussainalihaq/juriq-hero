@@ -48,7 +48,7 @@ async function generateChatResponse(history, currentMessage, role = 'general', j
     });
 
     // Role context
-    const roleInstruction = role === 'student' ? 'The user is a Law Student. Teach them.'
+    const roleInstruction = role === 'student' ? 'The user is a Student studying law. Teach them.'
         : role === 'entrepreneur' ? 'The user is an Entrepreneur. Focus on business risks.'
             : '';
 
