@@ -12,11 +12,11 @@ export const Sidebar: React.FC<SidebarProps> = ({ userEmail, userName, onUploadC
     const navigate = useNavigate();
 
     return (
-        <aside className={`w-[280px] flex flex-col bg-midnight-card border-r border-midnight-border shrink-0 text-text-dim h-full transition-all duration-300 ${className || 'hidden md:flex'}`}>
+        <aside className={`w-[280px] flex flex-col bg-white dark:bg-midnight-card border-r border-slate-200 dark:border-midnight-border shrink-0 text-slate-500 dark:text-text-dim h-full transition-all duration-300 ${className || 'hidden md:flex'}`}>
             {/* Brand */}
             <div className="p-6 cursor-pointer" onClick={() => navigate('/')}>
                 <div className="flex items-center gap-3 mb-8">
-                    <div className="w-8 h-8 text-white flex items-center justify-center">
+                    <div className="w-8 h-8 text-slate-900 dark:text-white flex items-center justify-center transition-colors">
                         <svg viewBox="0 0 96 96" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
                             <defs>
                                 <mask id="logo-mask-sidebar">
@@ -30,7 +30,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ userEmail, userName, onUploadC
                             </g>
                         </svg>
                     </div>
-                    <h1 className="text-xl font-bold tracking-tight text-white">juriq</h1>
+                    <h1 className="text-xl font-bold tracking-tight text-slate-900 dark:text-white transition-colors">juriq</h1>
                 </div>
             </div>
 
@@ -40,7 +40,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ userEmail, userName, onUploadC
                 {/* Recent Conversations */}
                 <div>
                     <h3 className="text-[10px] font-bold text-slate-600 uppercase tracking-widest px-2 mb-3">Recent Conversations</h3>
-                    <div className="px-2 py-3 text-sm text-slate-600 italic border border-dashed border-white/5 rounded-lg text-center">
+                    <div className="px-2 py-3 text-sm text-slate-400 dark:text-slate-600 italic border border-dashed border-slate-200 dark:border-white/5 rounded-lg text-center transition-colors">
                         No history yet.
                     </div>
                 </div>
@@ -50,9 +50,9 @@ export const Sidebar: React.FC<SidebarProps> = ({ userEmail, userName, onUploadC
                     <h3 className="text-[10px] font-bold text-slate-600 uppercase tracking-widest px-2 mb-3">Uploaded Documents</h3>
                     <button
                         onClick={onUploadClick}
-                        className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-lg border border-white/10 text-slate-400 hover:text-white hover:border-primary/50 hover:bg-white/5 transition-all text-sm group"
+                        className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-lg border border-slate-200 dark:border-white/10 text-slate-500 dark:text-slate-400 hover:text-primary dark:hover:text-white hover:border-primary/50 hover:bg-slate-50 dark:hover:bg-white/5 transition-all text-sm group"
                     >
-                        <span className="material-symbols-outlined text-lg text-slate-500 group-hover:text-primary transition-colors">upload_file</span>
+                        <span className="material-symbols-outlined text-lg text-slate-400 dark:text-slate-500 group-hover:text-primary transition-colors">upload_file</span>
                         <span>Upload New</span>
                     </button>
                 </div>
@@ -63,18 +63,18 @@ export const Sidebar: React.FC<SidebarProps> = ({ userEmail, userName, onUploadC
             <div className="p-4 border-t border-midnight-border">
                 <div
                     onClick={() => navigate('/settings')}
-                    className="flex items-center gap-3 p-2 rounded-lg hover:bg-white/5 cursor-pointer transition-colors group"
+                    className="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-white/5 cursor-pointer transition-colors group"
                 >
                     <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-primary to-purple-600 flex items-center justify-center text-white text-xs font-bold shadow-lg shadow-primary/20 uppercase">
                         {userName ? userName.charAt(0) : (userEmail?.charAt(0) || 'U')}
                     </div>
                     <div className="flex-1 overflow-hidden">
-                        <p className="text-sm font-bold text-white group-hover:text-primary-glow transition-colors truncate" title={userEmail}>
+                        <p className="text-sm font-bold text-slate-700 dark:text-white group-hover:text-primary transition-colors truncate" title={userEmail}>
                             {userName || userEmail?.split('@')[0] || 'User'}
                         </p>
                         <p className="text-xs text-slate-500 truncate">Free Plan</p>
                     </div>
-                    <button className="text-slate-500 hover:text-white transition-opacity opacity-0 group-hover:opacity-100">
+                    <button className="text-slate-400 dark:text-slate-500 hover:text-slate-700 dark:hover:text-white transition-opacity opacity-0 group-hover:opacity-100">
                         <span className="material-symbols-outlined text-lg">settings</span>
                     </button>
                 </div>

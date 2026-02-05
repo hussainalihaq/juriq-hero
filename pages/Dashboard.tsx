@@ -110,7 +110,7 @@ const Dashboard: React.FC = () => {
     };
 
     return (
-        <div className="flex h-screen overflow-hidden bg-midnight-bg text-text-bright font-display selection:bg-primary/30 selection:text-white">
+        <div className="flex h-screen overflow-hidden bg-off-white dark:bg-midnight-bg text-slate-900 dark:text-text-bright font-display selection:bg-primary/30 selection:text-white transition-colors duration-300">
             <input
                 type="file"
                 ref={fileInputRef}

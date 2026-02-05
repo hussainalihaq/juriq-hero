@@ -38,12 +38,12 @@ export const RightSidebar: React.FC<RightSidebarProps> = ({ className }) => {
     };
 
     return (
-        <aside className={`w-80 border-l border-midnight-border bg-midnight-card shrink-0 flex-col h-full transition-all duration-300 ${className || 'hidden xl:flex'}`}>
+        <aside className={`w-80 border-l border-slate-200 dark:border-midnight-border bg-white dark:bg-midnight-card shrink-0 flex-col h-full transition-all duration-300 ${className || 'hidden xl:flex'}`}>
             {/* Deadlines Section */}
-            <div className="p-6 border-b border-midnight-border">
-                <h3 className="text-xs font-bold text-text-bright mb-4 flex items-center gap-2 uppercase tracking-wider">
-                    <span className="material-symbols-outlined text-lg text-primary">calendar_month</span>
-                    Upcoming
+            <div className="p-6 border-b border-slate-200 dark:border-midnight-border">
+                <h3 className="text-xs font-bold text-slate-900 dark:text-text-bright mb-4 flex items-center gap-2 uppercase tracking-wider">
+                    <span className="material-symbols-outlined text-primary text-base">event</span>
+                    Deadlines
                 </h3>
                 <div className="space-y-3">
                     {deadlines.length === 0 ? (

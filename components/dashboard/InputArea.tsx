@@ -18,16 +18,16 @@ export const InputArea: React.FC<InputAreaProps> = ({ onSend, disabled, onUpload
     };
 
     return (
-        <div className="absolute bottom-0 left-0 right-0 p-6 md:p-10 z-20 flex flex-col items-center bg-gradient-to-t from-midnight-bg via-midnight-bg/90 to-transparent">
+        <div className="absolute bottom-0 left-0 right-0 p-6 md:p-10 z-20 flex flex-col items-center bg-gradient-to-t from-off-white via-off-white/90 to-transparent dark:from-midnight-bg dark:via-midnight-bg/90 dark:to-transparent transition-colors duration-300">
 
             <div className="w-full max-w-3xl relative">
-                <div className="glass-input rounded-xl p-1.5 flex items-center gap-2 shadow-glass transition-all duration-300 focus-within:bg-white/5 focus-within:border-white/20 group">
+                <div className="bg-white/50 dark:bg-white/5 border border-slate-200 dark:border-white/10 backdrop-blur-md rounded-xl p-1.5 flex items-center gap-2 shadow-xl dark:shadow-glass transition-all duration-300 focus-within:bg-white dark:focus-within:bg-white/10 focus-within:border-primary/50 dark:focus-within:border-white/20 group">
 
                     {/* Add Button */}
                     <button
                         type="button"
                         onClick={onUploadClick}
-                        className="p-3 text-slate-500 hover:text-white hover:bg-white/10 transition-all rounded-lg"
+                        className="p-3 text-slate-400 hover:text-primary dark:text-slate-500 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/10 transition-all rounded-lg"
                         title="Add Document"
                     >
                         <span className="material-symbols-outlined text-2xl">add_circle</span>
@@ -36,7 +36,7 @@ export const InputArea: React.FC<InputAreaProps> = ({ onSend, disabled, onUpload
                     {/* Input */}
                     <form onSubmit={handleSubmit} className="flex-1 flex py-2">
                         <input
-                            className="flex-1 bg-transparent border-none focus:ring-0 text-white placeholder-slate-500 text-lg px-2 font-light focus:outline-none"
+                            className="flex-1 bg-transparent border-none focus:ring-0 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 text-lg px-2 font-light focus:outline-none transition-colors"
                             placeholder="Ask anything about your documents..."
                             type="text"
                             value={text}
@@ -50,7 +50,7 @@ export const InputArea: React.FC<InputAreaProps> = ({ onSend, disabled, onUpload
                         onClick={handleSubmit}
                         disabled={!text.trim() || disabled}
                         className={`px-4 py-2 rounded-lg flex items-center gap-2 transition-all active:scale-95 font-medium text-sm
-                ${text.trim() && !disabled ? 'bg-white text-midnight-bg hover:bg-slate-200' : 'bg-white text-midnight-bg hover:bg-slate-200 opacity-50 cursor-not-allowed'}
+                ${text.trim() && !disabled ? 'bg-primary text-white hover:bg-primary-glow dark:bg-white dark:text-midnight-bg dark:hover:bg-slate-200' : 'bg-slate-100 text-slate-400 dark:bg-white dark:text-midnight-bg opacity-50 cursor-not-allowed'}
             `}>
                         <span>Run Analysis</span>
                         <span className="material-symbols-outlined text-sm">arrow_forward</span>

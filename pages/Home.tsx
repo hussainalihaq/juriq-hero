@@ -5,12 +5,10 @@ import Footer from '../components/Footer';
 import Modal from '../components/Modal';
 import BackgroundElements from '../components/BackgroundElements';
 
-interface HomeProps {
-    darkMode: boolean;
-    toggleDarkMode: () => void;
-}
+import { useTheme } from '../context/ThemeContext';
 
-const Home: React.FC<HomeProps> = ({ darkMode, toggleDarkMode }) => {
+const Home: React.FC = () => {
+    const { theme, toggleTheme } = useTheme();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [prefilledEmail, setPrefilledEmail] = useState('');
 
@@ -30,8 +28,8 @@ const Home: React.FC<HomeProps> = ({ darkMode, toggleDarkMode }) => {
 
             <Header
                 onGetAccess={() => handleOpenModal()}
-                darkMode={darkMode}
-                toggleDarkMode={toggleDarkMode}
+                darkMode={theme === 'dark'}
+                toggleDarkMode={toggleTheme}
             />
 
             <main className="relative flex flex-col items-center justify-center min-h-[calc(100vh-64px)] px-6 pt-12 pb-24 home-content">
