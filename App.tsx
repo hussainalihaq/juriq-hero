@@ -5,6 +5,8 @@ import SignUp from './pages/SignUp';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 
+import { Analytics } from "@vercel/analytics/react"
+
 const App: React.FC = () => {
   const [darkMode, setDarkMode] = useState(true);
 
@@ -21,14 +23,17 @@ const App: React.FC = () => {
   };
 
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Home darkMode={darkMode} toggleDarkMode={toggleDarkMode} />} />
-        <Route path="/signup" element={<SignUp />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-      </Routes>
-    </Router>
+    <>
+      <Router>
+        <Routes>
+          <Route path="/" element={<Home darkMode={darkMode} toggleDarkMode={toggleDarkMode} />} />
+          <Route path="/signup" element={<SignUp />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+        </Routes>
+      </Router>
+      <Analytics />
+    </>
   );
 };
 
