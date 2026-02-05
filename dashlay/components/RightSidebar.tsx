@@ -1,0 +1,116 @@
+import React from 'react';
+import { Deadline, Activity } from '../types';
+
+export const RightSidebar: React.FC = () => {
+  const deadlines: Deadline[] = [
+    {
+      id: '1',
+      title: 'Submit Opposing Brief',
+      date: 'Oct 24',
+      day: '24',
+      month: 'OCT',
+      urgent: true
+    },
+    {
+      id: '2',
+      title: 'Pre-Trial Conference',
+      date: 'Oct 27',
+      day: '27',
+      month: 'OCT',
+      time: '9:00 AM • Judge Martinez'
+    }
+  ];
+
+  const activities: Activity[] = [
+    {
+      id: '1',
+      title: 'Drafted Motion',
+      description: 'Refutation paragraph generated based on new case law.',
+      time: '10:24 AM',
+      type: 'draft'
+    },
+    {
+      id: '2',
+      title: 'Document Analysis',
+      description: 'Smith_Deposition_Final.pdf analyzed for inconsistencies.',
+      time: '09:15 AM',
+      type: 'analysis'
+    },
+    {
+      id: '3',
+      title: 'New Case Created',
+      description: 'Acme Corp v. Beta Logistics initialized.',
+      time: 'YESTERDAY',
+      type: 'create'
+    }
+  ];
+
+  const getIconColor = (type: Activity['type']) => {
+    switch (type) {
+      case 'draft': return 'bg-primary shadow-[0_0_10px_rgba(99,102,241,0.5)]';
+      case 'analysis': return 'bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)]';
+      case 'create': return 'bg-slate-500';
+      default: return 'bg-slate-500';
+    }
+  };
+
+  return (
+    <aside className="w-80 border-l border-midnight-border bg-midnight-card shrink-0 hidden xl:flex flex-col">
+      {/* Deadlines Section */}
+      <div className="p-6 border-b border-midnight-border">
+        <h3 className="text-xs font-bold text-text-bright mb-4 flex items-center gap-2 uppercase tracking-wider">
+          <span className="material-symbols-outlined text-lg text-primary">calendar_month</span>
+          Upcoming
+        </h3>
+        <div className="space-y-3">
+          {deadlines.map(d => (
+            <div key={d.id} className={`p-3 rounded-xl flex items-center gap-3 border transition-colors cursor-pointer group ${d.urgent ? 'bg-red-500/10 border-red-500/20' : 'bg-midnight-bg border-midnight-border hover:border-primary/40'}`}>
+              <div className={`flex flex-col items-center justify-center w-12 h-12 rounded-lg shrink-0 ${d.urgent ? 'bg-red-500 text-white' : 'bg-white/5 text-slate-400 group-hover:text-white transition-colors'}`}>
+                <span className="text-[10px] font-bold uppercase leading-none opacity-70">{d.month}</span>
+                <span className="text-lg font-black leading-none">{d.day}</span>
+              </div>
+              <div className="overflow-hidden">
+                <p className={`text-xs font-bold truncate ${d.urgent ? 'text-red-400' : 'text-slate-200'}`}>{d.title}</p>
+                <p className={`text-[10px] ${d.urgent ? 'text-red-400/70' : 'text-slate-500'}`}>
+                   {d.urgent ? 'Due in 2 hours' : d.time || d.date}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Activity Section */}
+      <div className="p-6 flex-1 overflow-y-auto">
+        <h3 className="text-xs font-bold text-text-bright mb-4 flex items-center gap-2 uppercase tracking-wider">
+            <span className="material-symbols-outlined text-lg text-primary">history</span>
+            Activity
+        </h3>
+        <div className="relative pl-6 space-y-7">
+          <div className="absolute left-[7px] top-2 bottom-2 w-px bg-midnight-border"></div>
+          
+          {activities.map(activity => (
+             <div key={activity.id} className={`relative ${activity.time === 'YESTERDAY' ? 'opacity-50' : ''}`}>
+                <div className={`absolute -left-[23px] top-1 w-3 h-3 rounded-full ring-4 ring-midnight-card ${getIconColor(activity.type)}`}></div>
+                <p className="text-xs font-bold text-slate-200">{activity.title}</p>
+                <p className="text-[11px] text-slate-500 mt-1 leading-relaxed">{activity.description}</p>
+                <p className="text-[10px] text-slate-600 mt-1.5 font-mono">{activity.time}</p>
+             </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Storage Section */}
+      <div className="p-6 mt-auto border-t border-midnight-border bg-midnight-bg/30">
+        <div className="flex items-center justify-between mb-3">
+          <h3 className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Storage Usage</h3>
+          <span className="text-[10px] font-bold text-primary-glow">82%</span>
+        </div>
+        <div className="w-full bg-white/5 h-1.5 rounded-full overflow-hidden">
+          <div className="bg-gradient-to-r from-primary to-purple-500 h-full w-[82%] rounded-full shadow-[0_0_10px_rgba(99,102,241,0.5)]"></div>
+        </div>
+        <p className="text-[10px] text-slate-600 mt-2 text-right">16.4 GB used</p>
+      </div>
+    </aside>
+  );
+};

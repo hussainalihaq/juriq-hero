@@ -42,30 +42,16 @@ const Dashboard: React.FC = () => {
         const file = e.target.files?.[0];
         if (!file) return;
 
-        // Mock upload logic
+        // Add a simple message indicating file was uploaded. No auto-response.
         const userMsg: Message = {
             id: Date.now().toString(),
             role: 'user',
-            text: `Uploaded: ${file.name}`,
+            text: `📎 Uploaded: **${file.name}**`,
             timestamp: new Date()
         };
         setMessages(prev => [...prev, userMsg]);
-
-        setIsTyping(true);
-        setTimeout(() => {
-            const aiMsg: Message = {
-                id: (Date.now() + 1).toString(),
-                role: 'model',
-                text: `I've received **${file.name}**. I'm analyzing it for key clauses and risks now.`,
-                timestamp: new Date(),
-                actions: [
-                    { label: 'Summarize', icon: 'segment', actionId: 'summarize' },
-                    { label: 'Extract Dates', icon: 'calendar_month', actionId: 'dates' }
-                ]
-            };
-            setMessages(prev => [...prev, aiMsg]);
-            setIsTyping(false);
-        }, 1500);
+        // Reset file input so the same file can be re-uploaded if needed
+        if (fileInputRef.current) fileInputRef.current.value = '';
     };
 
     const handleSend = useCallback(async (text: string) => {

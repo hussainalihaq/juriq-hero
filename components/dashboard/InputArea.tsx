@@ -37,7 +37,7 @@ export const InputArea: React.FC<InputAreaProps> = ({ onSend, disabled, onUpload
                     <form onSubmit={handleSubmit} className="flex-1 flex py-2">
                         <input
                             className="flex-1 bg-transparent border-none focus:ring-0 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 text-lg px-2 font-light focus:outline-none transition-colors"
-                            placeholder="Ask anything about your documents..."
+                            placeholder="Ask Juriq anything..."
                             type="text"
                             value={text}
                             onChange={(e) => setText(e.target.value)}
@@ -52,8 +52,8 @@ export const InputArea: React.FC<InputAreaProps> = ({ onSend, disabled, onUpload
                         className={`px-4 py-2 rounded-lg flex items-center gap-2 transition-all active:scale-95 font-medium text-sm
                 ${text.trim() && !disabled ? 'bg-primary text-white hover:bg-primary-glow dark:bg-white dark:text-midnight-bg dark:hover:bg-slate-200' : 'bg-slate-100 text-slate-400 dark:bg-white dark:text-midnight-bg opacity-50 cursor-not-allowed'}
             `}>
-                        <span>Run Analysis</span>
-                        <span className="material-symbols-outlined text-sm">arrow_forward</span>
+                        <span>Send</span>
+                        <span className="material-symbols-outlined text-sm">send</span>
                     </button>
                 </div>
             </div>
