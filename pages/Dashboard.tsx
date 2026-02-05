@@ -19,6 +19,9 @@ const Dashboard: React.FC = () => {
     // Document & History Tracking
     const [uploadedDocuments, setUploadedDocuments] = useState<{ id: string; name: string; size: number; uploadedAt: Date }[]>([]);
 
+    // Attachment Preview (shown in InputArea before sending)
+    const [attachedFile, setAttachedFile] = useState<{ name: string; type: string; size: number } | null>(null);
+
     // Sidebar Visibility State (Desktop)
     const [showLeftSidebar, setShowLeftSidebar] = useState(true);
     const [showRightSidebar, setShowRightSidebar] = useState(true);
@@ -53,25 +56,14 @@ const Dashboard: React.FC = () => {
         const file = e.target.files?.[0];
         if (!file) return;
 
-        // 1. Show the user's upload as a message
-        const userMsg: Message = {
-            id: Date.now().toString(),
-            role: 'user',
-            text: `📎 Uploaded: **${file.name}**`,
-            timestamp: new Date()
-        };
+        // Show attachment preview in InputArea (like Claude)
+        setAttachedFile({
+            name: file.name,
+            type: file.type || 'application/octet-stream',
+            size: file.size
+        });
 
-        // 2. Show AI response asking what to do (like Claude)
-        const aiPrompt: Message = {
-            id: (Date.now() + 1).toString(),
-            role: 'model',
-            text: `I've received **${file.name}**. What would you like me to do with this document?\n\nYou can ask me to:\n- **Summarize** the key points\n- **Identify risks** or liabilities\n- **Extract dates** and deadlines\n- Ask any specific question about it`,
-            timestamp: new Date()
-        };
-
-        setMessages(prev => [...prev, userMsg, aiPrompt]);
-
-        // Track the document for history
+        // Track the document for sidebar history
         setUploadedDocuments(prev => [{
             id: Date.now().toString(),
             name: file.name,
@@ -84,13 +76,20 @@ const Dashboard: React.FC = () => {
     };
 
     const handleSend = useCallback(async (text: string) => {
-        // 1. Add User Message
+        // 1. Add User Message (include attachment mention if present)
+        const messageText = attachedFile
+            ? `📎 **${attachedFile.name}**\n\n${text}`
+            : text;
+
         const userMsg: Message = {
             id: Date.now().toString(),
             role: 'user',
-            text,
+            text: messageText,
             timestamp: new Date()
         };
+
+        // Clear attachment after sending
+        setAttachedFile(null);
 
         setMessages(prev => [...prev, userMsg]);
         setIsTyping(true);
@@ -279,16 +278,6 @@ const Dashboard: React.FC = () => {
                             Beta Access
                         </div>
 
-                        {!showRightSidebar && (
-                            <button
-                                onClick={() => setShowRightSidebar(true)}
-                                className="w-8 h-8 flex items-center justify-center text-slate-500 hover:text-slate-900 dark:text-slate-500 dark:hover:text-white transition-colors xl:block hidden"
-                                title="Open Activity Panel"
-                            >
-                                <span className="material-symbols-outlined">dock_to_left</span>
-                            </button>
-                        )}
-
                         <button
                             onClick={() => navigate('/settings')}
                             className="w-8 h-8 rounded-full hover:bg-slate-100 dark:hover:bg-white/5 flex items-center justify-center text-slate-500 dark:text-text-dim transition-colors"
@@ -306,15 +295,18 @@ const Dashboard: React.FC = () => {
                 />
 
                 {/* Floating Input */}
-                <InputArea onSend={handleSend} disabled={isTyping} onUploadClick={handleUploadClick} />
+                <InputArea
+                    onSend={handleSend}
+                    disabled={isTyping}
+                    onUploadClick={handleUploadClick}
+                    attachedFile={attachedFile}
+                    onRemoveAttachment={() => setAttachedFile(null)}
+                />
 
             </main>
 
-            {/* Desktop Right Sidebar */}
-            <RightSidebar
-                className={`${showRightSidebar ? 'hidden xl:flex' : 'hidden'}`}
-                onCollapse={() => setShowRightSidebar(false)}
-            />
+            {/* Desktop Right Sidebar - Always visible on xl */}
+            <RightSidebar className="hidden xl:flex" />
         </div>
     );
 };
