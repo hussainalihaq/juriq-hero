@@ -1,16 +1,58 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+
+interface ChatSession {
+    id: string;
+    title: string;
+    preview: string;
+    timestamp: Date;
+}
+
+interface UploadedDocument {
+    id: string;
+    name: string;
+    size: number;
+    uploadedAt: Date;
+}
 
 interface SidebarProps {
     userEmail?: string;
     userName?: string;
     onUploadClick?: () => void;
     onCollapse?: () => void;
-    className?: string; // Add className prop
+    className?: string;
+    // New: For tracking uploads from Dashboard
+    uploadedDocuments?: UploadedDocument[];
+    chatSessions?: ChatSession[];
+    onClearHistory?: () => void;
 }
 
-export const Sidebar: React.FC<SidebarProps> = ({ userEmail, userName, onUploadClick, onCollapse, className }) => {
+export const Sidebar: React.FC<SidebarProps> = ({
+    userEmail,
+    userName,
+    onUploadClick,
+    onCollapse,
+    className,
+    uploadedDocuments = [],
+    chatSessions = [],
+    onClearHistory
+}) => {
     const navigate = useNavigate();
+
+    // Get recent sessions (max 5)
+    const recentChats = chatSessions.slice(0, 5);
+    const recentDocs = uploadedDocuments.slice(0, 5);
+
+    const formatTime = (date: Date) => {
+        const now = new Date();
+        const diff = now.getTime() - new Date(date).getTime();
+        const mins = Math.floor(diff / 60000);
+        if (mins < 1) return 'Just now';
+        if (mins < 60) return `${mins}m ago`;
+        const hours = Math.floor(mins / 60);
+        if (hours < 24) return `${hours}h ago`;
+        return new Date(date).toLocaleDateString();
+    };
 
     return (
         <aside className={`w-[280px] flex flex-col bg-white dark:bg-midnight-card border-r border-slate-200 dark:border-midnight-border shrink-0 text-slate-500 dark:text-text-dim h-full transition-all duration-300 ${className || 'hidden md:flex'}`}>
@@ -46,19 +88,73 @@ export const Sidebar: React.FC<SidebarProps> = ({ userEmail, userName, onUploadC
             </div>
 
             {/* Navigation */}
-            <nav className="flex-1 px-4 space-y-8 overflow-y-auto sidebar-scroll">
+            <nav className="flex-1 px-4 space-y-6 overflow-y-auto sidebar-scroll">
 
                 {/* Recent Conversations */}
                 <div>
-                    <h3 className="text-[10px] font-bold text-slate-600 uppercase tracking-widest px-2 mb-3">Recent Conversations</h3>
-                    <div className="px-2 py-3 text-sm text-slate-400 dark:text-slate-600 italic border border-dashed border-slate-200 dark:border-white/5 rounded-lg text-center transition-colors">
-                        No history yet.
+                    <div className="flex items-center justify-between mb-3">
+                        <h3 className="text-[10px] font-bold text-slate-600 uppercase tracking-widest px-2">Recent Conversations</h3>
+                        {recentChats.length > 0 && onClearHistory && (
+                            <button
+                                onClick={onClearHistory}
+                                className="text-[10px] text-slate-400 hover:text-red-500 transition-colors"
+                            >
+                                Clear
+                            </button>
+                        )}
                     </div>
+                    {recentChats.length === 0 ? (
+                        <div className="px-2 py-3 text-sm text-slate-400 dark:text-slate-600 italic border border-dashed border-slate-200 dark:border-white/5 rounded-lg text-center transition-colors">
+                            No history yet.
+                        </div>
+                    ) : (
+                        <div className="space-y-1">
+                            {recentChats.map(chat => (
+                                <div
+                                    key={chat.id}
+                                    className="px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-white/5 cursor-pointer transition-colors group"
+                                >
+                                    <p className="text-sm font-medium text-slate-700 dark:text-slate-200 truncate group-hover:text-primary transition-colors">
+                                        {chat.title}
+                                    </p>
+                                    <p className="text-xs text-slate-400 truncate">{chat.preview}</p>
+                                    <p className="text-[10px] text-slate-400 dark:text-slate-600 mt-1">{formatTime(chat.timestamp)}</p>
+                                </div>
+                            ))}
+                        </div>
+                    )}
                 </div>
 
                 {/* Uploaded Documents */}
                 <div>
-                    <h3 className="text-[10px] font-bold text-slate-600 uppercase tracking-widest px-2 mb-3">Uploaded Documents</h3>
+                    <div className="flex items-center justify-between mb-3">
+                        <h3 className="text-[10px] font-bold text-slate-600 uppercase tracking-widest px-2">Documents</h3>
+                        {recentDocs.length > 0 && (
+                            <span className="text-[10px] text-primary font-bold">{recentDocs.length}</span>
+                        )}
+                    </div>
+
+                    {recentDocs.length > 0 && (
+                        <div className="space-y-1 mb-3">
+                            {recentDocs.map(doc => (
+                                <div
+                                    key={doc.id}
+                                    className="px-3 py-2 rounded-lg bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/5 group"
+                                >
+                                    <div className="flex items-center gap-2">
+                                        <span className="material-symbols-outlined text-sm text-primary">description</span>
+                                        <p className="text-xs font-medium text-slate-700 dark:text-slate-200 truncate flex-1">
+                                            {doc.name}
+                                        </p>
+                                    </div>
+                                    <p className="text-[10px] text-slate-400 mt-1">
+                                        {(doc.size / 1024).toFixed(1)} KB • {formatTime(doc.uploadedAt)}
+                                    </p>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+
                     <button
                         onClick={onUploadClick}
                         className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-lg border border-slate-200 dark:border-white/10 text-slate-500 dark:text-slate-400 hover:text-primary dark:hover:text-white hover:border-primary/50 hover:bg-slate-50 dark:hover:bg-white/5 transition-all text-sm group"
@@ -71,7 +167,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ userEmail, userName, onUploadC
             </nav>
 
             {/* User Profile */}
-            <div className="p-4 border-t border-midnight-border">
+            <div className="p-4 border-t border-slate-200 dark:border-midnight-border">
                 <div
                     onClick={() => navigate('/settings')}
                     className="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-white/5 cursor-pointer transition-colors group"

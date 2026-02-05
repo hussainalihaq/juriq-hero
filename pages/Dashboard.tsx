@@ -16,11 +16,22 @@ const Dashboard: React.FC = () => {
     const [messages, setMessages] = useState<Message[]>([]);
     const [isTyping, setIsTyping] = useState(false);
 
+    // Document & History Tracking
+    const [uploadedDocuments, setUploadedDocuments] = useState<{ id: string; name: string; size: number; uploadedAt: Date }[]>([]);
+
     // Sidebar Visibility State (Desktop)
     const [showLeftSidebar, setShowLeftSidebar] = useState(true);
     const [showRightSidebar, setShowRightSidebar] = useState(true);
 
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+    // Derive chat session from messages (for sidebar display)
+    const chatSessions = messages.length > 0 ? [{
+        id: 'current',
+        title: messages[0]?.text.slice(0, 40) + '...' || 'New Chat',
+        preview: messages[messages.length - 1]?.text.slice(0, 50) + '...' || '',
+        timestamp: messages[0]?.timestamp || new Date()
+    }] : [];
 
     useEffect(() => {
         const getUser = async () => {
@@ -59,6 +70,14 @@ const Dashboard: React.FC = () => {
         };
 
         setMessages(prev => [...prev, userMsg, aiPrompt]);
+
+        // Track the document for history
+        setUploadedDocuments(prev => [{
+            id: Date.now().toString(),
+            name: file.name,
+            size: file.size,
+            uploadedAt: new Date()
+        }, ...prev]);
 
         // Reset file input so the same file can be re-uploaded if needed
         if (fileInputRef.current) fileInputRef.current.value = '';
@@ -199,6 +218,8 @@ const Dashboard: React.FC = () => {
                             userEmail={user?.email}
                             userName={user?.user_metadata?.full_name}
                             onUploadClick={handleUploadClick}
+                            chatSessions={chatSessions}
+                            uploadedDocuments={uploadedDocuments}
                         />
                     </div>
                 </div>
@@ -211,6 +232,12 @@ const Dashboard: React.FC = () => {
                 userName={user?.user_metadata?.full_name}
                 onUploadClick={handleUploadClick}
                 onCollapse={() => setShowLeftSidebar(false)}
+                chatSessions={chatSessions}
+                uploadedDocuments={uploadedDocuments}
+                onClearHistory={() => {
+                    setMessages([]);
+                    setUploadedDocuments([]);
+                }}
             />
 
             {/* Main Content */}
