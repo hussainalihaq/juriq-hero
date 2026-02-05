@@ -136,7 +136,7 @@ const Dashboard: React.FC = () => {
         } finally {
             setIsTyping(false);
         }
-    }, [messages]);
+    }, [messages, attachedFile, jurisdiction, user]);
 
     // --- Backend Connection Check (for API calls) ---
     const [backendOnline, setBackendOnline] = useState(true);
