@@ -21,11 +21,11 @@ interface SidebarProps {
     onUploadClick?: () => void;
     onCollapse?: () => void;
     className?: string;
-    // New: For tracking uploads from Dashboard
     uploadedDocuments?: UploadedDocument[];
     chatSessions?: ChatSession[];
     onClearHistory?: () => void;
     onSessionClick?: (sessionId: string) => void;
+    onDeleteSession?: (sessionId: string) => void;
 }
 
 export const Sidebar: React.FC<SidebarProps> = ({
@@ -37,7 +37,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
     uploadedDocuments = [],
     chatSessions = [],
     onClearHistory,
-    onSessionClick
+    onSessionClick,
+    onDeleteSession
 }) => {
     const navigate = useNavigate();
 
@@ -115,13 +116,25 @@ export const Sidebar: React.FC<SidebarProps> = ({
                                 <div
                                     key={chat.id}
                                     onClick={() => onSessionClick?.(chat.id)}
-                                    className="px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-white/5 cursor-pointer transition-colors group"
+                                    className="px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-white/5 cursor-pointer transition-colors group relative"
                                 >
-                                    <p className="text-sm font-medium text-slate-700 dark:text-slate-200 truncate group-hover:text-primary transition-colors">
+                                    <p className="text-sm font-medium text-slate-700 dark:text-slate-200 truncate group-hover:text-primary transition-colors pr-6">
                                         {chat.title}
                                     </p>
-                                    <p className="text-xs text-slate-400 truncate">{chat.preview}</p>
+                                    <p className="text-xs text-slate-400 truncate pr-6">{chat.preview}</p>
                                     <p className="text-[10px] text-slate-400 dark:text-slate-600 mt-1">{formatTime(chat.timestamp)}</p>
+
+                                    {/* Delete button */}
+                                    <button
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            onDeleteSession?.(chat.id);
+                                        }}
+                                        className="absolute top-2 right-2 w-5 h-5 flex items-center justify-center rounded text-slate-400 hover:text-red-500 hover:bg-red-500/10 opacity-0 group-hover:opacity-100 transition-all"
+                                        title="Delete chat"
+                                    >
+                                        <span className="material-symbols-outlined text-xs">close</span>
+                                    </button>
                                 </div>
                             ))}
                         </div>

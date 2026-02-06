@@ -19,8 +19,10 @@ export const ChatArea: React.FC<ChatAreaProps> = ({ messages, isTyping, onSugges
                 bottomRef.current.scrollIntoView({ behavior: 'smooth', block: 'end' });
             }
         };
-        // Small delay to ensure DOM is updated
-        const timer = setTimeout(scrollToBottom, 100);
+        // Longer delay to ensure DOM is fully updated
+        const timer = setTimeout(scrollToBottom, 150);
+        // Also scroll immediately for faster response
+        scrollToBottom();
         return () => clearTimeout(timer);
     }, [messages, isTyping]);
 
@@ -31,7 +33,7 @@ export const ChatArea: React.FC<ChatAreaProps> = ({ messages, isTyping, onSugges
     ];
 
     return (
-        <div className="flex-1 overflow-y-auto p-4 md:p-12 space-y-8 pb-64 scroll-smooth">
+        <div className="flex-1 overflow-y-auto p-4 md:p-12 space-y-8 pb-80 scroll-smooth">
             {/* Welcome Placeholder if empty */}
             {messages.length === 0 && (
                 <div className="h-full flex flex-col items-center justify-center text-center select-none pb-20">

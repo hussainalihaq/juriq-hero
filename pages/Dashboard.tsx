@@ -265,6 +265,26 @@ const Dashboard: React.FC = () => {
         }
     };
 
+    // Delete a session from history
+    const handleDeleteSession = (sessionId: string) => {
+        // Remove from allSessions
+        const updatedSessions = allSessions.filter(s => s.id !== sessionId);
+        setAllSessions(updatedSessions);
+        localStorage.setItem('juriq_all_sessions', JSON.stringify(updatedSessions));
+
+        // Remove session data from localStorage
+        localStorage.removeItem(`juriq_session_${sessionId}`);
+
+        // If deleting current session, clear messages
+        if (sessionId === currentSessionId) {
+            setMessages([]);
+            localStorage.removeItem('juriq_chat_history');
+            const newSessionId = Date.now().toString();
+            setCurrentSessionId(newSessionId);
+            localStorage.setItem('juriq_current_session', newSessionId);
+        }
+    };
+
     return (
         <div className="flex h-screen overflow-hidden bg-off-white dark:bg-midnight-bg text-slate-900 dark:text-text-bright font-display selection:bg-primary/30 selection:text-white transition-colors duration-300">
             <input
@@ -321,6 +341,7 @@ const Dashboard: React.FC = () => {
                     setUploadedDocuments([]);
                 }}
                 onSessionClick={handleSessionClick}
+                onDeleteSession={handleDeleteSession}
             />
 
             {/* Main Content */}
