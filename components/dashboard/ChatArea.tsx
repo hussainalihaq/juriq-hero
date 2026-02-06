@@ -12,19 +12,29 @@ interface ChatAreaProps {
 export const ChatArea: React.FC<ChatAreaProps> = ({ messages, isTyping, onSuggestionClick, onRetry }) => {
     const bottomRef = useRef<HTMLDivElement>(null);
     const containerRef = useRef<HTMLDivElement>(null);
-    const [shouldAutoScroll, setShouldAutoScroll] = React.useState(true);
+    // Use a ref for sticky state to avoid re-renders during scroll
+    const isSticky = useRef(true);
 
-    // Track if user is at the bottom to determine if we should auto-scroll
+    // Track if user is at the bottom using a robust threshold
     const handleScroll = () => {
         const container = containerRef.current;
         if (!container) return;
 
         const { scrollTop, scrollHeight, clientHeight } = container;
-        // Strict threshold: Only auto-scroll if user is VERY close to bottom (20px).
-        // This allows user to scroll up slightly to read without being dragged down.
-        const isAtBottom = Math.abs(scrollHeight - clientHeight - scrollTop) < 20;
-        setShouldAutoScroll(isAtBottom);
+        // If user is within 50px of bottom, they "stick" to it.
+        // If they scroll up more than 50px, stickiness breaks.
+        const distanceToBottom = Math.abs(scrollHeight - clientHeight - scrollTop);
+        isSticky.current = distanceToBottom < 50;
     };
+
+    // Auto-scroll effect: Runs whenever messages change (streaming)
+    useEffect(() => {
+        const container = containerRef.current;
+        if (container && (isSticky.current || messages.length <= 1)) {
+            // Direct scrollTop assignment is more robust than scrollIntoView for "sticky" behavior
+            container.scrollTop = container.scrollHeight;
+        }
+    }, [messages, isTyping]);
 
     // Auto-scroll effect
     useEffect(() => {

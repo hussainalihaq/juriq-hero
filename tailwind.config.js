@@ -25,9 +25,9 @@ export default {
                 "slate-border": "#e2e8f0",
             },
             fontFamily: {
-                "sans": ["Manrope", "Plus Jakarta Sans", "Inter", "sans-serif"],
-                "display": ["Manrope", "Plus Jakarta Sans", "sans-serif"],
-                "serif": ["Playfair Display", "serif"]
+                "sans": ["Inter", "Plus Jakarta Sans", "Roboto", "sans-serif"],
+                "display": ["Plus Jakarta Sans", "Inter", "sans-serif"],
+                "serif": ["Lora", "Merriweather", "serif"]
             },
             boxShadow: {
                 'glow': '0 0 40px -10px rgba(79, 70, 229, 0.3)',
