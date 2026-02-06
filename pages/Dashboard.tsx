@@ -193,7 +193,7 @@ const Dashboard: React.FC = () => {
         } finally {
             setIsTyping(false);
         }
-    }, [messages, attachedFile, jurisdiction, user]);
+    }, [messages, attachedFile, jurisdiction, selectedRole]); // Add selectedRole dependency
 
     // --- Backend Connection Check (for API calls) ---
     const [backendOnline, setBackendOnline] = useState(true);
