@@ -56,56 +56,53 @@ export const ChatArea: React.FC<ChatAreaProps> = ({ messages, isTyping, onSugges
             onScroll={handleScroll}
             className="flex-1 overflow-y-auto p-4 md:p-12 pb-48 relative"
         >
-            {/* Centered Container for Messages (Like GPT) */}
-            <div className="max-w-3xl mx-auto space-y-8">
-
-                {/* Welcome Placeholder if empty */}
-                {messages.length === 0 && (
-                    <div className="h-full flex flex-col items-center justify-center text-center select-none pb-20 pt-20">
-                        {/* Interactive Icon Animation */}
-                        <div className="relative mb-6 group animate-slide-up">
-                            <div className="absolute inset-0 bg-primary/20 blur-3xl rounded-full animate-pulse-slow opacity-50 dark:opacity-80 scale-150"></div>
-                            <div className="w-24 h-24 md:w-32 md:h-32 rounded-3xl flex items-center justify-center relative transform transition-transform duration-700 hover:scale-105 p-6 bg-white/50 dark:bg-white/5 backdrop-blur-sm border border-white/20 shadow-2xl">
-                                <svg viewBox="0 0 96 96" xmlns="http://www.w3.org/2000/svg" className="w-full h-full text-slate-900 dark:text-white drop-shadow-md">
-                                    <defs>
-                                        <mask id="logo-mask-chat">
-                                            <rect width="96" height="96" fill="white" />
-                                            <path d="M48 16c-17.67 0-32 14.33-32 32 0 17.67 14.33 32 32 32s32-14.33 32-32c0-17.67-14.33-32-32-32zm0 52c-11.05 0-20-8.95-20-20s8.95-20 20-20 20 8.95 20 20-8.95 20-20 20z" fill="black" />
-                                            <rect x="42" y="32" width="12" height="32" rx="2" fill="black" />
-                                        </mask>
-                                    </defs>
-                                    <rect width="96" height="96" fill="currentColor" mask="url(#logo-mask-chat)" />
-                                </svg>
-                            </div>
-                        </div>
-
-                        <h2 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mb-3 animate-fade-in tracking-tight">
-                            Good evening, {userRoleContext ? 'Counsel' : 'Counsel'}
-                        </h2>
-                        <p className="text-slate-500 dark:text-slate-400 max-w-md mx-auto mb-10 text-lg font-light leading-relaxed animate-fade-in delay-100">
-                            Ready to analyze your legal documents.
-                        </p>
-
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 w-full max-w-2xl px-4 animate-fade-in delay-200">
-                            {suggestions.map((s, i) => (
-                                <button
-                                    key={i}
-                                    onClick={() => onSuggestionClick(s.text)}
-                                    className="flex flex-col items-center gap-3 p-4 rounded-2xl bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 hover:border-primary/50 hover:shadow-lg dark:hover:bg-white/10 transition-all group duration-300"
-                                >
-                                    <div className="w-10 h-10 rounded-full bg-slate-100 dark:bg-white/10 flex items-center justify-center group-hover:bg-primary/10 group-hover:text-primary transition-colors">
-                                        <span className="material-symbols-outlined text-xl">{s.icon}</span>
-                                    </div>
-                                    <span className="text-sm font-medium text-slate-700 dark:text-slate-300 group-hover:text-primary transition-colors">
-                                        {s.text}
-                                    </span>
-                                </button>
-                            ))}
+            {/* Welcome Placeholder if empty - Full Width/Center to preserve logo alignment */}
+            {messages.length === 0 && (
+                <div className="h-full flex flex-col items-center justify-center text-center select-none pb-20 pt-20">
+                    <div className="relative mb-6 group animate-slide-up">
+                        <div className="absolute inset-0 bg-primary/20 blur-3xl rounded-full animate-pulse-slow opacity-50 dark:opacity-80 scale-150"></div>
+                        <div className="w-24 h-24 md:w-32 md:h-32 rounded-3xl flex items-center justify-center relative transform transition-transform duration-700 hover:scale-105 p-6 bg-white/50 dark:bg-white/5 backdrop-blur-sm border border-white/20 shadow-2xl">
+                            <svg viewBox="0 0 96 96" xmlns="http://www.w3.org/2000/svg" className="w-full h-full text-slate-900 dark:text-white drop-shadow-md">
+                                <defs>
+                                    <mask id="logo-mask-chat">
+                                        <rect width="96" height="96" fill="white" />
+                                        <path d="M48 16c-17.67 0-32 14.33-32 32 0 17.67 14.33 32 32 32s32-14.33 32-32c0-17.67-14.33-32-32-32zm0 52c-11.05 0-20-8.95-20-20s8.95-20 20-20 20 8.95 20 20-8.95 20-20 20z" fill="black" />
+                                        <rect x="42" y="32" width="12" height="32" rx="2" fill="black" />
+                                    </mask>
+                                </defs>
+                                <rect width="96" height="96" fill="currentColor" mask="url(#logo-mask-chat)" />
+                            </svg>
                         </div>
                     </div>
-                )}
 
-                {/* Messages */}
+                    <h2 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mb-3 animate-fade-in tracking-tight">
+                        Good evening, {userRoleContext ? 'Counsel' : 'Counsel'}
+                    </h2>
+                    <p className="text-slate-500 dark:text-slate-400 max-w-md mx-auto mb-10 text-lg font-light leading-relaxed animate-fade-in delay-100">
+                        Ready to analyze your legal documents.
+                    </p>
+
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 w-full max-w-2xl px-4 animate-fade-in delay-200">
+                        {suggestions.map((s, i) => (
+                            <button
+                                key={i}
+                                onClick={() => onSuggestionClick(s.text)}
+                                className="flex flex-col items-center gap-3 p-4 rounded-2xl bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 hover:border-primary/50 hover:shadow-lg dark:hover:bg-white/10 transition-all group duration-300"
+                            >
+                                <div className="w-10 h-10 rounded-full bg-slate-100 dark:bg-white/10 flex items-center justify-center group-hover:bg-primary/10 group-hover:text-primary transition-colors">
+                                    <span className="material-symbols-outlined text-xl">{s.icon}</span>
+                                </div>
+                                <span className="text-sm font-medium text-slate-700 dark:text-slate-300 group-hover:text-primary transition-colors">
+                                    {s.text}
+                                </span>
+                            </button>
+                        ))}
+                    </div>
+                </div>
+            )}
+
+            {/* Messages Container - Centered to match Input Bar width (Like GPT) */}
+            <div className="max-w-3xl mx-auto space-y-8">
                 {messages.map((message) => (
                     <div
                         key={message.id}
@@ -153,7 +150,7 @@ export const ChatArea: React.FC<ChatAreaProps> = ({ messages, isTyping, onSugges
                                 </div>
                             )}
 
-                            {/* Retry Button for Errors */}
+                            {/* Retry Button */}
                             {message.sender === 'ai' && message.text.startsWith('⚠️ Error:') && onRetry && (
                                 <div className="mt-4 pt-4 border-t border-red-100 dark:border-red-900/30">
                                     <button
@@ -169,9 +166,9 @@ export const ChatArea: React.FC<ChatAreaProps> = ({ messages, isTyping, onSugges
                     </div>
                 ))}
 
-                {/* Typing Indicator */}
+                {/* Typing Indicator inside centered container */}
                 {isTyping && (
-                    <div className="flex gap-4 max-w-4xl mx-auto opacity-0 animate-fade-in group w-full justify-start">
+                    <div className="flex gap-4 opacity-0 animate-fade-in group w-full justify-start">
                         <div className="w-8 h-8 rounded-lg bg-primary/10 dark:bg-midnight-card border border-primary/20 dark:border-white/10 shrink-0 flex items-center justify-center text-primary dark:text-white shadow-sm mt-1">
                             <span className="material-symbols-outlined text-sm">auto_awesome</span>
                         </div>
@@ -184,8 +181,7 @@ export const ChatArea: React.FC<ChatAreaProps> = ({ messages, isTyping, onSugges
                         </div>
                     </div>
                 )}
-
-                {/* Bottom Anchor */}
+                {/* Bottom Anchor inside centered container but effective for scroll */}
                 <div ref={bottomRef} className="h-px w-full" />
             </div>
 
@@ -198,6 +194,9 @@ export const ChatArea: React.FC<ChatAreaProps> = ({ messages, isTyping, onSugges
                     <span className="material-symbols-outlined">arrow_downward</span>
                 </button>
             </div>
+
+            {/* Spacer for input area overlap protection */}
+            <div className="h-0 shrink-0" />
         </div>
     );
 };
