@@ -133,8 +133,11 @@ const Dashboard: React.FC = () => {
         if (fileInputRef.current) fileInputRef.current.value = '';
     };
 
-    const handleSend = useCallback(async (text: string) => {
-        // 1. Add User Message (include attachment mention if present)
+    const handleSend = useCallback(async (text: string, file?: { name: string; type: string; size: number }) => {
+        if (!text.trim() && !file) return;
+        if (!text.trim() && !attachedFile) return;
+
+        // 1. Add User Message immediately
         const messageText = attachedFile
             ? `📎 **${attachedFile.name}**\n\n${text}`
             : text;
@@ -146,6 +149,11 @@ const Dashboard: React.FC = () => {
             timestamp: new Date()
         };
 
+        const fileToSend = attachedFile ? {
+            mimeType: attachedFile.type,
+            data: attachedFile.data
+        } : null;
+
         // Clear attachment after sending
         setAttachedFile(null);
 
@@ -153,17 +161,18 @@ const Dashboard: React.FC = () => {
         setIsTyping(true);
 
         try {
-            // 2. Call Real Backend API with user's role and jurisdiction
+            // 2. Call Real Backend API with user's selected role and jurisdiction
             const userRole = user?.user_metadata?.role || 'general';
 
             const response = await fetch(`${API_URL}/api/chat`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    history: messages.map(m => ({ role: m.role === 'model' ? 'ai' : 'user', text: m.text })), // Map model -> ai for backend consistency if needed, checking backend expectation
+                    history: messages.map(m => ({ role: m.role === 'model' ? 'ai' : 'user', text: m.text })),
                     message: text,
-                    role: userRole, // Use role from user metadata for personalized responses
-                    jurisdictions: [jurisdiction] // Pass selected jurisdiction
+                    role: selectedRole, // Uses the state we are adding back
+                    jurisdictions: [jurisdiction],
+                    file: fileToSend
                 })
             });
 
@@ -193,7 +202,7 @@ const Dashboard: React.FC = () => {
         } finally {
             setIsTyping(false);
         }
-    }, [messages, attachedFile, jurisdiction, selectedRole]); // Add selectedRole dependency
+    }, [messages, attachedFile, jurisdiction, selectedRole, user]);
 
     // --- Backend Connection Check (for API calls) ---
     const [backendOnline, setBackendOnline] = useState(true);
@@ -374,6 +383,24 @@ const Dashboard: React.FC = () => {
                     </div>
 
                     <div className="flex items-center gap-3">
+                        {/* Role Selector */}
+                        <div className="flex items-center gap-1 bg-slate-100 dark:bg-white/5 p-1 rounded-lg border border-slate-200 dark:border-white/10">
+                            <span className="material-symbols-outlined text-slate-400 text-sm pl-1">person</span>
+                            <select
+                                value={selectedRole}
+                                onChange={(e) => setSelectedRole(e.target.value)}
+                                className="bg-transparent border-none text-xs font-medium text-slate-700 dark:text-slate-300 outline-none cursor-pointer pr-1"
+                            >
+                                <option value="general">General</option>
+                                <option value="plain_english">Simple</option>
+                                <option value="student">Student</option>
+                                <option value="lawyer">Pro</option>
+                                <option value="entrepreneur">Founder</option>
+                            </select>
+                        </div>
+
+                        <div className="w-px h-4 bg-slate-300 dark:bg-white/10" />
+
                         {/* Jurisdiction Toggle */}
                         <div className="flex items-center bg-slate-100 dark:bg-white/5 rounded-lg p-0.5 border border-slate-200 dark:border-white/10">
                             {['pak', 'us', 'uk'].map((jur) => (
