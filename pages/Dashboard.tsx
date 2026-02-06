@@ -39,6 +39,10 @@ const Dashboard: React.FC = () => {
     // Role toggle (User persona)
     const [selectedRole, setSelectedRole] = useState('general');
 
+    // Usage Limit State
+    const [messageCount, setMessageCount] = useState(0);
+    const [showUpgradeModal, setShowUpgradeModal] = useState(false);
+
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
     // All saved chat sessions for sidebar
@@ -58,6 +62,12 @@ const Dashboard: React.FC = () => {
                 console.error('Failed to load sessions:', e);
             }
         }
+    }, []);
+
+    // Load usage count on mount
+    useEffect(() => {
+        const count = parseInt(localStorage.getItem('juriq_free_usage') || '0');
+        setMessageCount(count);
     }, []);
 
     // Derive current session for sidebar (combine with saved sessions)
@@ -156,8 +166,20 @@ const Dashboard: React.FC = () => {
     };
 
     const handleSend = useCallback(async (text: string, file?: { name: string; type: string; size: number }) => {
+        // CHECK LIMIT FIRST
+        const currentCount = parseInt(localStorage.getItem('juriq_free_usage') || '0');
+        if (currentCount >= 5) {
+            setShowUpgradeModal(true);
+            return;
+        }
+
         if (!text.trim() && !file) return;
         if (!text.trim() && !attachedFile) return;
+
+        // Increment Usage
+        const newCount = currentCount + 1;
+        setMessageCount(newCount);
+        localStorage.setItem('juriq_free_usage', newCount.toString());
 
         // 1. Add User Message immediately
         const messageText = attachedFile
