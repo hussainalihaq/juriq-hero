@@ -117,7 +117,9 @@ const Dashboard: React.FC = () => {
 
     const handleUploadClick = () => {
         // CHECK LIMIT FIRST
-        const currentCount = parseInt(localStorage.getItem('juriq_free_usage') || '0');
+        let currentCount = parseInt(localStorage.getItem('juriq_free_usage') || '0');
+        if (isNaN(currentCount)) currentCount = 0; // Robustness
+
         if (currentCount >= 5) {
             setShowUpgradeModal(true);
             return;
@@ -126,6 +128,7 @@ const Dashboard: React.FC = () => {
     };
 
     const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+        // ... (existing logic)
         const file = e.target.files?.[0];
         if (!file) return;
 
@@ -173,7 +176,9 @@ const Dashboard: React.FC = () => {
 
     const handleSend = useCallback(async (text: string, file?: { name: string; type: string; size: number }) => {
         // CHECK LIMIT FIRST
-        const currentCount = parseInt(localStorage.getItem('juriq_free_usage') || '0');
+        let currentCount = parseInt(localStorage.getItem('juriq_free_usage') || '0');
+        if (isNaN(currentCount)) currentCount = 0; // Robustness
+
         if (currentCount >= 5) {
             setShowUpgradeModal(true);
             return;
@@ -278,7 +283,9 @@ const Dashboard: React.FC = () => {
 
     const handleNewChat = () => {
         // CHECK LIMIT FIRST
-        const currentCount = parseInt(localStorage.getItem('juriq_free_usage') || '0');
+        let currentCount = parseInt(localStorage.getItem('juriq_free_usage') || '0');
+        if (isNaN(currentCount)) currentCount = 0; // Robustness
+
         if (currentCount >= 5) {
             setShowUpgradeModal(true);
             return;
