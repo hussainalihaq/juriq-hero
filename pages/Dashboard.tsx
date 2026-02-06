@@ -530,13 +530,9 @@ const Dashboard: React.FC = () => {
                                 onChange={(e) => setSelectedRole(e.target.value)}
                                 className="bg-transparent border-none text-xs font-medium text-slate-700 dark:text-slate-300 outline-none cursor-pointer pr-1"
                             >
-                                <option value="general">General</option>
-                                <option value="plain_english">Simple Mode</option>
-                                <option value="lawyer">Lawyer</option>
                                 <option value="student">Student</option>
-                                <option value="corporate">Corporate Counsel</option>
-                                <option value="paralegal">Paralegal</option>
-                                <option value="entrepreneur">Entrepreneur</option>
+                                <option value="entrepreneur">Founder</option>
+                                <option value="lawyer">Lawyer</option>
                             </select>
                         </div>
 

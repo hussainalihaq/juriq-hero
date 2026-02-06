@@ -12,32 +12,25 @@ interface ChatAreaProps {
 export const ChatArea: React.FC<ChatAreaProps> = ({ messages, isTyping, onSuggestionClick, onRetry }) => {
     const bottomRef = useRef<HTMLDivElement>(null);
     const containerRef = useRef<HTMLDivElement>(null);
+    const [shouldAutoScroll, setShouldAutoScroll] = React.useState(true);
 
-    // Auto-scroll to bottom with slight delay for DOM render
-    // Smart Auto-scroll: Only scroll if user is already near bottom or it's the start
-    useEffect(() => {
-        const scrollToBottom = () => {
-            if (bottomRef.current) {
-                bottomRef.current.scrollIntoView({ behavior: 'smooth', block: 'end' });
-            }
-        };
-
+    // Track if user is at the bottom to determine if we should auto-scroll
+    const handleScroll = () => {
         const container = containerRef.current;
-        if (!container) {
-            // If no container ref (fallback), just scroll usually
-            scrollToBottom();
-            return;
-        }
+        if (!container) return;
 
-        // Check if user is near bottom (within 150px)
-        const isNearBottom = container.scrollHeight - container.scrollTop - container.clientHeight < 150;
+        const { scrollTop, scrollHeight, clientHeight } = container;
+        // If user is within 100px of bottom, enable auto-scroll. Otherwise disable it.
+        const isAtBottom = scrollHeight - scrollTop - clientHeight < 100;
+        setShouldAutoScroll(isAtBottom);
+    };
 
-        // Always scroll if it's the very first message or User is just starting
-        // Or if user was already at the bottom (follow mode)
-        if (isNearBottom || messages.length <= 1) {
-            scrollToBottom();
+    // Auto-scroll effect
+    useEffect(() => {
+        if (shouldAutoScroll || messages.length <= 1) {
+            bottomRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' });
         }
-    }, [messages, isTyping]);
+    }, [messages, isTyping, shouldAutoScroll]);
 
     const suggestions = [
         { icon: 'auto_awesome', text: 'Summarize obligations' },
@@ -46,7 +39,11 @@ export const ChatArea: React.FC<ChatAreaProps> = ({ messages, isTyping, onSugges
     ];
 
     return (
-        <div ref={containerRef} className="flex-1 overflow-y-auto p-4 md:p-12 space-y-8 pb-80 scroll-smooth">
+        <div
+            ref={containerRef}
+            onScroll={handleScroll}
+            className="flex-1 overflow-y-auto p-4 md:p-12 space-y-8 pb-80 scroll-smooth"
+        >
             {/* Welcome Placeholder if empty */}
             {messages.length === 0 && (
                 <div className="h-full flex flex-col items-center justify-center text-center select-none pb-20">
