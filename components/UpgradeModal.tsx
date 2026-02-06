@@ -58,9 +58,9 @@ export const UpgradeModal: React.FC<UpgradeModalProps> = ({ isOpen, onClose }) =
 
                             <ul className="space-y-3 text-sm text-slate-600 dark:text-slate-300 mb-8">
                                 <li className="flex items-center gap-2"><span className="text-green-500">✓</span> 10 queries per day</li>
-                                <li className="flex items-center gap-2"><span className="text-green-500">✓</span> Pakistan Law Only</li>
+                                <li className="flex items-center gap-2"><span className="text-green-500">✓</span> All Jurisdictions (PK, US, UK)</li>
                                 <li className="flex items-center gap-2"><span className="text-green-500">✓</span> 1 Document Upload/day</li>
-                                <li className="flex items-center gap-2 opacity-50"><span className="text-slate-400">✗</span> Basic Analysis Only</li>
+                                <li className="flex items-center gap-2 opacity-50"><span className="text-slate-400">✗</span> Basic AI Model</li>
                             </ul>
 
                             <button className="w-full py-2 rounded-lg border border-slate-300 dark:border-white/10 text-slate-500 font-medium text-sm cursor-not-allowed">Current Plan</button>
@@ -76,7 +76,7 @@ export const UpgradeModal: React.FC<UpgradeModalProps> = ({ isOpen, onClose }) =
 
                             <ul className="space-y-3 text-sm text-slate-600 dark:text-slate-300 mb-8">
                                 <li className="flex items-center gap-2"><span className="text-green-500">✓</span> 100 queries per day</li>
-                                <li className="flex items-center gap-2"><span className="text-green-500">✓</span> All Jurisdictions (PK, UK, US)</li>
+                                <li className="flex items-center gap-2"><span className="text-green-500">✓</span> Advanced Case Search</li>
                                 <li className="flex items-center gap-2"><span className="text-green-500">✓</span> 20 Document Uploads/mo</li>
                                 <li className="flex items-center gap-2"><span className="text-green-500">✓</span> Deep Case Law Analysis</li>
                             </ul>

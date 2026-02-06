@@ -501,24 +501,18 @@ const Dashboard: React.FC = () => {
 
                         <div className="w-px h-4 bg-slate-300 dark:bg-white/10" />
 
-                        {/* Jurisdiction Toggle (Locked to PAK for Free) */}
+                        {/* Jurisdiction Toggle (Open to All) */}
                         <div className="flex items-center bg-slate-100 dark:bg-white/5 rounded-lg p-0.5 border border-slate-200 dark:border-white/10">
                             {['pak', 'us', 'uk'].map((jur) => (
                                 <button
                                     key={jur}
-                                    onClick={() => {
-                                        if (jur !== 'pak') {
-                                            setShowUpgradeModal(true); // Lock US/UK
-                                        } else {
-                                            setJurisdiction(jur);
-                                        }
-                                    }}
+                                    onClick={() => setJurisdiction(jur)}
                                     className={`px-3 py-1.5 rounded-md text-[10px] font-bold uppercase tracking-wider transition-all ${jurisdiction === jur
                                         ? 'bg-white dark:bg-primary text-primary dark:text-white shadow-sm'
                                         : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-white'
-                                        } ${jur !== 'pak' ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                        }`}
                                 >
-                                    {jur} {jur !== 'pak' && <span className="ml-1 text-[8px] opacity-70">🔒</span>}
+                                    {jur}
                                 </button>
                             ))}
                         </div>
