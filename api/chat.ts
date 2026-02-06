@@ -231,10 +231,52 @@ export default async function handler(req: any, res: any) {
         throw lastError || new Error('All models failed due to rate limits.');
 
     } catch (error: any) {
+        // If all Gemini models fail, try Groq as a final backup
+        if (process.env.GROQ_API_KEY) {
+            try {
+                console.log('Gemini failed, attempting fallback to Groq...');
+
+                // Helper to format messages for Groq (OpenAI format)
+                const groqMessages = [
+                    { role: 'system', content: generateSystemPrompt(req.body.jurisdictions?.[0] || 'pak', req.body.role || 'general') },
+                    ...(req.body.history || []).map((m: any) => ({
+                        role: m.role === 'ai' ? 'assistant' : 'user',
+                        content: m.text
+                    })),
+                    { role: 'user', content: req.body.message || (req.body.file ? "Analyze the attached file." : "") }
+                ];
+
+                const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${process.env.GROQ_API_KEY}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        model: 'llama3-8b-8192', // Fast, free model
+                        messages: groqMessages,
+                        temperature: 0.7,
+                        max_tokens: 4000
+                    })
+                });
+
+                if (!response.ok) throw new Error(`Groq API Error: ${response.statusText}`);
+
+                const data = await response.json();
+                const text = data.choices[0]?.message?.content || "";
+
+                return res.status(200).json({ text: text + "\n\n*(Powered by Llama 3 Backup)*" });
+
+            } catch (groqError: any) {
+                console.error('Groq Fallback Error:', groqError);
+                // Fall through to final error response
+            }
+        }
+
         console.error('API Error:', error);
         return res.status(500).json({
             error: error.message || 'Internal Server Error',
-            details: 'All available AI models are currently busy or rate-limited. Please try again in 1 minute.'
+            details: 'All available AI models (Gemini & Backup) are currently busy. Please try again in 1 minute.'
         });
     }
 }
