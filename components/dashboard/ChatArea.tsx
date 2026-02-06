@@ -158,6 +158,8 @@ export const ChatArea: React.FC<ChatAreaProps> = ({ messages, isTyping, onSugges
                 </div>
             )}
 
+            {/* Spacer to ensure scroll past the input area */}
+            <div className="h-[200px] shrink-0" />
             <div ref={bottomRef} />
         </div>
     );
