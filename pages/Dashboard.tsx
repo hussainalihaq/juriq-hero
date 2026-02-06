@@ -116,6 +116,12 @@ const Dashboard: React.FC = () => {
     }, [messages]);
 
     const handleUploadClick = () => {
+        // CHECK LIMIT FIRST
+        const currentCount = parseInt(localStorage.getItem('juriq_free_usage') || '0');
+        if (currentCount >= 5) {
+            setShowUpgradeModal(true);
+            return;
+        }
         fileInputRef.current?.click();
     };
 
@@ -271,6 +277,13 @@ const Dashboard: React.FC = () => {
     }, [messages, isTyping]);
 
     const handleNewChat = () => {
+        // CHECK LIMIT FIRST
+        const currentCount = parseInt(localStorage.getItem('juriq_free_usage') || '0');
+        if (currentCount >= 5) {
+            setShowUpgradeModal(true);
+            return;
+        }
+
         // Save current session if it has messages
         if (messages.length > 0) {
             const currentSession = {
