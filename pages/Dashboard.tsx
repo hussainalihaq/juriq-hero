@@ -215,11 +215,6 @@ const Dashboard: React.FC = () => {
             });
         }
 
-        // Track the document for sidebar history
-        const keys = getStorageKeys();
-        const newDocCount = (parseInt(localStorage.getItem(keys.doc) || '0') || 0) + 1;
-        localStorage.setItem(keys.doc, newDocCount.toString());
-
         setUploadedDocuments(prev => [{
             id: Date.now().toString(),
             name: file.name,
@@ -264,10 +259,16 @@ const Dashboard: React.FC = () => {
         if (!text.trim() && !file) return;
         if (!text.trim() && !attachedFile) return;
 
-        // Increment Usage
+        // Increment Message Usage
         const newCount = currentCount + 1;
         setMessageCount(newCount);
         localStorage.setItem(keys.msg, newCount.toString());
+
+        // Increment Document Usage IF a file is being sent
+        if (attachedFile) {
+            const docCount = parseInt(localStorage.getItem(keys.doc) || '0') || 0;
+            localStorage.setItem(keys.doc, (docCount + 1).toString());
+        }
 
         // 1. Add User Message immediately
         const messageText = attachedFile
@@ -351,12 +352,7 @@ const Dashboard: React.FC = () => {
         checkBackend();
     }, []);
 
-    // Auto-scroll to bottom when messages change
-    useEffect(() => {
-        if (chatContainerRef.current) {
-            chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
-        }
-    }, [messages, isTyping]);
+
 
     const handleNewChat = () => {
         // Always allow New Chat (to see Welcome Screen)

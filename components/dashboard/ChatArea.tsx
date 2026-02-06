@@ -45,12 +45,12 @@ export const ChatArea: React.FC<ChatAreaProps> = ({ messages, isTyping, onSugges
         }
     };
 
-    // Auto-scroll effect: Runs whenever messages change (streaming)
-    useEffect(() => {
+    // Use useLayoutEffect to ensure the scroll happens BEFORE the browser paints
+    // this prevents "jerkiness" during streaming responses.
+    React.useLayoutEffect(() => {
         const container = containerRef.current;
         if (container && (isSticky.current || messages.length <= 1)) {
-            // Direct scrollTop assignment is more robust than scrollIntoView for "sticky" behavior
-            // But we use 'smooth' here only if the change is small? No, instant is better for streaming.
+            // Force instant scroll to avoid lagging behind content
             container.scrollTop = container.scrollHeight;
         }
     }, [messages, isTyping]);
