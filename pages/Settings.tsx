@@ -371,7 +371,7 @@ const Settings = () => {
                                     <p className="text-sm text-slate-600 dark:text-slate-400">Unlimited power for serious legal research</p>
                                 </div>
                                 <div className="text-right">
-                                    <p className="text-2xl font-bold text-primary">$19</p>
+                                    <p className="text-2xl font-bold text-primary">$29</p>
                                     <p className="text-xs text-slate-500">/ month</p>
                                 </div>
                             </div>

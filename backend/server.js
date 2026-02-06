@@ -85,6 +85,10 @@ app.post('/api/upload', upload.single('file'), async (req, res) => {
 const webhooksRouter = require('./routes/webhooks');
 app.use('/api/webhooks', webhooksRouter);
 
+// 6. Polar Checkout
+const checkoutRouter = require('./routes/checkout');
+app.use('/api/checkout', checkoutRouter);
+
 // Start Server
 app.listen(port, () => {
     console.log(`\n🚀 Juriq Backend running at http://localhost:${port}`);

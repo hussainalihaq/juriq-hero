@@ -3,11 +3,9 @@
 
 import { Polar } from '@polar-sh/sdk';
 
-// Initialize Polar client (client-side safe)
-const polar = new Polar({
-    accessToken: import.meta.env.VITE_POLAR_ACCESS_TOKEN || '',
-    server: import.meta.env.VITE_POLAR_ENV === 'production' ? 'production' : 'sandbox'
-});
+// Initialize Polar client (client-side safe - ONLY for public data if needed)
+// Note: Checkout creation is now handled by the backend to protect the secret token.
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 
 // Product IDs from Polar Dashboard
 export const POLAR_PRODUCTS = {
@@ -16,11 +14,7 @@ export const POLAR_PRODUCTS = {
 };
 
 /**
- * Create a checkout session for upgrading to Pro
- * @param customerEmail - User's email address
- * @param productId - Polar product ID (from POLAR_PRODUCTS)
- * @param successUrl - Redirect URL after successful payment
- * @param metadata - Additional metadata (e.g., user_id)
+ * Create a checkout session via Backend API
  */
 export async function createCheckout(
     customerEmail: string,
@@ -29,18 +23,26 @@ export async function createCheckout(
     metadata?: Record<string, string>
 ): Promise<string | null> {
     try {
-        const checkout = await polar.checkouts.create({
-            products: [productId],
-            customerEmail,
-            successUrl,
-            metadata: {
-                source: 'juriq_app',
-                ...metadata
-            }
+        const userId = metadata?.user_id;
+
+        const response = await fetch(`${API_URL}/api/checkout/create`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                productId,
+                customerEmail,
+                userId,
+                successUrl
+            })
         });
 
-        // Return the checkout URL for redirect
-        return checkout.url || null;
+        if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error.error || 'Checkout creation failed');
+        }
+
+        const data = await response.json();
+        return data.url || null; // Return the checkout URL
     } catch (error) {
         console.error('Polar checkout error:', error);
         throw error;
@@ -97,4 +99,5 @@ export async function getCustomerPortalUrl(customerId: string): Promise<string |
     }
 }
 
-export { polar };
+
+// export { polar }; // Removed as we use backend for API calls
