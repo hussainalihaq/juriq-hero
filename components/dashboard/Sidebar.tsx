@@ -25,6 +25,7 @@ interface SidebarProps {
     uploadedDocuments?: UploadedDocument[];
     chatSessions?: ChatSession[];
     onClearHistory?: () => void;
+    onSessionClick?: (sessionId: string) => void;
 }
 
 export const Sidebar: React.FC<SidebarProps> = ({
@@ -35,7 +36,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
     className,
     uploadedDocuments = [],
     chatSessions = [],
-    onClearHistory
+    onClearHistory,
+    onSessionClick
 }) => {
     const navigate = useNavigate();
 
@@ -112,6 +114,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                             {recentChats.map(chat => (
                                 <div
                                     key={chat.id}
+                                    onClick={() => onSessionClick?.(chat.id)}
                                     className="px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-white/5 cursor-pointer transition-colors group"
                                 >
                                     <p className="text-sm font-medium text-slate-700 dark:text-slate-200 truncate group-hover:text-primary transition-colors">

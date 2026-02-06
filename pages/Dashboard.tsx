@@ -197,8 +197,8 @@ const Dashboard: React.FC = () => {
     useEffect(() => {
         const checkBackend = async () => {
             try {
-                const res = await fetch('http://localhost:3000/');
-                setBackendOnline(res.ok);
+                const res = await fetch(`${API_URL}/api/chat`, { method: 'OPTIONS' });
+                setBackendOnline(true);
             } catch (e) {
                 setBackendOnline(false);
             }
@@ -238,6 +238,31 @@ const Dashboard: React.FC = () => {
         localStorage.setItem('juriq_current_session', newSessionId);
         setMessages([]);
         localStorage.removeItem('juriq_chat_history');
+    };
+
+    // Load a previous session from history
+    const handleSessionClick = (sessionId: string) => {
+        // Save current session first if it has messages
+        if (messages.length > 0 && sessionId !== currentSessionId) {
+            localStorage.setItem(`juriq_session_${currentSessionId}`, JSON.stringify(messages));
+        }
+
+        // Load the clicked session
+        const savedMessages = localStorage.getItem(`juriq_session_${sessionId}`);
+        if (savedMessages) {
+            try {
+                const parsed = JSON.parse(savedMessages).map((m: any) => ({
+                    ...m,
+                    timestamp: new Date(m.timestamp)
+                }));
+                setMessages(parsed);
+                setCurrentSessionId(sessionId);
+                localStorage.setItem('juriq_current_session', sessionId);
+                localStorage.setItem('juriq_chat_history', savedMessages);
+            } catch (e) {
+                console.error('Failed to load session:', e);
+            }
+        }
     };
 
     return (
@@ -295,6 +320,7 @@ const Dashboard: React.FC = () => {
                     setMessages([]);
                     setUploadedDocuments([]);
                 }}
+                onSessionClick={handleSessionClick}
             />
 
             {/* Main Content */}
