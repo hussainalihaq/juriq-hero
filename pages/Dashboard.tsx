@@ -28,7 +28,7 @@ const Dashboard: React.FC = () => {
     const [uploadedDocuments, setUploadedDocuments] = useState<{ id: string; name: string; size: number; uploadedAt: Date }[]>([]);
 
     // Attachment Preview (shown in InputArea before sending)
-    const [attachedFile, setAttachedFile] = useState<{ name: string; type: string; size: number; isValid?: boolean } | null>(null);
+    const [attachedFile, setAttachedFile] = useState<{ name: string; type: string; size: number; isValid?: boolean; data?: string } | null>(null);
 
     // Sidebar Visibility State (Desktop)
     const [showLeftSidebar, setShowLeftSidebar] = useState(true);

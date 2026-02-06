@@ -133,10 +133,10 @@ export default async function handler(req: any, res: any) {
     }
 
     try {
-        const { history, message, role, jurisdictions, outputStyle } = req.body;
+        const { history, message, role, jurisdictions, outputStyle, file } = req.body;
 
-        if (!message) {
-            return res.status(400).json({ error: 'Message is required' });
+        if (!message && !file) {
+            return res.status(400).json({ error: 'Message or file is required' });
         }
 
         if (!process.env.GEMINI_API_KEY) {
@@ -158,9 +158,27 @@ export default async function handler(req: any, res: any) {
             },
         });
 
-        const fullMessage = `${systemPrompt}\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nUSER QUERY:\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n${message}`;
+        // Construct message parts
+        const messageParts: any[] = [];
 
-        const result = await chat.sendMessage(fullMessage);
+        // Add System Prompt Context to the user query (since system instructions in startChat might be weaker or just prepending is robust)
+        // Note: For multi-turn chat, usually system instructions are set at model init, but here we prepend to the message or history.
+        // We'll prepend the system prompt text to the user message for this turn to ensure context.
+        const fullMessageText = `${systemPrompt}\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nUSER QUERY:\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n${message || ''}`;
+
+        messageParts.push({ text: fullMessageText });
+
+        // Add File if present
+        if (file && file.data) {
+            messageParts.push({
+                inlineData: {
+                    mimeType: file.mimeType || 'application/pdf',
+                    data: file.data
+                }
+            });
+        }
+
+        const result = await chat.sendMessage(messageParts);
         const response = await result.response;
         const text = response.text();
 
