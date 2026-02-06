@@ -294,21 +294,6 @@ const Settings = () => {
                                     ></div>
                                 </div>
                             </div>
-
-                            {/* Troubleshooting Reset */}
-                            <div className="pt-2 border-t border-slate-100 dark:border-white/5 mt-4">
-                                <button
-                                    onClick={() => {
-                                        localStorage.setItem('juriq_doc_usage', '0');
-                                        localStorage.setItem('juriq_free_usage', '0');
-                                        window.location.reload();
-                                    }}
-                                    className="text-[10px] text-slate-400 hover:text-red-500 flex items-center gap-1 transition-colors"
-                                >
-                                    <span className="material-symbols-outlined text-[10px]">restart_alt</span>
-                                    Reset Daily Limits (Troubleshooting)
-                                </button>
-                            </div>
                         </div>
                     </section>
 
