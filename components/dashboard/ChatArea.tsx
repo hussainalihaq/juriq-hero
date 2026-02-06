@@ -86,14 +86,26 @@ export const ChatArea: React.FC<ChatAreaProps> = ({ messages, isTyping, onSugges
                     className={`flex gap-4 max-w-4xl mx-auto animate-fade-in ${msg.role === 'user' ? 'flex-row-reverse' : ''}`}
                 >
                     {/* Avatar */}
-                    <div className={`w-8 h-8 rounded-lg shrink-0 flex items-center justify-center shadow-lg text-xs border
-            ${msg.role === 'model'
-                            ? 'bg-midnight-card border-white/10 text-white'
-                            : 'bg-primary/20 border-primary/20 text-primary-glow'}`}>
-                        <span className="material-symbols-outlined text-sm">
-                            {msg.role === 'model' ? 'auto_awesome' : 'person'}
-                        </span>
-                    </div>
+                    {msg.role === 'model' ? (
+                        <div className="w-8 h-8 rounded-lg shrink-0 flex items-center justify-center shadow-lg border bg-midnight-card border-white/10 text-white p-1.5">
+                            <svg viewBox="0 0 96 96" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
+                                <defs>
+                                    <mask id={`logo-mask-chat-${msg.id}`}>
+                                        <rect width="24" height="24" fill="white" />
+                                        <circle cx="18.5" cy="18.5" r="5.25" fill="black" />
+                                    </mask>
+                                </defs>
+                                <g transform="translate(18, 18) scale(2.5)">
+                                    <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="2.5" fill="none" mask={`url(#logo-mask-chat-${msg.id})`} />
+                                    <path d="M18.5 15.75 A2.75 2.75 0 1 1 18.5 21.25 A2.75 2.75 0 1 1 18.5 15.75 M18.5 17 A1.5 1.5 0 1 0 18.5 20 A1.5 1.5 0 1 0 18.5 17" fill="currentColor" fillRule="evenodd" />
+                                </g>
+                            </svg>
+                        </div>
+                    ) : (
+                        <div className="w-8 h-8 rounded-lg shrink-0 flex items-center justify-center shadow-lg text-xs border bg-primary/20 border-primary/20 text-primary-glow">
+                            <span className="material-symbols-outlined text-sm">person</span>
+                        </div>
+                    )}
 
                     {/* Message Content */}
                     <div className={`flex flex-col gap-1 max-w-[85%] ${msg.role === 'user' ? 'items-end' : ''}`}>
