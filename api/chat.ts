@@ -156,12 +156,12 @@ export default async function handler(req: any, res: any) {
         // Available models to try in order (Failover Strategy)
         // Based on User's available quota list
         // Available models to try in order (Failover Strategy)
-        // User reports Gemini 3 Flash has quota (0/20), while 2.5 is exceeded.
+        // gemini-3.0-flash returned 404, but now we catch 404s. User requested 3.0 as primary.
         const MODELS_TO_TRY = [
-            "gemini-3.0-flash",         // Primary (Fresh Quota)
-            "gemini-2.5-flash-lite",    // Secondary (Lite variant)
-            "gemini-2.0-flash-lite-preview-02-05", // Try explicit preview ID if 3.0 fails
-            "gemini-1.5-flash"          // Fallback Stable
+            "gemini-3.0-flash",                 // Primary (User Request)
+            "gemini-2.5-flash-lite",            // Secondary (User has quota)
+            "gemini-2.0-flash-lite-preview-02-05", // Tertiary
+            "gemini-1.5-flash"                  // Fallback
         ];
 
         let lastError: any = null;
@@ -218,17 +218,25 @@ export default async function handler(req: any, res: any) {
                 console.error(`Error with ${modelName}:`, error.message);
                 lastError = error;
 
-                // If the error is NOT a rate limit (429) or Service Unavailable (503), throw immediately (e.g. invalid key)
-                // However, Google SDK errors might be wrapped. Usually checking for '429' or 'quota' or 'resource exhausted' string matches.
-                const isRateLimit = error.message?.includes('429') || error.message?.includes('quota') || error.message?.includes('Too Many Requests') || error.message?.includes('resource exhausted');
+                // If the error is NOT a rate limit (429) or Service Unavailable (503) or Not Found (404), throw immediately
+                // However, for robustness, we should try all models in the list if one fails with 404 (model not found) or 429 (quota).
+                const isRecoverable =
+                    error.message?.includes('429') ||
+                    error.message?.includes('quota') ||
+                    error.message?.includes('Too Many Requests') ||
+                    error.message?.includes('resource exhausted') ||
+                    error.message?.includes('404') || // Model not found
+                    error.message?.includes('not found');
 
-                if (!isRateLimit) {
-                    // Critical error, don't retry
+                if (!isRecoverable) {
+                    // Critical error (e.g. Auth failure), don't retry
                     break;
                 }
-                // If it IS a rate limit, loop continues to next model
+                // If it IS recoverable, loop continues to next model
+                console.warn(`Model ${modelName} failed with recoverable error. Retrying next model...`);
             }
         }
+
 
         // If we exhausted all models
         throw lastError || new Error('All models failed due to rate limits.');

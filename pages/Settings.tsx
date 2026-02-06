@@ -285,12 +285,14 @@ const Settings = () => {
                             <div>
                                 <div className="flex justify-between text-xs font-medium mb-1">
                                     <span className="text-slate-600 dark:text-slate-400">Daily Documents</span>
-                                    <span className="text-slate-900 dark:text-white">{localStorage.getItem('juriq_doc_usage') || 0} / 1</span>
+                                    <span className="text-slate-900 dark:text-white">
+                                        {localStorage.getItem(user ? `juriq_usage_doc_${user.id}` : 'juriq_doc_usage') || 0} / 1
+                                    </span>
                                 </div>
                                 <div className="h-2 bg-slate-100 dark:bg-white/5 rounded-full overflow-hidden">
                                     <div
                                         className="h-full bg-purple-500 rounded-full transition-all duration-500"
-                                        style={{ width: `${Math.min(((parseInt(localStorage.getItem('juriq_doc_usage') || '0') / 1) * 100), 100)}%` }}
+                                        style={{ width: `${Math.min(((parseInt(localStorage.getItem(user ? `juriq_usage_doc_${user.id}` : 'juriq_doc_usage') || '0') / 1) * 100), 100)}%` }}
                                     ></div>
                                 </div>
                             </div>

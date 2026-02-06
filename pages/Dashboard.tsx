@@ -15,40 +15,58 @@ const Dashboard: React.FC = () => {
     const fileInputRef = useRef<HTMLInputElement>(null);
     const chatContainerRef = useRef<HTMLDivElement>(null);
 
+    // --- State Management (Moved to top) ---
+    const [user, setUser] = useState<any>(null);
+    const [messages, setMessages] = useState<Message[]>([]);
+    const [isTyping, setIsTyping] = useState(false);
+
+    // Session management
+    const [currentSessionId, setCurrentSessionId] = useState<string>(() => {
+        return localStorage.getItem('juriq_current_session') || Date.now().toString();
+    });
+
+    // --- User-Specific Storage Keys ---
+    const getStorageKeys = useCallback(() => {
+        const uid = user?.id || 'guest';
+        return {
+            msg: `juriq_usage_msg_${uid}`,
+            doc: `juriq_usage_doc_${uid}`,
+            lastDate: `juriq_usage_date_${uid}`,
+            history: `juriq_chat_history_${uid}`,
+            session: `juriq_session_${uid}`
+        };
+    }, [user]);
+
     // --- Daily Limit Logic (PKT Reset) ---
-    const checkDailyReset = () => {
+    const checkDailyReset = useCallback(() => {
         const now = new Date();
         // Convert to Pakistan Time (UTC+5)
         const pktDate = new Date(now.toLocaleString("en-US", { timeZone: "Asia/Karachi" }));
         const todayStr = pktDate.toISOString().split('T')[0]; // YYYY-MM-DD
 
-        const lastDate = localStorage.getItem('juriq_last_date');
+        const keys = getStorageKeys();
+        const lastDate = localStorage.getItem(keys.lastDate);
 
         if (lastDate !== todayStr) {
-            // New Day (PKT) -> Reset Limits
-            console.log('New Day (PKT) detected. Resetting limits.');
-            localStorage.setItem('juriq_free_usage', '0');
-            localStorage.setItem('juriq_doc_usage', '0');
-            localStorage.setItem('juriq_last_date', todayStr);
+            // New Day (PKT) -> Reset Limits for THIS user
+            console.log(`New Day (PKT) detected for ${user?.id || 'guest'}. Resetting limits.`);
+            localStorage.setItem(keys.msg, '0');
+            localStorage.setItem(keys.doc, '0');
+            localStorage.setItem(keys.lastDate, todayStr);
             return true; // Reset happened
         }
         return false;
-    };
+    }, [getStorageKeys, user]);
 
-    // Run reset check on mount
+    // Run reset check when user changes
     useEffect(() => {
         checkDailyReset();
-    }, []);
+    }, [checkDailyReset]);
 
-    // Session management for multi-chat history
-    const [currentSessionId, setCurrentSessionId] = useState<string>(() => {
-        return localStorage.getItem('juriq_current_session') || Date.now().toString();
-    });
+
 
     // --- State Management ---
-    const [user, setUser] = useState<any>(null);
-    const [messages, setMessages] = useState<Message[]>([]);
-    const [isTyping, setIsTyping] = useState(false);
+    // (Moved to top)
 
     // Document & History Tracking
     const [uploadedDocuments, setUploadedDocuments] = useState<{ id: string; name: string; size: number; uploadedAt: Date }[]>([]);
@@ -90,11 +108,12 @@ const Dashboard: React.FC = () => {
         }
     }, []);
 
-    // Load usage count on mount
+    // Load usage count on mount or user change
     useEffect(() => {
-        const count = parseInt(localStorage.getItem('juriq_free_usage') || '0');
+        const keys = getStorageKeys();
+        const count = parseInt(localStorage.getItem(keys.msg) || '0');
         setMessageCount(count);
-    }, []);
+    }, [getStorageKeys]);
 
     // Derive current session for sidebar (combine with saved sessions)
     const chatSessions = messages.length > 0 ? [{
@@ -116,9 +135,10 @@ const Dashboard: React.FC = () => {
         getUser();
     }, [navigate]);
 
-    // Load messages from localStorage on mount
+    // Load messages from localStorage on user change
     useEffect(() => {
-        const saved = localStorage.getItem('juriq_chat_history');
+        const keys = getStorageKeys();
+        const saved = localStorage.getItem(keys.history); // User-specific history
         if (saved) {
             try {
                 const parsed = JSON.parse(saved);
@@ -131,22 +151,25 @@ const Dashboard: React.FC = () => {
             } catch (e) {
                 console.error('Failed to load chat history:', e);
             }
+        } else {
+            setMessages([]); // Clear previous user's messages if none saved
         }
-    }, []);
+    }, [getStorageKeys]);
 
     // Save messages to localStorage whenever they change
     useEffect(() => {
+        const keys = getStorageKeys();
         if (messages.length > 0) {
-            localStorage.setItem('juriq_chat_history', JSON.stringify(messages));
+            localStorage.setItem(keys.history, JSON.stringify(messages));
         }
-    }, [messages]);
+    }, [messages, getStorageKeys]);
 
     const handleUploadClick = () => {
         // 1. Check Daily Reset
         checkDailyReset();
 
-        // 2. Check Document Limit (1 per day for Free Tier)
-        let docCount = parseInt(localStorage.getItem('juriq_doc_usage') || '0');
+        const keys = getStorageKeys();
+        let docCount = parseInt(localStorage.getItem(keys.doc) || '0');
         if (isNaN(docCount)) docCount = 0;
 
         // Allow 1 document, block if >= 1
@@ -193,8 +216,9 @@ const Dashboard: React.FC = () => {
         }
 
         // Track the document for sidebar history
-        const newDocCount = (parseInt(localStorage.getItem('juriq_doc_usage') || '0') || 0) + 1;
-        localStorage.setItem('juriq_doc_usage', newDocCount.toString());
+        const keys = getStorageKeys();
+        const newDocCount = (parseInt(localStorage.getItem(keys.doc) || '0') || 0) + 1;
+        localStorage.setItem(keys.doc, newDocCount.toString());
 
         setUploadedDocuments(prev => [{
             id: Date.now().toString(),
@@ -228,7 +252,8 @@ const Dashboard: React.FC = () => {
         checkDailyReset();
 
         // 2. Check Message Limit (10 per day for Free Tier)
-        let currentCount = parseInt(localStorage.getItem('juriq_free_usage') || '0');
+        const keys = getStorageKeys();
+        let currentCount = parseInt(localStorage.getItem(keys.msg) || '0');
         if (isNaN(currentCount)) currentCount = 0; // Robustness
 
         if (currentCount >= 10) {
@@ -242,7 +267,7 @@ const Dashboard: React.FC = () => {
         // Increment Usage
         const newCount = currentCount + 1;
         setMessageCount(newCount);
-        localStorage.setItem('juriq_free_usage', newCount.toString());
+        localStorage.setItem(keys.msg, newCount.toString());
 
         // 1. Add User Message immediately
         const messageText = attachedFile
