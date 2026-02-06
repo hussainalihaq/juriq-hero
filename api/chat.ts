@@ -238,7 +238,3 @@ export default async function handler(req: any, res: any) {
         });
     }
 }
-console.error('Chat API Error:', error);
-return res.status(500).json({ error: error.message || 'Internal server error' });
-    }
-}
