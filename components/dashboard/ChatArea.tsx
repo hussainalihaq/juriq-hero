@@ -44,7 +44,7 @@ export const ChatArea: React.FC<ChatAreaProps> = ({ messages, isTyping, onSugges
         <div
             ref={containerRef}
             onScroll={handleScroll}
-            className="flex-1 overflow-y-auto p-4 md:p-12 space-y-8 pb-4"
+            className="flex-1 overflow-y-auto p-4 md:p-12 space-y-8 pb-40"
         >
             {/* Welcome Placeholder if empty */}
             {messages.length === 0 && (
