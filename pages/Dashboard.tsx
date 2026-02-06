@@ -364,6 +364,9 @@ const Dashboard: React.FC = () => {
 
     return (
         <div className="flex h-screen overflow-hidden bg-off-white dark:bg-midnight-bg text-slate-900 dark:text-text-bright font-display selection:bg-primary/30 selection:text-white transition-colors duration-300">
+            {/* Upgrade Modal */}
+            <UpgradeModal isOpen={showUpgradeModal} onClose={() => setShowUpgradeModal(false)} />
+
             <input
                 type="file"
                 ref={fileInputRef}
