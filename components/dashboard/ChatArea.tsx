@@ -10,9 +10,18 @@ interface ChatAreaProps {
 
 export const ChatArea: React.FC<ChatAreaProps> = ({ messages, isTyping, onSuggestionClick }) => {
     const bottomRef = useRef<HTMLDivElement>(null);
+    const containerRef = useRef<HTMLDivElement>(null);
 
+    // Auto-scroll to bottom with slight delay for DOM render
     useEffect(() => {
-        bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+        const scrollToBottom = () => {
+            if (bottomRef.current) {
+                bottomRef.current.scrollIntoView({ behavior: 'smooth', block: 'end' });
+            }
+        };
+        // Small delay to ensure DOM is updated
+        const timer = setTimeout(scrollToBottom, 100);
+        return () => clearTimeout(timer);
     }, [messages, isTyping]);
 
     const suggestions = [
