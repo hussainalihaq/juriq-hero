@@ -53,7 +53,7 @@ export default {
                 }
             },
             backgroundImage: {
-                'grand-courtroom': 'linear-gradient(to bottom, rgba(15, 23, 42, 0.3), rgba(2, 6, 23, 0.85)), url("https://images.unsplash.com/photo-1564951434112-64d74cc2a2d7?q=80&w=2712&auto=format&fit=crop")',
+                'grand-courtroom': 'linear-gradient(to bottom, rgba(15, 23, 42, 0.3), rgba(2, 6, 23, 0.85)), url("https://images.unsplash.com/photo-1577962917302-cd874c4e31d2?q=80&w=2532&auto=format&fit=crop")',
             }
         },
     },

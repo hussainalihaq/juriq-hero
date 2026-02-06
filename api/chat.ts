@@ -161,10 +161,14 @@ export default async function handler(req: any, res: any) {
         // Construct message parts
         const messageParts: any[] = [];
 
-        // Add System Prompt Context to the user query (since system instructions in startChat might be weaker or just prepending is robust)
-        // Note: For multi-turn chat, usually system instructions are set at model init, but here we prepend to the message or history.
-        // We'll prepend the system prompt text to the user message for this turn to ensure context.
-        const fullMessageText = `${systemPrompt}\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nUSER QUERY:\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n${message || ''}`;
+        let finalSystemPrompt = systemPrompt;
+
+        // If a file is attached, force the model to focus on it
+        if (file && file.data) {
+            finalSystemPrompt += `\n\n[SYSTEM INSTRUCTION: A document has been attached to this message. You MUST read, analyze, and reference the content of this document to answer the user's query. Do not say you cannot read it. It is provided in the input context.]`;
+        }
+
+        const fullMessageText = `${finalSystemPrompt}\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nUSER QUERY:\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n${message || ''}`;
 
         messageParts.push({ text: fullMessageText });
 
