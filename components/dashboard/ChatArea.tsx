@@ -36,13 +36,7 @@ export const ChatArea: React.FC<ChatAreaProps> = ({ messages, isTyping, onSugges
         }
     }, [messages, isTyping]);
 
-    // Auto-scroll effect
-    useEffect(() => {
-        if (shouldAutoScroll || messages.length <= 1) {
-            // Use 'auto' behavior for instant scrolling during streaming to avoid lag/fighting
-            bottomRef.current?.scrollIntoView({ behavior: 'auto', block: 'end' });
-        }
-    }, [messages, isTyping, shouldAutoScroll]);
+
 
     const suggestions = [
         { icon: 'auto_awesome', text: 'Summarize obligations' },
