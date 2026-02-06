@@ -67,11 +67,11 @@ export const ChatArea: React.FC<ChatAreaProps> = ({ messages, isTyping, onSugges
             <div
                 ref={containerRef}
                 onScroll={handleScroll}
-                className="flex-1 w-full h-full overflow-y-auto p-4 md:p-12 space-y-8 pb-64 relative scroll-smooth"
+                className="flex-1 w-full h-full overflow-y-auto p-4 md:p-12 space-y-8 pb-96 relative scroll-smooth"
             >
                 {/* Welcome Placeholder if empty */}
                 {messages.length === 0 && (
-                    <div className="h-full flex flex-col items-center justify-center text-center select-none pb-20">
+                    <div className="h-full flex flex-col items-center justify-center text-center select-none">
                         {/* Interactive Icon Animation */}
                         {/* Full Welcome Screen with Logo */}
                         <div className="relative mb-6 group animate-slide-up">
@@ -209,7 +209,8 @@ export const ChatArea: React.FC<ChatAreaProps> = ({ messages, isTyping, onSugges
                     </div>
                 )}
 
-                {/* Bottom Anchor */}
+                {/* Spacer (Restored to 240px) to ensure visibility of latest messages */}
+                <div className="h-[240px] shrink-0" />
                 <div ref={bottomRef} />
             </div>
 
