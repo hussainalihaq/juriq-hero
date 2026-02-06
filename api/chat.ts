@@ -153,52 +153,93 @@ export default async function handler(req: any, res: any) {
             return res.status(500).json({ error: 'GEMINI_API_KEY not configured' });
         }
 
-        const model = genAI.getGenerativeModel({ model: MODEL_NAME });
+        // Available models to try in order (Failover Strategy)
+        // This effectively pools the rate limits of multiple models
+        const MODELS_TO_TRY = [
+            "gemini-2.5-flash",         // Primary (5 RPM / 20 RPD)
+            "gemini-2.5-flash-lite",    // Fallback 1 (10 RPM / 20 RPD) - Faster, lighter
+            "gemini-2.0-flash",         // Fallback 2 (Standard fallback)
+            "gemini-1.5-flash"          // Fallback 3 (Reliable workhorse)
+        ];
 
-        // Temperature based on output style
-        const temperature = 0.9 - ((outputStyle || 50) / 100) * 0.6;
-        const primaryJurisdiction = jurisdictions?.[0] || 'pak';
-        const systemPrompt = generateSystemPrompt(primaryJurisdiction, role || 'general');
+        let lastError: any = null;
 
-        const chat = model.startChat({
-            history: formatHistoryForGemini(history || []),
-            generationConfig: {
-                maxOutputTokens: 4000,
-                temperature: temperature,
-            },
-        });
+        for (const modelName of MODELS_TO_TRY) {
+            try {
+                console.log(`Attempting with model: ${modelName}`);
+                const model = genAI.getGenerativeModel({ model: modelName });
 
-        // Construct message parts
-        const messageParts: any[] = [];
+                // Temperature based on output style
+                const temperature = 0.9 - ((outputStyle || 50) / 100) * 0.6;
+                const primaryJurisdiction = jurisdictions?.[0] || 'pak';
+                const systemPrompt = generateSystemPrompt(primaryJurisdiction, role || 'general');
 
-        let finalSystemPrompt = systemPrompt;
+                const chat = model.startChat({
+                    history: formatHistoryForGemini(history || []),
+                    generationConfig: {
+                        maxOutputTokens: 4000,
+                        temperature: temperature,
+                    },
+                });
 
-        // If a file is attached, force the model to focus on it
-        if (file && file.data) {
-            finalSystemPrompt += `\n\n[SYSTEM INSTRUCTION: A document has been attached to this message. You MUST read, analyze, and reference the content of this document to answer the user's query. Do not say you cannot read it. It is provided in the input context.]`;
-        }
+                // Construct message parts
+                const messageParts: any[] = [];
+                let finalSystemPrompt = systemPrompt;
 
-        const fullMessageText = `${finalSystemPrompt}\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nUSER QUERY:\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n${message || ''}`;
-
-        messageParts.push({ text: fullMessageText });
-
-        // Add File if present
-        if (file && file.data) {
-            messageParts.push({
-                inlineData: {
-                    mimeType: file.mimeType || 'application/pdf',
-                    data: file.data
+                // If a file is attached, force the model to focus on it
+                if (file && file.data) {
+                    finalSystemPrompt += `\n\n[SYSTEM INSTRUCTION: A document has been attached to this message. You MUST read, analyze, and reference the content of this document to answer the user's query. Do not say you cannot read it. It is provided in the input context.]`;
                 }
-            });
+
+                const fullMessageText = `${finalSystemPrompt}\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nUSER QUERY:\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n${message || ''}`;
+                messageParts.push({ text: fullMessageText });
+
+                // Add File if present
+                if (file && file.data) {
+                    messageParts.push({
+                        inlineData: {
+                            mimeType: file.mimeType || 'application/pdf',
+                            data: file.data
+                        }
+                    });
+                }
+
+                const result = await chat.sendMessage(messageParts);
+                const response = await result.response;
+                const text = response.text();
+
+                // If successful, append a small indicator for debugging (optional, can remove for prod)
+                // const debugText = `${text}\n\n*[Generated via ${modelName}]*`; 
+                return res.status(200).json({ text });
+
+            } catch (error: any) {
+                console.error(`Error with ${modelName}:`, error.message);
+                lastError = error;
+
+                // If the error is NOT a rate limit (429) or Service Unavailable (503), throw immediately (e.g. invalid key)
+                // However, Google SDK errors might be wrapped. Usually checking for '429' or 'quota' or 'resource exhausted' string matches.
+                const isRateLimit = error.message?.includes('429') || error.message?.includes('quota') || error.message?.includes('Too Many Requests') || error.message?.includes('resource exhausted');
+
+                if (!isRateLimit) {
+                    // Critical error, don't retry
+                    break;
+                }
+                // If it IS a rate limit, loop continues to next model
+            }
         }
 
-        const result = await chat.sendMessage(messageParts);
-        const response = await result.response;
-        const text = response.text();
+        // If we exhausted all models
+        throw lastError || new Error('All models failed due to rate limits.');
 
-        return res.status(200).json({ text });
     } catch (error: any) {
-        console.error('Chat API Error:', error);
-        return res.status(500).json({ error: error.message || 'Internal server error' });
+        console.error('API Error:', error);
+        return res.status(500).json({
+            error: error.message || 'Internal Server Error',
+            details: 'All available AI models are currently busy or rate-limited. Please try again in 1 minute.'
+        });
+    }
+}
+console.error('Chat API Error:', error);
+return res.status(500).json({ error: error.message || 'Internal server error' });
     }
 }
