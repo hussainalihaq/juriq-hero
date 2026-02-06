@@ -175,34 +175,20 @@ export const ChatArea: React.FC<ChatAreaProps> = ({ messages, isTyping, onSugges
                                     </div>
                                 )}
 
-                                {/* Message Actions (Copy, Like, Dislike, Regenerate) */}
+                                {/* Message Actions (Copy Only) */}
                                 {msg.role === 'model' && !msg.text.startsWith('⚠️ Error:') && (
                                     <div className="flex items-center gap-2 mt-2 pt-2 text-slate-400">
                                         <button
                                             onClick={() => {
                                                 navigator.clipboard.writeText(msg.text);
-                                                // Visual feedback could be added here
+                                                // Simple feedback (optional TODO: Add toast)
                                             }}
-                                            className="p-1.5 rounded-md hover:bg-slate-100 dark:hover:bg-white/10 hover:text-slate-600 dark:hover:text-slate-200 transition-colors"
+                                            className="p-1.5 rounded-md hover:bg-slate-100 dark:hover:bg-white/10 hover:text-slate-600 dark:hover:text-slate-200 transition-colors flex items-center gap-1.5"
                                             title="Copy to clipboard"
                                         >
                                             <span className="material-symbols-outlined text-[18px]">content_copy</span>
+                                            {/* <span className="text-xs">Copy</span> -- Minimal icon only as per design */}
                                         </button>
-                                        <button className="p-1.5 rounded-md hover:bg-slate-100 dark:hover:bg-white/10 hover:text-slate-600 dark:hover:text-slate-200 transition-colors">
-                                            <span className="material-symbols-outlined text-[18px]">thumb_up</span>
-                                        </button>
-                                        <button className="p-1.5 rounded-md hover:bg-slate-100 dark:hover:bg-white/10 hover:text-slate-600 dark:hover:text-slate-200 transition-colors">
-                                            <span className="material-symbols-outlined text-[18px]">thumb_down</span>
-                                        </button>
-                                        {onRetry && (
-                                            <button
-                                                onClick={onRetry}
-                                                className="p-1.5 rounded-md hover:bg-slate-100 dark:hover:bg-white/10 hover:text-slate-600 dark:hover:text-slate-200 transition-colors"
-                                                title="Regenerate response"
-                                            >
-                                                <span className="material-symbols-outlined text-[18px]">cached</span>
-                                            </button>
-                                        )}
                                     </div>
                                 )}
 
@@ -240,8 +226,8 @@ export const ChatArea: React.FC<ChatAreaProps> = ({ messages, isTyping, onSugges
                     </div>
                 )}
 
-                {/* Robust Spacer to clear the Input Area (Physical element is more reliable than padding) */}
-                <div className="h-72 shrink-0" />
+                {/* Spacer (Reduced to 160px) to clear Input Area without excessive gap */}
+                <div className="h-40 shrink-0" />
                 <div ref={bottomRef} />
             </div>
 
