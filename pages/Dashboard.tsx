@@ -110,11 +110,15 @@ const Dashboard: React.FC = () => {
         const file = e.target.files?.[0];
         if (!file) return;
 
-        // Show attachment preview in InputArea (like Claude)
+        const MAX_SIZE = 5 * 1024 * 1024; // 5MB limit
+        const isValidSize = file.size <= MAX_SIZE;
+
+        // Show attachment preview in InputArea with validation status
         setAttachedFile({
             name: file.name,
             type: file.type || 'application/octet-stream',
-            size: file.size
+            size: file.size,
+            isValid: isValidSize
         });
 
         // Track the document for sidebar history

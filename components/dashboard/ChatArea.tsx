@@ -112,25 +112,25 @@ export const ChatArea: React.FC<ChatAreaProps> = ({ messages, isTyping, onSugges
                     {/* Message Content */}
                     <div className={`flex flex-col gap-1 max-w-[85%] ${msg.role === 'user' ? 'items-end' : ''}`}>
                         <div className="flex items-center gap-2 mb-1 px-1">
-                            <span className="text-xs font-bold text-slate-300">{msg.role === 'model' ? 'Juriq' : 'You'}</span>
-                            <span className="text-[10px] text-slate-600">{msg.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                            <span className="text-xs font-bold text-slate-400 dark:text-slate-500">{msg.role === 'model' ? 'Juriq' : 'You'}</span>
+                            <span className="text-[10px] text-slate-400 dark:text-slate-600 opacity-60">{msg.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
                         </div>
 
                         <div className={`
-                p-5 rounded-2xl leading-relaxed text-[15px] shadow-sm backdrop-blur-sm border
+                py-4 px-5 md:py-5 md:px-6 rounded-2xl leading-loose text-base shadow-sm backdrop-blur-sm border transition-all duration-300
                 ${msg.role === 'model'
-                                ? 'bg-midnight-card/80 border-white/5 text-slate-200'
+                                ? 'bg-white dark:bg-midnight-card/80 border-slate-100 dark:border-white/5 text-slate-800 dark:text-slate-200'
                                 : 'bg-primary text-white border-primary shadow-glow'}
             `}>
-                            <div className={`prose prose-sm max-w-none prose-invert`}>
+                            <div className={`prose prose-base max-w-none ${msg.role === 'model' ? 'prose-slate dark:prose-invert' : 'prose-invert'} prose-p:my-3 prose-headings:mb-3 prose-headings:mt-6 first:prose-headings:mt-0 prose-li:my-1`}>
                                 <ReactMarkdown>{msg.text}</ReactMarkdown>
                             </div>
 
                             {/* Action Chips for Model */}
                             {msg.role === 'model' && msg.actions && (
-                                <div className="mt-4 flex flex-wrap gap-2 pt-4 border-t border-white/5">
+                                <div className="mt-6 flex flex-wrap gap-2 pt-4 border-t border-slate-100 dark:border-white/5">
                                     {msg.actions.map((action, idx) => (
-                                        <button key={idx} className="px-3 py-1.5 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-primary/40 rounded-lg flex items-center gap-2 cursor-pointer transition-colors text-slate-400 hover:text-primary-glow">
+                                        <button key={idx} className="px-3.5 py-2 bg-slate-50 dark:bg-white/5 hover:bg-slate-100 dark:hover:bg-white/10 border border-slate-200 dark:border-white/10 hover:border-primary/40 rounded-lg flex items-center gap-2 cursor-pointer transition-colors text-slate-500 dark:text-slate-400 hover:text-primary dark:hover:text-primary-glow">
                                             <span className="material-symbols-outlined text-sm">{action.icon}</span>
                                             <span className="text-xs font-medium">{action.label}</span>
                                         </button>
