@@ -36,6 +36,9 @@ const Dashboard: React.FC = () => {
     // Jurisdiction toggle (quick switch)
     const [jurisdiction, setJurisdiction] = useState('pak');
 
+    // Role toggle (User persona)
+    const [selectedRole, setSelectedRole] = useState('general');
+
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
     // All saved chat sessions for sidebar
