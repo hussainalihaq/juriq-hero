@@ -175,6 +175,37 @@ export const ChatArea: React.FC<ChatAreaProps> = ({ messages, isTyping, onSugges
                                     </div>
                                 )}
 
+                                {/* Message Actions (Copy, Like, Dislike, Regenerate) */}
+                                {msg.role === 'model' && !msg.text.startsWith('⚠️ Error:') && (
+                                    <div className="flex items-center gap-2 mt-2 pt-2 text-slate-400">
+                                        <button
+                                            onClick={() => {
+                                                navigator.clipboard.writeText(msg.text);
+                                                // Visual feedback could be added here
+                                            }}
+                                            className="p-1.5 rounded-md hover:bg-slate-100 dark:hover:bg-white/10 hover:text-slate-600 dark:hover:text-slate-200 transition-colors"
+                                            title="Copy to clipboard"
+                                        >
+                                            <span className="material-symbols-outlined text-[18px]">content_copy</span>
+                                        </button>
+                                        <button className="p-1.5 rounded-md hover:bg-slate-100 dark:hover:bg-white/10 hover:text-slate-600 dark:hover:text-slate-200 transition-colors">
+                                            <span className="material-symbols-outlined text-[18px]">thumb_up</span>
+                                        </button>
+                                        <button className="p-1.5 rounded-md hover:bg-slate-100 dark:hover:bg-white/10 hover:text-slate-600 dark:hover:text-slate-200 transition-colors">
+                                            <span className="material-symbols-outlined text-[18px]">thumb_down</span>
+                                        </button>
+                                        {onRetry && (
+                                            <button
+                                                onClick={onRetry}
+                                                className="p-1.5 rounded-md hover:bg-slate-100 dark:hover:bg-white/10 hover:text-slate-600 dark:hover:text-slate-200 transition-colors"
+                                                title="Regenerate response"
+                                            >
+                                                <span className="material-symbols-outlined text-[18px]">cached</span>
+                                            </button>
+                                        )}
+                                    </div>
+                                )}
+
                                 {/* Retry Button for Errors */}
                                 {msg.role === 'model' && msg.text.startsWith('⚠️ Error:') && onRetry && (
                                     <div className="mt-4 pt-4 border-t border-red-100 dark:border-red-900/30">
