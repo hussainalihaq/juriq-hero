@@ -154,12 +154,11 @@ export default async function handler(req: any, res: any) {
         }
 
         // Available models to try in order (Failover Strategy)
-        // This effectively pools the rate limits of multiple models
+        // Based on User's available quota list
         const MODELS_TO_TRY = [
-            "gemini-2.5-flash",         // Primary (5 RPM / 20 RPD)
-            "gemini-2.5-flash-lite",    // Fallback 1 (10 RPM / 20 RPD) - Faster, lighter
-            "gemini-2.0-flash",         // Fallback 2 (Standard fallback)
-            "gemini-1.5-flash"          // Fallback 3 (Reliable workhorse)
+            "gemini-2.5-flash",         // Primary (Hit limit)
+            "gemini-2.5-flash-lite",    // Fallback 1 (Unused quota)
+            "gemini-3.0-flash"          // Fallback 2 (Unused quota - assuming ID based on "Gemini 3 Flash")
         ];
 
         let lastError: any = null;
