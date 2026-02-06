@@ -564,7 +564,7 @@ const Dashboard: React.FC = () => {
                 </header>
 
                 {/* Chat */}
-                <div className="flex-1 overflow-hidden relative">
+                <div className="flex-1 flex flex-col relative min-h-0 overflow-hidden">
                     <ChatArea
                         messages={messages}
                         isTyping={isTyping}
