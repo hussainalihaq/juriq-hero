@@ -568,7 +568,7 @@ const Dashboard: React.FC = () => {
                 </header>
 
                 {/* Chat */}
-                <div className="flex-1 overflow-hidden relative">
+                <div className="flex-1 overflow-hidden relative flex flex-col">
                     <ChatArea
                         key={currentSessionId} // Force remount on session switch to reset scroll
                         messages={messages}
