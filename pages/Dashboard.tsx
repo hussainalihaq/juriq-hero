@@ -5,6 +5,7 @@ import { Sidebar } from '../components/dashboard/Sidebar';
 import { ChatArea } from '../components/dashboard/ChatArea';
 import { InputArea } from '../components/dashboard/InputArea';
 import { Message } from '../types/dashboard';
+import { UpgradeModal } from '../components/UpgradeModal';
 
 // API URL: Use environment variable for external backend, or empty string for same-origin Vercel serverless
 const API_URL = import.meta.env.VITE_API_URL || '';
