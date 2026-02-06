@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@google/generative-ai": "^0.24.1",
+    "@polar-sh/sdk": "^0.42.5",
     "@supabase/supabase-js": "^2.93.3",
     "@vercel/analytics": "^1.6.1",
     "autoprefixer": "^10.4.24",

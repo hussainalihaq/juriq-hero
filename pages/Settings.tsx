@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabaseClient';
 import { Sidebar } from '../components/dashboard/Sidebar';
 import { useTheme } from '../context/ThemeContext';
+import { openProUpgrade } from '../lib/polarService';
 
 const JURISDICTIONS = [
     { id: 'pak', label: 'Pakistan', sublabel: 'Federal & Provincial' },
@@ -405,8 +406,12 @@ const Settings = () => {
 
                             <button
                                 onClick={() => {
-                                    // TODO: Paddle checkout integration
-                                    alert('Paddle checkout coming soon! Contact support for early access.');
+                                    if (user?.email) {
+                                        openProUpgrade(user.email, user.id, 'monthly');
+                                    } else {
+                                        alert('Please log in to upgrade.');
+                                        navigate('/login');
+                                    }
                                 }}
                                 className="w-full py-3 rounded-xl bg-primary hover:bg-primary-glow text-white font-bold text-sm transition-all flex items-center justify-center gap-2"
                             >
