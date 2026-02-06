@@ -28,65 +28,86 @@ export const UpgradeModal: React.FC<UpgradeModalProps> = ({ isOpen, onClose }) =
             />
 
             {/* Modal Content */}
-            <div className={`relative w-full max-w-md bg-white dark:bg-midnight-card border border-slate-200 dark:border-white/10 rounded-2xl shadow-2xl overflow-hidden transform transition-all duration-300 ${isOpen ? 'scale-100 translate-y-0' : 'scale-95 translate-y-4'}`}>
+            <div className={`relative bg-white dark:bg-midnight-card w-full max-w-4xl mx-4 rounded-2xl shadow-2xl border border-slate-200 dark:border-white/10 overflow-hidden transform transition-all duration-300 ${isRendered ? 'scale-100 opacity-100' : 'scale-95 opacity-0'}`}>
 
-                {/* Header Image/Gradient */}
-                <div className="h-32 bg-gradient-to-br from-primary via-purple-600 to-indigo-800 flex items-center justify-center relative overflow-hidden">
-                    <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-20"></div>
-                    <span className="material-symbols-outlined text-6xl text-white/90 drop-shadow-md">school</span>
-                </div>
+                {/* Close Button */}
+                <button
+                    onClick={onClose}
+                    className="absolute top-4 right-4 z-10 w-8 h-8 flex items-center justify-center rounded-full bg-slate-100 dark:bg-white/5 text-slate-500 hover:bg-slate-200 dark:hover:bg-white/10 transition-colors"
+                >
+                    <span className="material-symbols-outlined text-lg">close</span>
+                </button>
 
-                <div className="p-8">
-                    <div className="text-center mb-6">
-                        <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">Student Plan</h2>
-                        <p className="text-slate-500 dark:text-slate-400 text-sm">You have reached your 5 free messages limit.</p>
+                <div className="p-6 md:p-10">
+                    <div className="text-center mb-8">
+                        <h2 className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white mb-2">
+                            Unlock Full Legal Power
+                        </h2>
+                        <p className="text-slate-500 dark:text-slate-400">
+                            Choose the plan that fits your professional needs.
+                        </p>
                     </div>
 
-                    <div className="bg-slate-50 dark:bg-white/5 rounded-xl p-6 mb-6 border border-slate-100 dark:border-white/5 relative">
-                        <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-green-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wide">
-                            Best Value
+                    <div className="grid md:grid-cols-3 gap-6">
+
+                        {/* Free Tier */}
+                        <div className="p-6 rounded-xl border border-slate-200 dark:border-white/10 bg-slate-50/50 dark:bg-white/5 opacity-80">
+                            <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-1">Free Tier</h3>
+                            <p className="text-xs text-slate-500 mb-4 uppercase tracking-wider">Lead Generation</p>
+                            <div className="text-2xl font-bold text-slate-900 dark:text-white mb-6">PKR 0<span className="text-sm font-normal text-slate-500">/mo</span></div>
+
+                            <ul className="space-y-3 text-sm text-slate-600 dark:text-slate-300 mb-8">
+                                <li className="flex items-center gap-2"><span className="text-green-500">✓</span> 10 queries per day</li>
+                                <li className="flex items-center gap-2"><span className="text-green-500">✓</span> Pakistan Law Only</li>
+                                <li className="flex items-center gap-2"><span className="text-green-500">✓</span> Basic Q&A</li>
+                                <li className="flex items-center gap-2 opacity-50"><span className="text-slate-400">✗</span> No Document Uploads</li>
+                            </ul>
+
+                            <button className="w-full py-2 rounded-lg border border-slate-300 dark:border-white/10 text-slate-500 font-medium text-sm cursor-not-allowed">Current Plan</button>
                         </div>
-                        <div className="text-center">
-                            <span className="text-3xl font-bold text-slate-900 dark:text-white">PKR 1000</span>
-                            <span className="text-slate-400 text-sm">/month</span>
+
+                        {/* Student Plan (Highlighted) */}
+                        <div className="p-6 rounded-xl border-2 border-primary bg-white dark:bg-midnight-card relative shadow-xl shadow-primary/10">
+                            <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-primary text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider">Most Popular</div>
+                            <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-1">Student Plan</h3>
+                            <p className="text-xs text-primary mb-4 uppercase tracking-wider">For Law Students</p>
+                            <div className="text-2xl font-bold text-slate-900 dark:text-white mb-1">PKR 500<span className="text-sm font-normal text-slate-500">/mo</span></div>
+                            <p className="text-xs text-slate-400 mb-6">or PKR 4,500/year (Save 25%)</p>
+
+                            <ul className="space-y-3 text-sm text-slate-600 dark:text-slate-300 mb-8">
+                                <li className="flex items-center gap-2"><span className="text-green-500">✓</span> 100 queries per day</li>
+                                <li className="flex items-center gap-2"><span className="text-green-500">✓</span> All Jurisdictions (PK, UK, US)</li>
+                                <li className="flex items-center gap-2"><span className="text-green-500">✓</span> 5 Document Uploads/mo</li>
+                                <li className="flex items-center gap-2"><span className="text-green-500">✓</span> Case Law Analysis</li>
+                            </ul>
+
+                            <button className="w-full py-2.5 rounded-lg bg-primary hover:bg-primary-dark text-white font-bold text-sm transition-colors shadow-lg shadow-primary/25">Upgrade to Student</button>
                         </div>
-                        <ul className="mt-4 space-y-2 text-sm text-slate-600 dark:text-slate-300">
-                            <li className="flex items-center gap-2">
-                                <span className="material-symbols-outlined text-green-500 text-base">check</span>
-                                Unlimited AI Chats
-                            </li>
-                            <li className="flex items-center gap-2">
-                                <span className="material-symbols-outlined text-green-500 text-base">check</span>
-                                Full Document Analysis
-                            </li>
-                            <li className="flex items-center gap-2">
-                                <span className="material-symbols-outlined text-green-500 text-base">check</span>
-                                Access to "Simple Mode"
-                            </li>
-                            <li className="flex items-center gap-2">
-                                <span className="material-symbols-outlined text-green-500 text-base">check</span>
-                                Citation & Case Law Links
-                            </li>
-                        </ul>
+
+                        {/* Professional Plan */}
+                        <div className="p-6 rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-midnight-card">
+                            <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-1">Professional</h3>
+                            <p className="text-xs text-purple-500 mb-4 uppercase tracking-wider">For Lawyers & Founders</p>
+                            <div className="text-2xl font-bold text-slate-900 dark:text-white mb-1">PKR 2,500<span className="text-sm font-normal text-slate-500">/mo</span></div>
+                            <p className="text-xs text-slate-400 mb-6">or PKR 25,000/year (Save 17%)</p>
+
+                            <ul className="space-y-3 text-sm text-slate-600 dark:text-slate-300 mb-8">
+                                <li className="flex items-center gap-2"><span className="text-green-500">✓</span> Unlimited Queries</li>
+                                <li className="flex items-center gap-2"><span className="text-green-500">✓</span> GPT-4o Powered</li>
+                                <li className="flex items-center gap-2"><span className="text-green-500">✓</span> 50 Document Uploads/mo</li>
+                                <li className="flex items-center gap-2"><span className="text-green-500">✓</span> Contract Risk Analysis</li>
+                            </ul>
+
+                            <button className="w-full py-2.5 rounded-lg bg-slate-900 dark:bg-white hover:bg-slate-800 dark:hover:bg-slate-200 text-white dark:text-slate-900 font-bold text-sm transition-colors">Go Professional</button>
+                        </div>
+
                     </div>
 
-                    <button
-                        className="w-full py-3.5 bg-primary hover:bg-primary-glow text-white font-bold rounded-xl shadow-lg shadow-primary/30 transition-all active:scale-[0.98] flex items-center justify-center gap-2"
-                        onClick={() => {
-                            // In real app, redirect to payment gateway
-                            alert('Payment integration coming soon!');
-                        }}
-                    >
-                        <span>Upgrade Now</span>
-                        <span className="material-symbols-outlined text-sm">arrow_forward</span>
-                    </button>
-
-                    <button
-                        onClick={onClose}
-                        className="w-full mt-4 text-xs font-bold text-slate-400 hover:text-slate-600 dark:text-slate-500 dark:hover:text-slate-300 uppercase tracking-widest transition-colors"
-                    >
-                        Maybe Later
-                    </button>
+                    <div className="mt-8 text-center">
+                        <p className="text-xs text-slate-400">
+                            Enterprise plans available for firms. <a href="#" className="text-primary hover:underline">Contact Sales</a>
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>

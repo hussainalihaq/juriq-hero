@@ -38,10 +38,18 @@ const SignUp = () => {
 
             if (error) throw error;
 
-            // If successful, maybe redirect to login or show check email message
-            // For now, let's assume auto-login or redirect to dashboard (Home)
-            alert("Sign up successful! Please check your email to confirm your account.");
-            navigate('/dashboard');
+            if (error) throw error;
+
+            // Check if session was created immediately (Email Confirmation Disabled on Server)
+            if (data.session) {
+                // Auto-login success
+                navigate('/dashboard');
+                return;
+            }
+
+            // Fallback: If Email Confirmation IS required by server settings
+            alert("Account created! If required, please check your email to verify.");
+            navigate('/login'); // Redirect to login to wait for verification
 
         } catch (err: any) {
             console.error("Sign up error:", err);

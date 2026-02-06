@@ -145,16 +145,11 @@ const Dashboard: React.FC = () => {
         // 1. Check Daily Reset
         checkDailyReset();
 
-        // 2. Check Document Limit (1 per day)
-        let docCount = parseInt(localStorage.getItem('juriq_doc_usage') || '0');
-        if (isNaN(docCount)) docCount = 0;
-
-        if (docCount >= 1) {
-            // Trigger upgrade modal if doc limit reached
-            setShowUpgradeModal(true);
-            return;
-        }
-        fileInputRef.current?.click();
+        // 2. Check Plan (Free Tier = 0 Documents)
+        // Currently everyone is on Free Tier default
+        // Show Upgrade Modal immediately for any upload attempt
+        setShowUpgradeModal(true);
+        return;
     };
 
     const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -211,11 +206,11 @@ const Dashboard: React.FC = () => {
         // 1. Check Daily Reset
         checkDailyReset();
 
-        // 2. Check Message Limit (5 per day)
+        // 2. Check Message Limit (10 per day for Free Tier)
         let currentCount = parseInt(localStorage.getItem('juriq_free_usage') || '0');
         if (isNaN(currentCount)) currentCount = 0; // Robustness
 
-        if (currentCount >= 5) {
+        if (currentCount >= 10) {
             setShowUpgradeModal(true);
             return;
         }
@@ -501,18 +496,24 @@ const Dashboard: React.FC = () => {
 
                         <div className="w-px h-4 bg-slate-300 dark:bg-white/10" />
 
-                        {/* Jurisdiction Toggle */}
+                        {/* Jurisdiction Toggle (Locked to PAK for Free) */}
                         <div className="flex items-center bg-slate-100 dark:bg-white/5 rounded-lg p-0.5 border border-slate-200 dark:border-white/10">
                             {['pak', 'us', 'uk'].map((jur) => (
                                 <button
                                     key={jur}
-                                    onClick={() => setJurisdiction(jur)}
+                                    onClick={() => {
+                                        if (jur !== 'pak') {
+                                            setShowUpgradeModal(true); // Lock US/UK
+                                        } else {
+                                            setJurisdiction(jur);
+                                        }
+                                    }}
                                     className={`px-3 py-1.5 rounded-md text-[10px] font-bold uppercase tracking-wider transition-all ${jurisdiction === jur
                                         ? 'bg-white dark:bg-primary text-primary dark:text-white shadow-sm'
                                         : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-white'
-                                        }`}
+                                        } ${jur !== 'pak' ? 'opacity-50 cursor-not-allowed' : ''}`}
                                 >
-                                    {jur}
+                                    {jur} {jur !== 'pak' && <span className="ml-1 text-[8px] opacity-70">🔒</span>}
                                 </button>
                             ))}
                         </div>
