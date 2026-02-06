@@ -77,7 +77,7 @@ export const UpgradeModal: React.FC<UpgradeModalProps> = ({ isOpen, onClose }) =
                             <ul className="space-y-3 text-sm text-slate-600 dark:text-slate-300 mb-8">
                                 <li className="flex items-center gap-2"><span className="text-green-500">✓</span> 100 queries per day</li>
                                 <li className="flex items-center gap-2"><span className="text-green-500">✓</span> Advanced Case Search</li>
-                                <li className="flex items-center gap-2"><span className="text-green-500">✓</span> 20 Document Uploads/mo</li>
+                                <li className="flex items-center gap-2"><span className="text-green-500">✓</span> 10 Document Uploads/day</li>
                                 <li className="flex items-center gap-2"><span className="text-green-500">✓</span> Deep Case Law Analysis</li>
                             </ul>
 
@@ -94,7 +94,7 @@ export const UpgradeModal: React.FC<UpgradeModalProps> = ({ isOpen, onClose }) =
                             <ul className="space-y-3 text-sm text-slate-600 dark:text-slate-300 mb-8">
                                 <li className="flex items-center gap-2"><span className="text-green-500">✓</span> Unlimited Queries</li>
                                 <li className="flex items-center gap-2"><span className="text-green-500">✓</span> GPT-5 Powered</li>
-                                <li className="flex items-center gap-2"><span className="text-green-500">✓</span> Unlimited Documents</li>
+                                <li className="flex items-center gap-2"><span className="text-green-500">✓</span> 25 Document Uploads/day</li>
                                 <li className="flex items-center gap-2"><span className="text-green-500">✓</span> Contract Risk Analysis</li>
                             </ul>
 
