@@ -155,10 +155,13 @@ export default async function handler(req: any, res: any) {
 
         // Available models to try in order (Failover Strategy)
         // Based on User's available quota list
+        // Available models to try in order (Failover Strategy)
+        // Switch to stable 1.5-flash to avoid 429 limits on experimental models
         const MODELS_TO_TRY = [
-            "gemini-2.5-flash",         // Primary (Hit limit)
-            "gemini-2.5-flash-lite",    // Fallback 1 (Unused quota)
-            "gemini-3.0-flash"          // Fallback 2 (Unused quota - assuming ID based on "Gemini 3 Flash")
+            "gemini-1.5-flash",         // Primary (Stable, Good Limits)
+            "gemini-2.0-flash",         // Secondary (Newer, maybe limited)
+            "gemini-1.5-pro",           // Tertiary (High logic, stricter limits)
+            "gemini-1.5-flash-8b"       // Final (Fastest)
         ];
 
         let lastError: any = null;
