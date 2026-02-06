@@ -145,11 +145,16 @@ const Dashboard: React.FC = () => {
         // 1. Check Daily Reset
         checkDailyReset();
 
-        // 2. Check Plan (Free Tier = 0 Documents)
-        // Currently everyone is on Free Tier default
-        // Show Upgrade Modal immediately for any upload attempt
-        setShowUpgradeModal(true);
-        return;
+        // 2. Check Document Limit (1 per day for Free Tier)
+        let docCount = parseInt(localStorage.getItem('juriq_doc_usage') || '0');
+        if (isNaN(docCount)) docCount = 0;
+
+        // Allow 1 document, block if >= 1
+        if (docCount >= 1) {
+            setShowUpgradeModal(true);
+            return;
+        }
+        fileInputRef.current?.click();
     };
 
     const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {

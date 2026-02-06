@@ -59,42 +59,42 @@ export const UpgradeModal: React.FC<UpgradeModalProps> = ({ isOpen, onClose }) =
                             <ul className="space-y-3 text-sm text-slate-600 dark:text-slate-300 mb-8">
                                 <li className="flex items-center gap-2"><span className="text-green-500">✓</span> 10 queries per day</li>
                                 <li className="flex items-center gap-2"><span className="text-green-500">✓</span> Pakistan Law Only</li>
-                                <li className="flex items-center gap-2"><span className="text-green-500">✓</span> Basic Q&A</li>
-                                <li className="flex items-center gap-2 opacity-50"><span className="text-slate-400">✗</span> No Document Uploads</li>
+                                <li className="flex items-center gap-2"><span className="text-green-500">✓</span> 1 Document Upload/day</li>
+                                <li className="flex items-center gap-2 opacity-50"><span className="text-slate-400">✗</span> Basic Analysis Only</li>
                             </ul>
 
                             <button className="w-full py-2 rounded-lg border border-slate-300 dark:border-white/10 text-slate-500 font-medium text-sm cursor-not-allowed">Current Plan</button>
                         </div>
 
-                        {/* Student Plan (Highlighted) */}
+                        {/* Standard Plan (Was Student - Now Open to All) */}
                         <div className="p-6 rounded-xl border-2 border-primary bg-white dark:bg-midnight-card relative shadow-xl shadow-primary/10">
                             <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-primary text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider">Most Popular</div>
-                            <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-1">Student Plan</h3>
-                            <p className="text-xs text-primary mb-4 uppercase tracking-wider">For Law Students</p>
-                            <div className="text-2xl font-bold text-slate-900 dark:text-white mb-1">PKR 500<span className="text-sm font-normal text-slate-500">/mo</span></div>
-                            <p className="text-xs text-slate-400 mb-6">or PKR 4,500/year (Save 25%)</p>
+                            <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-1">Standard Plan</h3>
+                            <p className="text-xs text-primary mb-4 uppercase tracking-wider">For Students & Everyone</p>
+                            <div className="text-2xl font-bold text-slate-900 dark:text-white mb-1">PKR 999<span className="text-sm font-normal text-slate-500">/mo</span></div>
+                            <p className="text-xs text-slate-400 mb-6">or PKR 9,999/year (Save ~17%)</p>
 
                             <ul className="space-y-3 text-sm text-slate-600 dark:text-slate-300 mb-8">
                                 <li className="flex items-center gap-2"><span className="text-green-500">✓</span> 100 queries per day</li>
                                 <li className="flex items-center gap-2"><span className="text-green-500">✓</span> All Jurisdictions (PK, UK, US)</li>
-                                <li className="flex items-center gap-2"><span className="text-green-500">✓</span> 5 Document Uploads/mo</li>
-                                <li className="flex items-center gap-2"><span className="text-green-500">✓</span> Case Law Analysis</li>
+                                <li className="flex items-center gap-2"><span className="text-green-500">✓</span> 20 Document Uploads/mo</li>
+                                <li className="flex items-center gap-2"><span className="text-green-500">✓</span> Deep Case Law Analysis</li>
                             </ul>
 
-                            <button className="w-full py-2.5 rounded-lg bg-primary hover:bg-primary-dark text-white font-bold text-sm transition-colors shadow-lg shadow-primary/25">Upgrade to Student</button>
+                            <button className="w-full py-2.5 rounded-lg bg-primary hover:bg-primary-dark text-white font-bold text-sm transition-colors shadow-lg shadow-primary/25">Get Standard</button>
                         </div>
 
                         {/* Professional Plan */}
                         <div className="p-6 rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-midnight-card">
                             <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-1">Professional</h3>
-                            <p className="text-xs text-purple-500 mb-4 uppercase tracking-wider">For Lawyers & Founders</p>
-                            <div className="text-2xl font-bold text-slate-900 dark:text-white mb-1">PKR 2,500<span className="text-sm font-normal text-slate-500">/mo</span></div>
-                            <p className="text-xs text-slate-400 mb-6">or PKR 25,000/year (Save 17%)</p>
+                            <p className="text-xs text-purple-500 mb-4 uppercase tracking-wider">Lawyers & Founders</p>
+                            <div className="text-2xl font-bold text-slate-900 dark:text-white mb-1">PKR 2,999<span className="text-sm font-normal text-slate-500">/mo</span></div>
+                            <p className="text-xs text-slate-400 mb-6">or PKR 29,999/year (Save ~17%)</p>
 
                             <ul className="space-y-3 text-sm text-slate-600 dark:text-slate-300 mb-8">
                                 <li className="flex items-center gap-2"><span className="text-green-500">✓</span> Unlimited Queries</li>
                                 <li className="flex items-center gap-2"><span className="text-green-500">✓</span> GPT-4o Powered</li>
-                                <li className="flex items-center gap-2"><span className="text-green-500">✓</span> 50 Document Uploads/mo</li>
+                                <li className="flex items-center gap-2"><span className="text-green-500">✓</span> Unlimited Documents</li>
                                 <li className="flex items-center gap-2"><span className="text-green-500">✓</span> Contract Risk Analysis</li>
                             </ul>
 
