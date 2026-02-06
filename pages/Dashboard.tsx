@@ -177,15 +177,14 @@ const Dashboard: React.FC = () => {
             };
 
             setMessages(prev => [...prev, aiMsg]);
-        } catch (error) {
-            console.error(error);
-            const errorMsg: Message = {
-                id: (Date.now() + 1).toString(),
-                role: 'model',
-                text: "I'm having trouble connecting to the server. Please ensure the backend is running.",
-                timestamp: new Date()
-            };
-            setMessages(prev => [...prev, errorMsg]);
+        } catch (error: any) {
+            console.error('Chat Error:', error);
+            // Update placeholder with specific error message
+            setMessages(prev => prev.map(msg =>
+                msg.id === placeholderId
+                    ? { ...msg, text: `⚠️ Error: ${error.message || 'Connection failed. Please check your internet and API key.'}` }
+                    : msg
+            ));
         } finally {
             setIsTyping(false);
         }
