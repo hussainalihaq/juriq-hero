@@ -207,7 +207,23 @@ const Dashboard: React.FC = () => {
         if (fileInputRef.current) fileInputRef.current.value = '';
     };
 
-    const handleSend = useCallback(async (text: string, file?: { name: string; type: string; size: number }) => {
+    const handleRetry = () => {
+        if (messages.length < 2) return;
+        const lastMsg = messages[messages.length - 1];
+        const userMsg = messages[messages.length - 2];
+
+        // Ensure last is error and prev is user
+        if (lastMsg.role === 'model' && lastMsg.text.startsWith('⚠️ Error') && userMsg.role === 'user') {
+            // Remove last 2 messages UI
+            const newHistory = messages.slice(0, -2);
+            setMessages(newHistory);
+
+            // Re-send user message with explicit history (to avoid stale closure)
+            handleSend(userMsg.text, undefined, newHistory);
+        }
+    };
+
+    const handleSend = useCallback(async (text: string, file?: { name: string; type: string; size: number }, historyOverride?: Message[]) => {
         // 1. Check Daily Reset
         checkDailyReset();
 
@@ -259,7 +275,7 @@ const Dashboard: React.FC = () => {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    history: messages.map(m => ({ role: m.role === 'model' ? 'ai' : 'user', text: m.text })),
+                    history: (historyOverride || messages).map(m => ({ role: m.role === 'model' ? 'ai' : 'user', text: m.text })),
                     message: text,
                     role: selectedRole, // Uses the state we are adding back
                     jurisdictions: [jurisdiction],
@@ -531,11 +547,14 @@ const Dashboard: React.FC = () => {
                 </header>
 
                 {/* Chat */}
-                <ChatArea
-                    messages={messages}
-                    isTyping={isTyping}
-                    onSuggestionClick={(text) => handleSend(text)}
-                />
+                <div className="flex-1 overflow-hidden relative">
+                    <ChatArea
+                        messages={messages}
+                        isTyping={isTyping}
+                        onSuggestionClick={(text) => handleSend(text)}
+                        onRetry={handleRetry}
+                    />
+                </div>
 
                 {/* Floating Input */}
                 <InputArea

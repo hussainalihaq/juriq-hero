@@ -280,6 +280,36 @@ const Settings = () => {
                                 </button>
                             ))}
                         </div>
+                        <div className="bg-white dark:bg-midnight-card border border-slate-200 dark:border-white/5 p-6 rounded-xl space-y-4">
+                            {/* Documents */}
+                            <div>
+                                <div className="flex justify-between text-xs font-medium mb-1">
+                                    <span className="text-slate-600 dark:text-slate-400">Daily Documents</span>
+                                    <span className="text-slate-900 dark:text-white">{localStorage.getItem('juriq_doc_usage') || 0} / 1</span>
+                                </div>
+                                <div className="h-2 bg-slate-100 dark:bg-white/5 rounded-full overflow-hidden">
+                                    <div
+                                        className="h-full bg-purple-500 rounded-full transition-all duration-500"
+                                        style={{ width: `${Math.min(((parseInt(localStorage.getItem('juriq_doc_usage') || '0') / 1) * 100), 100)}%` }}
+                                    ></div>
+                                </div>
+                            </div>
+
+                            {/* Troubleshooting Reset */}
+                            <div className="pt-2 border-t border-slate-100 dark:border-white/5 mt-4">
+                                <button
+                                    onClick={() => {
+                                        localStorage.setItem('juriq_doc_usage', '0');
+                                        localStorage.setItem('juriq_free_usage', '0');
+                                        window.location.reload();
+                                    }}
+                                    className="text-[10px] text-slate-400 hover:text-red-500 flex items-center gap-1 transition-colors"
+                                >
+                                    <span className="material-symbols-outlined text-[10px]">restart_alt</span>
+                                    Reset Daily Limits (Troubleshooting)
+                                </button>
+                            </div>
+                        </div>
                     </section>
 
                     {/* Appearance Section */}

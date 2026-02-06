@@ -6,9 +6,10 @@ interface ChatAreaProps {
     messages: Message[];
     isTyping: boolean;
     onSuggestionClick: (text: string) => void;
+    onRetry?: () => void;
 }
 
-export const ChatArea: React.FC<ChatAreaProps> = ({ messages, isTyping, onSuggestionClick }) => {
+export const ChatArea: React.FC<ChatAreaProps> = ({ messages, isTyping, onSuggestionClick, onRetry }) => {
     const bottomRef = useRef<HTMLDivElement>(null);
     const containerRef = useRef<HTMLDivElement>(null);
 
@@ -138,6 +139,19 @@ export const ChatArea: React.FC<ChatAreaProps> = ({ messages, isTyping, onSugges
                                             <span className="text-xs font-medium">{action.label}</span>
                                         </button>
                                     ))}
+                                </div>
+                            )}
+
+                            {/* Retry Button for Errors */}
+                            {msg.role === 'model' && msg.text.startsWith('⚠️ Error:') && onRetry && (
+                                <div className="mt-4 pt-4 border-t border-red-100 dark:border-red-900/30">
+                                    <button
+                                        onClick={onRetry}
+                                        className="flex items-center gap-2 px-4 py-2 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-900/40 rounded-lg text-sm font-bold transition-colors"
+                                    >
+                                        <span className="material-symbols-outlined text-lg">refresh</span>
+                                        Retry Request
+                                    </button>
                                 </div>
                             )}
                         </div>
