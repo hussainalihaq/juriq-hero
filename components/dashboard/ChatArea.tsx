@@ -20,9 +20,9 @@ export const ChatArea: React.FC<ChatAreaProps> = ({ messages, isTyping, onSugges
         if (!container) return;
 
         const { scrollTop, scrollHeight, clientHeight } = container;
-        // If user is within 150px of bottom, enable auto-scroll. 
-        // Use Math.abs for robustness against fractional pixels (zooming)
-        const isAtBottom = Math.abs(scrollHeight - clientHeight - scrollTop) < 150;
+        // Strict threshold: Only auto-scroll if user is VERY close to bottom (20px).
+        // This allows user to scroll up slightly to read without being dragged down.
+        const isAtBottom = Math.abs(scrollHeight - clientHeight - scrollTop) < 20;
         setShouldAutoScroll(isAtBottom);
     };
 
