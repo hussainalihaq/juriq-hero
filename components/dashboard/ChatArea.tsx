@@ -143,16 +143,17 @@ export const ChatArea: React.FC<ChatAreaProps> = ({ messages, isTyping, onSugges
             ))}
 
             {/* Typing Indicator */}
+            {/* Typing Indicator */}
             {isTyping && (
-                <div className="flex gap-4 max-w-4xl mx-auto">
-                    <div className="w-8 h-8 rounded-lg bg-midnight-card border border-white/10 shrink-0 flex items-center justify-center text-white">
+                <div className="flex gap-4 max-w-4xl mx-auto opacity-0 animate-fade-in group w-full">
+                    <div className="w-8 h-8 rounded-lg bg-primary/10 dark:bg-midnight-card border border-primary/20 dark:border-white/10 shrink-0 flex items-center justify-center text-primary dark:text-white shadow-sm mt-1">
                         <span className="material-symbols-outlined text-sm">auto_awesome</span>
                     </div>
-                    <div className="bg-midnight-card/80 border border-white/5 px-4 py-3 rounded-2xl flex items-center gap-2 shadow-sm">
-                        <div className="flex gap-1">
-                            <div className="w-1.5 h-1.5 bg-primary rounded-full animate-bounce"></div>
-                            <div className="w-1.5 h-1.5 bg-primary rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
-                            <div className="w-1.5 h-1.5 bg-primary rounded-full animate-bounce" style={{ animationDelay: '0.4s' }}></div>
+                    <div className="py-4 px-6 bg-white dark:bg-midnight-card/80 border border-slate-100 dark:border-white/5 rounded-2xl rounded-tl-none shadow-sm backdrop-blur-sm transition-all duration-300">
+                        <div className="flex gap-1.5 py-1">
+                            <div className="w-2 h-2 bg-primary/60 dark:bg-primary rounded-full animate-bounce"></div>
+                            <div className="w-2 h-2 bg-primary/60 dark:bg-primary rounded-full animate-bounce" style={{ animationDelay: '0.15s' }}></div>
+                            <div className="w-2 h-2 bg-primary/60 dark:bg-primary rounded-full animate-bounce" style={{ animationDelay: '0.3s' }}></div>
                         </div>
                     </div>
                 </div>
