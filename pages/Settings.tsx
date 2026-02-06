@@ -280,7 +280,165 @@ const Settings = () => {
                                 </button>
                             ))}
                         </div>
+                    </section>
+
+                    {/* Subscription Plan Section */}
+                    <section className="space-y-4">
+                        <div className="flex items-center gap-2 border-b border-slate-200 dark:border-white/10 pb-2">
+                            <span className="material-symbols-outlined text-primary">workspace_premium</span>
+                            <h2 className="text-lg font-bold text-slate-900 dark:text-slate-200">Subscription Plan</h2>
+                        </div>
+
+                        {/* Current Plan Card */}
+                        <div className="bg-gradient-to-br from-slate-50 to-slate-100 dark:from-midnight-card dark:to-midnight-bg border border-slate-200 dark:border-white/10 p-6 rounded-xl">
+                            <div className="flex items-start justify-between mb-6">
+                                <div>
+                                    <div className="flex items-center gap-2 mb-1">
+                                        <h3 className="text-xl font-bold text-slate-900 dark:text-white">Free Plan</h3>
+                                        <span className="px-2 py-0.5 rounded-full bg-slate-200 dark:bg-white/10 text-xs font-bold text-slate-600 dark:text-slate-400 uppercase">Current</span>
+                                    </div>
+                                    <p className="text-sm text-slate-500 dark:text-slate-400">Perfect for exploring Juriq's capabilities</p>
+                                </div>
+                                <div className="text-right">
+                                    <p className="text-2xl font-bold text-slate-900 dark:text-white">$0</p>
+                                    <p className="text-xs text-slate-500">/ month</p>
+                                </div>
+                            </div>
+
+                            {/* Usage Limits */}
+                            <div className="space-y-4 mb-6">
+                                <div>
+                                    <div className="flex justify-between text-sm font-medium mb-1">
+                                        <span className="text-slate-600 dark:text-slate-400">Daily Messages</span>
+                                        <span className="text-slate-900 dark:text-white">
+                                            {localStorage.getItem(user ? `juriq_usage_msg_${user.id}` : 'juriq_msg_usage') || 0} / 10
+                                        </span>
+                                    </div>
+                                    <div className="h-2 bg-white dark:bg-white/5 rounded-full overflow-hidden">
+                                        <div
+                                            className="h-full bg-primary rounded-full transition-all duration-500"
+                                            style={{ width: `${Math.min(((parseInt(localStorage.getItem(user ? `juriq_usage_msg_${user.id}` : 'juriq_msg_usage') || '0') / 10) * 100), 100)}%` }}
+                                        ></div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div className="flex justify-between text-sm font-medium mb-1">
+                                        <span className="text-slate-600 dark:text-slate-400">Daily Documents</span>
+                                        <span className="text-slate-900 dark:text-white">
+                                            {localStorage.getItem(user ? `juriq_usage_doc_${user.id}` : 'juriq_doc_usage') || 0} / 1
+                                        </span>
+                                    </div>
+                                    <div className="h-2 bg-white dark:bg-white/5 rounded-full overflow-hidden">
+                                        <div
+                                            className="h-full bg-purple-500 rounded-full transition-all duration-500"
+                                            style={{ width: `${Math.min(((parseInt(localStorage.getItem(user ? `juriq_usage_doc_${user.id}` : 'juriq_doc_usage') || '0') / 1) * 100), 100)}%` }}
+                                        ></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Free Plan Features */}
+                            <div className="grid grid-cols-2 gap-2 text-sm text-slate-600 dark:text-slate-400 mb-6">
+                                <div className="flex items-center gap-2">
+                                    <span className="material-symbols-outlined text-green-500 text-base">check_circle</span>
+                                    <span>10 messages/day</span>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <span className="material-symbols-outlined text-green-500 text-base">check_circle</span>
+                                    <span>1 document/day</span>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <span className="material-symbols-outlined text-green-500 text-base">check_circle</span>
+                                    <span>Pakistan jurisdiction</span>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <span className="material-symbols-outlined text-slate-300 dark:text-slate-600 text-base">cancel</span>
+                                    <span className="line-through opacity-60">Advanced analysis</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Pro Plan Card */}
+                        <div className="bg-gradient-to-br from-primary/5 to-primary/10 dark:from-primary/10 dark:to-primary/5 border-2 border-primary/30 p-6 rounded-xl relative overflow-hidden">
+                            <div className="absolute top-3 right-3">
+                                <span className="px-3 py-1 rounded-full bg-primary text-white text-xs font-bold uppercase">Recommended</span>
+                            </div>
+
+                            <div className="flex items-start justify-between mb-6">
+                                <div>
+                                    <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-1">Pro Plan</h3>
+                                    <p className="text-sm text-slate-600 dark:text-slate-400">Unlimited power for serious legal research</p>
+                                </div>
+                                <div className="text-right">
+                                    <p className="text-2xl font-bold text-primary">$19</p>
+                                    <p className="text-xs text-slate-500">/ month</p>
+                                </div>
+                            </div>
+
+                            {/* Pro Plan Features */}
+                            <div className="grid grid-cols-2 gap-2 text-sm text-slate-700 dark:text-slate-300 mb-6">
+                                <div className="flex items-center gap-2">
+                                    <span className="material-symbols-outlined text-primary text-base">check_circle</span>
+                                    <span className="font-medium">Unlimited messages</span>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <span className="material-symbols-outlined text-primary text-base">check_circle</span>
+                                    <span className="font-medium">50 documents/month</span>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <span className="material-symbols-outlined text-primary text-base">check_circle</span>
+                                    <span className="font-medium">All jurisdictions</span>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <span className="material-symbols-outlined text-primary text-base">check_circle</span>
+                                    <span className="font-medium">Advanced analysis</span>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <span className="material-symbols-outlined text-primary text-base">check_circle</span>
+                                    <span className="font-medium">Contract risk scoring</span>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <span className="material-symbols-outlined text-primary text-base">check_circle</span>
+                                    <span className="font-medium">PDF export</span>
+                                </div>
+                            </div>
+
+                            <button
+                                onClick={() => {
+                                    // TODO: Paddle checkout integration
+                                    alert('Paddle checkout coming soon! Contact support for early access.');
+                                }}
+                                className="w-full py-3 rounded-xl bg-primary hover:bg-primary-glow text-white font-bold text-sm transition-all flex items-center justify-center gap-2"
+                            >
+                                <span className="material-symbols-outlined text-lg">rocket_launch</span>
+                                Upgrade to Pro
+                            </button>
+                        </div>
+                    </section>
+
+                    {/* Usage Statistics */}
+                    <section className="space-y-4">
+                        <div className="flex items-center gap-2 border-b border-slate-200 dark:border-white/10 pb-2">
+                            <span className="material-symbols-outlined text-primary">analytics</span>
+                            <h2 className="text-lg font-bold text-slate-900 dark:text-slate-200">Usage Statistics</h2>
+                        </div>
+
                         <div className="bg-white dark:bg-midnight-card border border-slate-200 dark:border-white/5 p-6 rounded-xl space-y-4">
+                            {/* Messages */}
+                            <div>
+                                <div className="flex justify-between text-xs font-medium mb-1">
+                                    <span className="text-slate-600 dark:text-slate-400">Daily Messages</span>
+                                    <span className="text-slate-900 dark:text-white">
+                                        {localStorage.getItem(user ? `juriq_usage_msg_${user.id}` : 'juriq_msg_usage') || 0} / 10
+                                    </span>
+                                </div>
+                                <div className="h-2 bg-slate-100 dark:bg-white/5 rounded-full overflow-hidden">
+                                    <div
+                                        className="h-full bg-primary rounded-full transition-all duration-500"
+                                        style={{ width: `${Math.min(((parseInt(localStorage.getItem(user ? `juriq_usage_msg_${user.id}` : 'juriq_msg_usage') || '0') / 10) * 100), 100)}%` }}
+                                    ></div>
+                                </div>
+                            </div>
                             {/* Documents */}
                             <div>
                                 <div className="flex justify-between text-xs font-medium mb-1">
@@ -296,6 +454,9 @@ const Settings = () => {
                                     ></div>
                                 </div>
                             </div>
+                            <p className="text-xs text-slate-500 dark:text-slate-500 pt-2 border-t border-slate-100 dark:border-white/5">
+                                Limits reset daily at midnight (Pakistan Time). Upgrade to Pro for unlimited access.
+                            </p>
                         </div>
                     </section>
 

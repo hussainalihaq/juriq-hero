@@ -62,23 +62,47 @@ export const InputArea: React.FC<InputAreaProps> = ({
 
             <div className="w-full max-w-3xl relative space-y-3">
 
-                {/* Attachment Preview (like Claude) */}
+                {/* Attachment Preview (Enhanced Visual Feedback) */}
                 {attachedFile && (
-                    <div className={`inline-flex items-center gap-3 px-4 py-3 rounded-xl border ${getFileColor(attachedFile)} shadow-sm max-w-xs transition-all duration-300`}>
-                        <div className={`w-10 h-10 rounded-lg flex items-center justify-center bg-white/50 dark:bg-black/20`}>
-                            <span className="material-symbols-outlined text-xl">{getFileIcon(attachedFile.type)}</span>
+                    <div className={`inline-flex items-center gap-3 px-4 py-3 rounded-xl border-2 ${getFileColor(attachedFile)} shadow-lg max-w-sm transition-all duration-300 animate-in slide-in-from-bottom-2`}>
+                        {/* File Icon with Pulse Animation for Valid Files */}
+                        <div className={`relative w-12 h-12 rounded-xl flex items-center justify-center ${attachedFile.isValid === true ? 'bg-green-100 dark:bg-green-500/20' : attachedFile.isValid === false ? 'bg-red-100 dark:bg-red-500/20' : 'bg-white/50 dark:bg-black/20'}`}>
+                            {attachedFile.isValid === true && (
+                                <div className="absolute inset-0 rounded-xl bg-green-400/30 animate-ping" />
+                            )}
+                            <span className={`material-symbols-outlined text-2xl relative z-10 ${attachedFile.isValid === true ? 'text-green-600' : attachedFile.isValid === false ? 'text-red-500' : ''}`}>{getFileIcon(attachedFile.type)}</span>
                         </div>
                         <div className="flex-1 min-w-0">
                             <p className="text-sm font-bold truncate">{attachedFile.name}</p>
-                            <p className="text-xs opacity-80 uppercase flex items-center gap-1">
-                                {attachedFile.type.split('/')[1] || 'File'}
-                                {attachedFile.isValid === false && <span className="font-bold text-red-600 dark:text-red-400 ml-1">• Too Large</span>}
-                                {attachedFile.isValid === true && <span className="font-bold text-green-600 dark:text-green-400 ml-1">• Ready</span>}
-                            </p>
+                            <div className="flex items-center gap-2 mt-0.5">
+                                <span className="text-xs opacity-70 uppercase">
+                                    {attachedFile.type.split('/')[1]?.toUpperCase() || 'FILE'}
+                                </span>
+                                <span className="text-xs opacity-50">•</span>
+                                <span className="text-xs opacity-70">
+                                    {(attachedFile.size / 1024).toFixed(0)} KB
+                                </span>
+                                {attachedFile.isValid === false && (
+                                    <>
+                                        <span className="text-xs opacity-50">•</span>
+                                        <span className="font-bold text-red-600 dark:text-red-400 text-xs">Too Large (Max 4.5MB)</span>
+                                    </>
+                                )}
+                                {attachedFile.isValid === true && (
+                                    <>
+                                        <span className="text-xs opacity-50">•</span>
+                                        <span className="font-bold text-green-600 dark:text-green-400 text-xs flex items-center gap-0.5">
+                                            <span className="material-symbols-outlined text-xs">check_circle</span>
+                                            Ready to Analyze
+                                        </span>
+                                    </>
+                                )}
+                            </div>
                         </div>
                         <button
                             onClick={onRemoveAttachment}
-                            className="w-6 h-6 rounded-full bg-slate-200 dark:bg-white/10 hover:bg-slate-300 dark:hover:bg-white/20 flex items-center justify-center text-slate-500 dark:text-slate-400 transition-colors"
+                            className="w-7 h-7 rounded-full bg-slate-200 dark:bg-white/10 hover:bg-red-100 dark:hover:bg-red-500/20 flex items-center justify-center text-slate-500 hover:text-red-500 dark:text-slate-400 dark:hover:text-red-400 transition-colors"
+                            title="Remove file"
                         >
                             <span className="material-symbols-outlined text-sm">close</span>
                         </button>
