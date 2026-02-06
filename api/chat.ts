@@ -2,7 +2,7 @@ import { GoogleGenerativeAI } from '@google/generative-ai';
 
 // Initialize Gemini
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
-const MODEL_NAME = "gemini-2.5-flash";
+const MODEL_NAME = "gemini-1.5-flash";
 
 // ==========================================
 // BASE SYSTEM PROMPT
@@ -117,8 +117,18 @@ function formatHistoryForGemini(frontendHistory: any[]) {
 // ==========================================
 // VERCEL SERVERLESS HANDLER
 // ==========================================
+// Configure Vercel/Next.js body size limit
+export const config = {
+    api: {
+        bodyParser: {
+            sizeLimit: '10mb', // Increase limit to 10MB to accommodate files
+        },
+    },
+};
+
 export default async function handler(req: any, res: any) {
-    // CORS headers
+    // ... rest of handler
+
     res.setHeader('Access-Control-Allow-Credentials', 'true');
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');

@@ -113,16 +113,35 @@ const Dashboard: React.FC = () => {
         const file = e.target.files?.[0];
         if (!file) return;
 
-        const MAX_SIZE = 5 * 1024 * 1024; // 5MB limit
+        const MAX_SIZE = 4.5 * 1024 * 1024; // Lower to 4.5MB for safety
         const isValidSize = file.size <= MAX_SIZE;
 
-        // Show attachment preview in InputArea with validation status
-        setAttachedFile({
-            name: file.name,
-            type: file.type || 'application/octet-stream',
-            size: file.size,
-            isValid: isValidSize
-        });
+        if (isValidSize) {
+            // Read file as Base64 for backend
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                const base64String = reader.result as string;
+                // Remove data:application/pdf;base64, prefix
+                const base64Data = base64String.split(',')[1];
+
+                setAttachedFile({
+                    name: file.name,
+                    type: file.type || 'application/octet-stream',
+                    size: file.size,
+                    isValid: isValidSize,
+                    data: base64Data // Store actual data
+                });
+            };
+            reader.readAsDataURL(file);
+        } else {
+            // Just metadata for error display
+            setAttachedFile({
+                name: file.name,
+                type: file.type,
+                size: file.size,
+                isValid: false
+            });
+        }
 
         // Track the document for sidebar history
         setUploadedDocuments(prev => [{
