@@ -136,10 +136,10 @@ export const ChatArea: React.FC<ChatAreaProps> = ({ messages, isTyping, onSugges
                         </div>
 
                         <div className={`
-                py-4 px-5 md:py-5 md:px-6 rounded-2xl leading-loose text-base shadow-sm backdrop-blur-sm border transition-all duration-300
+                py-2 md:py-3 leading-loose text-base transition-all duration-300
                 ${msg.role === 'model'
-                                ? 'bg-white dark:bg-midnight-card/80 border-slate-100 dark:border-white/5 text-slate-800 dark:text-slate-200'
-                                : 'bg-primary text-white border-primary shadow-glow'}
+                                ? 'bg-transparent px-0 border-none shadow-none text-slate-800 dark:text-slate-200'
+                                : 'bg-primary text-white border border-primary shadow-glow px-5 md:px-6 rounded-2xl'}
             `}>
                             <div className={`prose prose-base max-w-none ${msg.role === 'model' ? 'prose-slate dark:prose-invert' : 'prose-invert'} prose-p:my-3 prose-headings:mb-3 prose-headings:mt-6 first:prose-headings:mt-0 prose-li:my-1`}>
                                 <ReactMarkdown>{msg.text}</ReactMarkdown>
