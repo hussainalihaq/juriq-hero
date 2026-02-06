@@ -20,15 +20,17 @@ export const ChatArea: React.FC<ChatAreaProps> = ({ messages, isTyping, onSugges
         if (!container) return;
 
         const { scrollTop, scrollHeight, clientHeight } = container;
-        // If user is within 100px of bottom, enable auto-scroll. Otherwise disable it.
-        const isAtBottom = scrollHeight - scrollTop - clientHeight < 100;
+        // If user is within 150px of bottom, enable auto-scroll. 
+        // Use Math.abs for robustness against fractional pixels (zooming)
+        const isAtBottom = Math.abs(scrollHeight - clientHeight - scrollTop) < 150;
         setShouldAutoScroll(isAtBottom);
     };
 
     // Auto-scroll effect
     useEffect(() => {
         if (shouldAutoScroll || messages.length <= 1) {
-            bottomRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' });
+            // Use 'auto' behavior for instant scrolling during streaming to avoid lag/fighting
+            bottomRef.current?.scrollIntoView({ behavior: 'auto', block: 'end' });
         }
     }, [messages, isTyping, shouldAutoScroll]);
 
@@ -42,7 +44,7 @@ export const ChatArea: React.FC<ChatAreaProps> = ({ messages, isTyping, onSugges
         <div
             ref={containerRef}
             onScroll={handleScroll}
-            className="flex-1 overflow-y-auto p-4 md:p-12 space-y-8 pb-80 scroll-smooth"
+            className="flex-1 overflow-y-auto p-4 md:p-12 space-y-8 pb-80"
         >
             {/* Welcome Placeholder if empty */}
             {messages.length === 0 && (

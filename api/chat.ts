@@ -77,10 +77,11 @@ JURISDICTION: UNITED KINGDOM LAW
 // ==========================================
 // USER ROLE CONTEXTS
 // ==========================================
-student: `AUDIENCE: LAW STUDENT / BEGINNER - CRITICAL INSTRUCTION: EXPLAIN IN PLAIN ENGLISH. Use simple, layman's terms. Avoid complex jargon unless necessary, and if used, define it immediately. Teach the concept clearly as if to a undergraduate student.`,
+const USER_ROLE_CONTEXTS: Record<string, string> = {
+    student: `AUDIENCE: LAW STUDENT / BEGINNER - CRITICAL INSTRUCTION: EXPLAIN IN PLAIN ENGLISH. Use simple, layman's terms. Avoid complex jargon unless necessary, and if used, define it immediately. Teach the concept clearly as if to a undergraduate student.`,
     entrepreneur: `AUDIENCE: FOUNDER / BUSINESS OWNER - CRITICAL INSTRUCTION: PLAIN ENGLISH ONLY. no legalese. Focus purely on business risks, actionable steps, and bottom-line implications. Explain like you are talking to a non-lawyer founder.`,
-        lawyer: `AUDIENCE: LEGAL PROFESSIONAL - EXPERT MODE. Use precise legal terminology, detailed citation, Latin maxims where appropriate (e.g., prima facie, res judicata). Focus on nuance, conflicting precedents, and procedural technicalities. Do not oversimplify.`,
-            general: `AUDIENCE: GENERAL PUBLIC - PLAIN ENGLISH. Explain simply and clearly.`
+    lawyer: `AUDIENCE: LEGAL PROFESSIONAL - EXPERT MODE. Use precise legal terminology, detailed citation, Latin maxims where appropriate (e.g., prima facie, res judicata). Focus on nuance, conflicting precedents, and procedural technicalities. Do not oversimplify.`,
+    general: `AUDIENCE: GENERAL PUBLIC - PLAIN ENGLISH. Explain simply and clearly.`
 };
 
 // ==========================================
