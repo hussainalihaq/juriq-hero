@@ -67,7 +67,7 @@ export const ChatArea: React.FC<ChatAreaProps> = ({ messages, isTyping, onSugges
             <div
                 ref={containerRef}
                 onScroll={handleScroll}
-                className="flex-1 w-full h-full overflow-y-auto p-4 md:p-12 space-y-8 pb-96 relative scroll-smooth"
+                className="flex-1 w-full h-full overflow-y-auto p-4 md:p-12 space-y-8 pb-48 relative scroll-smooth"
             >
                 {/* Welcome Placeholder if empty */}
                 {messages.length === 0 && (
@@ -209,8 +209,7 @@ export const ChatArea: React.FC<ChatAreaProps> = ({ messages, isTyping, onSugges
                     </div>
                 )}
 
-                {/* Spacer (Restored to 240px) to ensure visibility of latest messages */}
-                <div className="h-[240px] shrink-0" />
+                {/* Bottom Anchor */}
                 <div ref={bottomRef} />
             </div>
 
