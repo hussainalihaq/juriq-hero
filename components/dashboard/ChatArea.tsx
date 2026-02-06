@@ -39,10 +39,11 @@ export const ChatArea: React.FC<ChatAreaProps> = ({ messages, isTyping, onSugges
                 <div className="h-full flex flex-col items-center justify-center text-center select-none pb-20">
                     {/* Interactive Icon Animation */}
                     {/* Interactive Icon Animation */}
-                    <div className="relative mb-8 group animate-slide-up">
-                        <div className="absolute inset-0 bg-primary/20 blur-2xl rounded-full animate-pulse-slow opacity-50 dark:opacity-100"></div>
-                        <div className="w-20 h-20 rounded-2xl flex items-center justify-center relative transform transition-transform duration-700 hover:scale-105 hover:rotate-3 p-4">
-                            <svg viewBox="0 0 96 96" xmlns="http://www.w3.org/2000/svg" className="w-full h-full text-primary dark:text-white drop-shadow-lg">
+                    {/* Full Welcome Screen with Logo */}
+                    <div className="relative mb-6 group animate-slide-up">
+                        <div className="absolute inset-0 bg-primary/20 blur-3xl rounded-full animate-pulse-slow opacity-50 dark:opacity-80 scale-150"></div>
+                        <div className="w-24 h-24 md:w-32 md:h-32 rounded-3xl flex items-center justify-center relative transform transition-transform duration-700 hover:scale-105 p-6 bg-white/50 dark:bg-white/5 backdrop-blur-sm border border-white/20 shadow-2xl">
+                            <svg viewBox="0 0 96 96" xmlns="http://www.w3.org/2000/svg" className="w-full h-full text-slate-900 dark:text-white drop-shadow-md">
                                 <defs>
                                     <mask id="logo-mask-chat">
                                         <rect width="24" height="24" fill="white" />
@@ -57,12 +58,14 @@ export const ChatArea: React.FC<ChatAreaProps> = ({ messages, isTyping, onSugges
                         </div>
                     </div>
 
-                    <div className="animate-slide-up" style={{ animationDelay: '0.1s' }}>
-                        <h2 className="text-4xl md:text-5xl font-bold text-slate-900 dark:text-white mb-4 tracking-tight leading-tight transition-colors">
-                            Understand your <br />
-                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-purple-600 dark:from-white dark:to-slate-400 italic">legal world.</span>
+                    <div className="animate-slide-up space-y-2" style={{ animationDelay: '0.1s' }}>
+                        <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-slate-900 dark:text-white mb-2">
+                            juriq
+                        </h1>
+                        <h2 className="text-2xl md:text-3xl font-medium text-slate-600 dark:text-slate-300 tracking-tight leading-tight">
+                            Understand your <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-purple-600 dark:from-white dark:to-slate-400 italic font-serif">legal world.</span>
                         </h2>
-                        <p className="text-slate-400 max-w-lg mx-auto leading-relaxed text-sm md:text-base">
+                        <p className="text-slate-400 max-w-lg mx-auto leading-relaxed text-sm md:text-base pt-2">
                             The high-fidelity intelligence platform for elite legal professional analysis.
                         </p>
                     </div>

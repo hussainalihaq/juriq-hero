@@ -15,6 +15,31 @@ const Dashboard: React.FC = () => {
     const fileInputRef = useRef<HTMLInputElement>(null);
     const chatContainerRef = useRef<HTMLDivElement>(null);
 
+    // --- Daily Limit Logic (PKT Reset) ---
+    const checkDailyReset = () => {
+        const now = new Date();
+        // Convert to Pakistan Time (UTC+5)
+        const pktDate = new Date(now.toLocaleString("en-US", { timeZone: "Asia/Karachi" }));
+        const todayStr = pktDate.toISOString().split('T')[0]; // YYYY-MM-DD
+
+        const lastDate = localStorage.getItem('juriq_last_date');
+
+        if (lastDate !== todayStr) {
+            // New Day (PKT) -> Reset Limits
+            console.log('New Day (PKT) detected. Resetting limits.');
+            localStorage.setItem('juriq_free_usage', '0');
+            localStorage.setItem('juriq_doc_usage', '0');
+            localStorage.setItem('juriq_last_date', todayStr);
+            return true; // Reset happened
+        }
+        return false;
+    };
+
+    // Run reset check on mount
+    useEffect(() => {
+        checkDailyReset();
+    }, []);
+
     // Session management for multi-chat history
     const [currentSessionId, setCurrentSessionId] = useState<string>(() => {
         return localStorage.getItem('juriq_current_session') || Date.now().toString();
@@ -117,11 +142,15 @@ const Dashboard: React.FC = () => {
     }, [messages]);
 
     const handleUploadClick = () => {
-        // CHECK LIMIT FIRST
-        let currentCount = parseInt(localStorage.getItem('juriq_free_usage') || '0');
-        if (isNaN(currentCount)) currentCount = 0; // Robustness
+        // 1. Check Daily Reset
+        checkDailyReset();
 
-        if (currentCount >= 5) {
+        // 2. Check Document Limit (1 per day)
+        let docCount = parseInt(localStorage.getItem('juriq_doc_usage') || '0');
+        if (isNaN(docCount)) docCount = 0;
+
+        if (docCount >= 1) {
+            // Trigger upgrade modal if doc limit reached
             setShowUpgradeModal(true);
             return;
         }
@@ -164,6 +193,9 @@ const Dashboard: React.FC = () => {
         }
 
         // Track the document for sidebar history
+        const newDocCount = (parseInt(localStorage.getItem('juriq_doc_usage') || '0') || 0) + 1;
+        localStorage.setItem('juriq_doc_usage', newDocCount.toString());
+
         setUploadedDocuments(prev => [{
             id: Date.now().toString(),
             name: file.name,
@@ -176,7 +208,10 @@ const Dashboard: React.FC = () => {
     };
 
     const handleSend = useCallback(async (text: string, file?: { name: string; type: string; size: number }) => {
-        // CHECK LIMIT FIRST
+        // 1. Check Daily Reset
+        checkDailyReset();
+
+        // 2. Check Message Limit (5 per day)
         let currentCount = parseInt(localStorage.getItem('juriq_free_usage') || '0');
         if (isNaN(currentCount)) currentCount = 0; // Robustness
 
@@ -283,14 +318,9 @@ const Dashboard: React.FC = () => {
     }, [messages, isTyping]);
 
     const handleNewChat = () => {
-        // CHECK LIMIT FIRST
-        let currentCount = parseInt(localStorage.getItem('juriq_free_usage') || '0');
-        if (isNaN(currentCount)) currentCount = 0; // Robustness
-
-        if (currentCount >= 5) {
-            setShowUpgradeModal(true);
-            return;
-        }
+        // Always allow New Chat (to see Welcome Screen)
+        // Reset check handled in background
+        checkDailyReset();
 
         // Save current session if it has messages
         if (messages.length > 0) {
