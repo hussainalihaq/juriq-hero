@@ -53,8 +53,8 @@ export default {
                 }
             },
             backgroundImage: {
-                'grand-courtroom': 'linear-gradient(to bottom, rgba(15, 23, 42, 0.3), rgba(2, 6, 23, 0.85)), url("https://images.unsplash.com/photo-1577962917302-cd874c4e31d2?q=80&w=2532&auto=format&fit=crop")',
-            }
+                'grand-courtroom': 'linear-gradient(to bottom, rgba(15, 23, 42, 0.4), rgba(2, 6, 23, 0.9)), url("https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=2301&auto=format&fit=crop")', // Modern sleek office/architecture
+            },
         },
     },
     plugins: [],
