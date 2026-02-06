@@ -10,6 +10,7 @@ import UpdatePassword from './pages/UpdatePassword';
 import { ThemeProvider } from './context/ThemeContext';
 
 import { Analytics } from "@vercel/analytics/react"
+import { SpeedInsights } from "@vercel/speed-insights/react"
 
 const App: React.FC = () => {
   return (
@@ -26,6 +27,7 @@ const App: React.FC = () => {
         </Routes>
       </Router>
       <Analytics />
+      <SpeedInsights />
     </ThemeProvider>
   );
 };
