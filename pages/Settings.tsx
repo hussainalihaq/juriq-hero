@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabaseClient';
 import { Sidebar } from '../components/dashboard/Sidebar';
 import { useTheme } from '../context/ThemeContext';
-import { openProUpgrade } from '../lib/polarService';
+import { openPaddleCheckout } from '../lib/paddleService';
 
 const JURISDICTIONS = [
     { id: 'pak', label: 'Pakistan', sublabel: 'Federal & Provincial' },
@@ -407,7 +407,7 @@ const Settings = () => {
                             <button
                                 onClick={() => {
                                     if (user?.email) {
-                                        openProUpgrade(user.email, user.id, 'monthly');
+                                        openPaddleCheckout(user.email, user.id, 'monthly');
                                     } else {
                                         alert('Please log in to upgrade.');
                                         navigate('/login');

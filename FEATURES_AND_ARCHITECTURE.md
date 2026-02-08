@@ -1,7 +1,7 @@
 # Juriq - Features & Architecture Documentation
 
 ## 1. Project Overview
-**Juriq** is a high-fidelity AI Legal Assistant designed for the Pakistan jurisdiction (with US/UK support). It provides specialized legal analysis for Students, Founders, and Lawyers using Google's Gemini 1.5 Pro models.
+**Juriq** is a high-fidelity AI Legal Assistant designed for the Pakistan jurisdiction (with US/UK support). It provides specialized legal analysis for **Students**, **Founders**, and **Lawyers** using Google's Gemini 1.5 Pro models.
 
 ## 2. Technical Stack
 
@@ -9,103 +9,113 @@
 - **Framework**: React 18 (Vite)
 - **Language**: TypeScript
 - **Styling**: Tailwind CSS (Dark Mode enabled, Custom `midnight` theme)
-- **Typography**: `Lora` (Serif for headings) + `Inter` (Sans-serif for UI)
-- **Icons**: Material Symbols Outlined
-- **State Management**: React `useState`, `useRef`, `localStorage` (Persistence)
-- **Routing**: React Router DOM
+- **State Management**: `useState` + `localStorage` (migrating to Supabase)
+- **Payment**: Paddle.js (V2 Billing)
+- **Analytics**: Vercel Analytics
 
 ### Backend
-- **Runtime**: Node.js
-- **Framework**: Express.js
-- **AI Model**: Google Gemini 1.5 Pro / Flash (via `@google/generative-ai`)
-- **File Handling**: `multer` (for PDF/Docx processing)
-- **PDF Parsing**: `pdf-parse`
+- **Runtime**: Node.js + Express.js
+- **Database**: Supabase (PostgreSQL) + RLS Policies
+- **Storage**: Supabase Storage (PDFs/Docs)
+- **AI Model**: Google Gemini 1.5 Pro / Flash
+- **Payment Processing**: Paddle Webhooks
 
 ---
 
-## 3. Key Features
+## 3. Architecture & Data Flow
 
-### 🧠 AI & Context Engine
-- **Role-Based Personas**:
-  - **Lawyer**: Professional, citation-heavy, statutory references.
-  - **Student**: Educational, explains concepts, breaks down logic.
-  - **Founder**: Practical, risk-focused, business-centric advice.
-- **Jurisdiction Toggle**: Defaults to **Pakistan**, supports switching to US/UK.
-- **Streaming Responses**: Real-time text generation for a responsive feel.
+### Database Schema (Supabase Postgres)
+| Table | Description | Key Fields |
+| :--- | :--- | :--- |
+| **`profiles`** | User details & subscription tier | `id`, `email`, `role`, `tier` (free/student/founder/pro), `paddle_customer_id` |
+| **`chat_sessions`** | Top-level conversation metadata | `id`, `user_id`, `role` (context), `jurisdiction` |
+| **`messages`** | Individual chat messages | `id`, `session_id`, `role` (user/model), `content`, `tokens_used` |
+| **`documents`** | Uploaded file metadata | `id`, `file_path`, `risk_score`, `analysis_json` |
+| **`usage_tracking`** | Daily usage limits enforcement | `user_id`, `date`, `messages_count`, `documents_count` |
 
-### 💬 Advanced Chat Interface
-- **Smart Scrolling**:
-  - Uses `useLayoutEffect` to lock scroll to bottom during streaming.
-  - "Stickiness" auto-disengages if user scrolls up to read history.
-  - **Floating Scroll Button**: Appears when scrolled up to instantly return to latest.
-  - **Layout Spacing**: optimized `pb-64` padding + `h-40` physical spacer ensures text never hides behind the input bar.
-- **Message Actions**:
-  - **Copy**: One-click copy to clipboard.
-  - **Retry**: Regenerate response on error or dissatisfaction.
-- **Visuals**:
-  - Clean, transparent AI text (no boxy borders).
-  - User messages in Primary Blue bubbles.
-  - Markdown rendering (Bold, Lists, Headers).
-
-### 📂 Document Analysis (RAG-Lite)
-- **File Support**: PDF, DOCX, TXT.
-- **Upload Logic**:
-  - Files are processed in-memory (or temp storage) and converted to text.
-  - Content is attached to the prompt context for Gemini to analyze.
-- **Limits**:
-  - Document usage counts only increment on **Send** (not upload).
-  - Daily limit enforcement (e.g., 20 docs/day).
-
-### ⚙️ Dashboard & Settings
-- **Session Management**:
-  - Auto-saves chat history to `localStorage`.
-  - Sidebar for switching between past conversations.
-  - "New Chat" resets context but keeps history.
-- **Usage Tracking**:
-  - Visual progress bars for Daily Messages and Document Limits.
-  - Tier-based logic (Free vs Pro).
-- **Authentication**:
-  - **Supabase Auth**: Email/Password login.
-  - **Guest Mode**: Limited access capabilities.
+### Payment Flow (Paddle)
+1.  **Frontend**: User clicks "Upgrade" on `/pricing`.
+2.  **Paddle.js**: Opens Checkout Overlay (Products: Free, Student, Founder, Pro).
+3.  **Payment Success**: Paddle processes transaction.
+4.  **Webhook**: Paddle sends `subscription.created` event to Backend.
+5.  **Backend**: Validates signature -> Updates `profiles.tier` & `profiles.subscription_status`.
 
 ---
 
-## 4. Backend Architecture Details
+## 4. Backend API Documentation
 
-### Directory Structure
+### A. Authentication
+- Managed via Supabase Client on Frontend.
+- Backend Middleware: Verify Supabase JWT Token.
+
+### B. Chat & AI Endpoints
+| Method | Endpoint | Description | Status |
+| :--- | :--- | :--- | :--- |
+| `POST` | `/api/chat` | Main RAG chat endpoint. Accepts `history`, `jurisdiction`, `role`. | ✅ Live |
+| `POST` | `/api/analyze` | Deep document analysis (Risk Score, Summary). | ✅ Live |
+
+### C. Documents (Unfinished)
+| Method | Endpoint | Description | Status |
+| :--- | :--- | :--- | :--- |
+| `POST` | `/api/upload` | Upload PDF/Docx to Supabase Storage + Parse Text. | 🚧 Setup Required |
+| `GET` | `/api/documents` | List user's documents. | 🚧 Pending |
+
+### D. Payments (Paddle)
+| Method | Endpoint | Description | Status |
+| :--- | :--- | :--- | :--- |
+| `POST` | `/api/webhooks/paddle` | Receives subscription events from Paddle. | 🚧 Config Required |
+
+---
+
+## 5. Pricing Tiers
+
+| Tier | Price | Verification | Limits | Model |
+| :--- | :--- | :--- | :--- | :--- |
+| **Free** | $0 | None | 10 msgs/day, 3 docs/mo | Flash Lite |
+| **Student** | $5/mo | .edu / ID | Unlimited msgs, 15 docs/mo | Flash |
+| **Founder** | $12/mo | None | Unlimited msgs, 30 docs/mo | Flash |
+| **Professional** | $29/mo | None | Unlimited Everything + Priority | **GPT-4o** |
+
+---
+
+## 6. Unfinished Work & Roadmap
+
+### Phase 1: Database Migration (Immediate Priority)
+- [ ] **Run SQL Schema**: Execute `backend/schema.sql` in Supabase.
+- [ ] **Create Storage Bucket**: Create `documents` bucket (Private).
+- [ ] **Backend Env**: Add `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY`.
+
+### Phase 2: Paddle Integration
+- [ ] **Frontend**: Configure Client Token in `.env.local`.
+- [ ] **Backend**: Configure Webhook Secret in `.env`.
+- [ ] **Webhook Handler**: Implement logic to parse Paddle events and update User Tier.
+
+### Phase 3: Subscription Enforcement
+- [ ] **Middleware**: Create `checkTierLimits` middleware.
+    - Check user's Tier in `profiles`.
+    - Check count in `usage_tracking` for today.
+    - Block request if over limit.
+- [ ] **Daily Reset**: Logic to handle date rollover (or just query by `CURRENT_DATE`).
+
+### Phase 4: Model Upgrade
+- [ ] **GPT-4o Integration**: Update `geminiService.js` (or create `openaiService.js`) to switch model based on `tier == 'professional'`.
+
+---
+
+## 7. Directory Structure (Planned)
 ```
 /backend
-  ├── server.js           # Main Entry Point (Express App)
-  ├── geminiService.js    # AI Logic (Prompt Engineering + Google SDK)
-  └── juriq-prompts.js    # System Instructions & Persona Definitions
+  ├── config/
+  │   └── supabase.js        # DB Connection
+  ├── middleware/
+  │   ├── auth.js            # JWT Validation
+  │   └── usage.js           # Tier Enforcement
+  ├── routes/
+  │   ├── chat.js            # AI Logic
+  │   ├── webhooks.js        # Paddle Listener
+  │   └── documents.js       # File Ops
+  ├── services/
+  │   ├── geminiService.js   # Google AI
+  │   └── paddleService.js   # Subscription Logic
+  └── server.js              # Entry Point
 ```
-
-### API Endpoints
-1.  **POST `/api/chat`**
-    *   **Body**: `{ message, history, role, jurisdiction, file }`
-    *   **Logic**:
-        *   Constructs a "system prompt" based on Role + Jurisdiction.
-        *   Incorporates File context if present.
-        *   Calls Gemini API (Stream).
-        *   Streams chunks back to frontend.
-
-2.  **POST `/api/analyze`** (Beta)
-    *   **Logic**: Dedicated endpoint for deep document analysis / summarization.
-
-### Security & Limits
-*   **CORS**: Configured to allow frontend origin.
-*   **Rate Limiting**: Backend tracks simple usage (can be expanded to Redis).
-*   **Env Variables**: API Keys stored in `.env` (Google AI, Supabase).
-
----
-
-## 5. Deployment
-
-*   **Frontend**: Deployed on **Vercel** (Single Page App).
-*   **Backend**: Can be deployed on **Render**, **Railway**, or as Serverless Functions on Vercel (`/api` directory).
-*   **Build Command**: `npm run build` (Production optimized).
-
-## 6. Future Roadmap (Planned)
-*   **Supabase Database**: Move history from LocalStorage to Postgres.
-*   **Vector Search (RAG)**: For searching across thousands of legal cases.
-*   **Payment Gateway**: Stripe integration for Pro Plan upgrades.

@@ -81,18 +81,10 @@ app.post('/api/upload', upload.single('file'), async (req, res) => {
     }
 });
 
-// 5. Polar Webhooks
-const webhooksRouter = require('./routes/webhooks');
-app.use('/api/webhooks', webhooksRouter);
-
-// 6. Polar Checkout
-const checkoutRouter = require('./routes/checkout');
-app.use('/api/checkout', checkoutRouter);
-
 // Start Server
 app.listen(port, () => {
     console.log(`\n🚀 Juriq Backend running at http://localhost:${port}`);
     console.log(`   - Gemini API Key: ${process.env.GEMINI_API_KEY ? 'Set' : 'MISSING'}`);
     console.log(`   - Supabase URL: ${process.env.SUPABASE_URL ? 'Set' : 'MISSING'}`);
-    console.log(`   - Polar Webhook: ${process.env.POLAR_WEBHOOK_SECRET ? 'Set' : 'MISSING'}\n`);
+    console.log(`   - Paddle Vendor: ${process.env.PADDLE_VENDOR_ID ? 'Set' : 'MISSING'}\n`);
 });

@@ -7,6 +7,7 @@ import Dashboard from './pages/Dashboard';
 import Settings from './pages/Settings';
 import ForgotPassword from './pages/ForgotPassword';
 import UpdatePassword from './pages/UpdatePassword';
+import PricingAndTerms from './pages/PricingAndTerms';
 import { ThemeProvider } from './context/ThemeContext';
 
 import { Analytics } from "@vercel/analytics/react"
@@ -23,6 +24,7 @@ const App: React.FC = () => {
           <Route path="/update-password" element={<UpdatePassword />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/settings" element={<Settings />} />
+          <Route path="/pricing" element={<PricingAndTerms />} />
         </Routes>
       </Router>
       <Analytics />
