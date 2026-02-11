@@ -13,35 +13,38 @@ const Hero: React.FC<HeroProps> = ({ onGetAccess }) => {
   };
 
   return (
-    <div className="w-full max-w-4xl mx-auto text-center flex flex-col items-center gap-4 md:gap-14">
-      {/* Badge */}
-      <div className="space-y-3 md:space-y-8 animate-[fadeIn_0.5s_ease-out]">
-        <div className="inline-flex items-center gap-3 px-4 py-1.5 rounded-full bg-white/50 dark:bg-slate-800/50 border border-white/80 dark:border-white/10 shadow-sm backdrop-blur-sm transition-colors duration-300 transform scale-90 md:scale-100">
+    <div className="w-full max-w-4xl mx-auto text-center flex flex-col items-center gap-2 md:gap-14">
+      {/* Badge - Hidden on mobile to save space */}
+      <div className="hidden md:block space-y-8 animate-[fadeIn_0.5s_ease-out]">
+        <div className="inline-flex items-center gap-3 px-4 py-1.5 rounded-full bg-white/50 dark:bg-slate-800/50 border border-white/80 dark:border-white/10 shadow-sm backdrop-blur-sm transition-colors duration-300">
           <span className="w-1.5 h-1.5 rounded-full bg-primary dark:bg-blue-400 animate-pulse"></span>
           <span className="text-[10px] font-bold text-primary dark:text-blue-100 tracking-[0.2em] uppercase">Waitlist Open</span>
         </div>
+      </div>
 
-        {/* Headline */}
-        <h1 className="text-slate-900 dark:text-white text-3xl sm:text-6xl font-extrabold leading-[1.1] tracking-tighter md:text-8xl drop-shadow-sm transition-colors duration-300 px-4">
+      {/* Headline - Reduced size and spacing */}
+      <div className="animate-[fadeIn_0.5s_ease-out]">
+        <h1 className="text-slate-900 dark:text-white text-3xl sm:text-6xl font-extrabold leading-tight tracking-tighter md:text-8xl drop-shadow-sm transition-colors duration-300 px-4 mb-2 md:mb-6">
           Understand your legal world, <span className="italic font-serif font-bold text-primary dark:text-blue-200">instantly.</span>
         </h1>
 
-        <p className="text-slate-500 dark:text-slate-400 text-sm md:text-lg max-w-lg mx-auto font-medium leading-relaxed transition-colors duration-300">
+        <p className="text-slate-500 dark:text-slate-400 text-xs md:text-lg max-w-lg mx-auto font-medium leading-relaxed transition-colors duration-300 px-4 mb-4 md:mb-0">
           The high-fidelity intelligence platform for elite legal professional analysis.
         </p>
       </div>
 
       {/* Product Mockup Container */}
-      {/* Reduced margins/padding for mobile to fit content above fold */}
-      <div className="w-full max-w-2xl relative group animate-[fadeIn_0.7s_ease-out_0.2s_both] mt-4 md:mt-0">
+      {/* Significantly reduced margins and height for mobile */}
+      <div className="w-full max-w-2xl relative group animate-[fadeIn_0.7s_ease-out_0.2s_both] mt-0 md:mt-0">
         {/* Glow Effect */}
         <div className="absolute -inset-10 bg-gradient-to-b from-white/20 to-transparent dark:from-blue-500/10 dark:to-transparent rounded-[4rem] blur-3xl -z-10 transition-opacity opacity-70 group-hover:opacity-100 duration-1000"></div>
 
-        <div className="glass-morphism rounded-[2rem] md:rounded-[2.5rem] p-2 md:p-3 relative overflow-hidden transform transition-transform duration-500 hover:scale-[1.01]">
-          {/* Blurred Interface */}
-          <div className="filter blur-md opacity-40 select-none pointer-events-none grayscale-[0.3] dark:grayscale-0 dark:opacity-20 scale-90 md:scale-100 origin-top">
-            <div className="flex flex-col gap-2">
-              <div className="flex items-center gap-3 p-2">
+        {/* Mobile: Taller crop, smaller scale. Desktop: Normal */}
+        <div className="glass-morphism rounded-2xl md:rounded-[2.5rem] p-1.5 md:p-3 relative overflow-hidden transform transition-transform duration-500 hover:scale-[1.01]">
+          {/* Blurred Interface - simplified/smaller for mobile */}
+          <div className="filter blur-md opacity-40 select-none pointer-events-none grayscale-[0.3] dark:grayscale-0 dark:opacity-20 scale-[0.8] md:scale-100 origin-top -mb-8 md:mb-0">
+            <div className="flex flex-col gap-1 md:gap-2">
+              <div className="flex items-center gap-2 md:gap-3 p-1 md:p-2">
                 <div className="flex-1">
                   <div className="w-full h-10 md:h-12 border-none bg-transparent text-sm md:text-lg font-medium py-3 text-primary dark:text-white flex items-center">
                     Paste a clause or ask a legal question...
