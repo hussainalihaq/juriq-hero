@@ -31,6 +31,35 @@ const Hero: React.FC<HeroProps> = ({ onGetAccess }) => {
         </p>
       </div>
 
+      {/* Action Input (Moved Up for Mobile Visibility) */}
+      <div className="w-full max-w-lg mx-auto transform transition-all duration-500 z-30 relative">
+        <form onSubmit={handleSubmit} className="relative bg-white dark:bg-slate-800 p-2 pr-2 rounded-2xl shadow-xl shadow-slate-200/60 dark:shadow-none border border-slate-100 dark:border-slate-700 flex items-center group/input transition-all hover:shadow-2xl hover:shadow-primary/5 focus-within:shadow-2xl focus-within:shadow-primary/10 focus-within:border-primary/20 dark:focus-within:border-blue-400/50">
+          <div className="pl-4 text-slate-400 dark:text-slate-500 group-focus-within/input:text-primary dark:group-focus-within/input:text-white transition-colors">
+            <span className="material-symbols-outlined text-xl">mail</span>
+          </div>
+          <input
+            className="w-full border-none bg-transparent focus:ring-0 text-slate-800 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 text-sm font-medium h-12 outline-none"
+            placeholder="Enter your work email..."
+            type="email"
+            value={emailInput}
+            onChange={(e) => setEmailInput(e.target.value)}
+          />
+          <button
+            type="submit"
+            className="shrink-0 bg-primary dark:bg-white hover:bg-navy-deep dark:hover:bg-slate-200 text-white dark:text-primary h-11 px-6 rounded-xl text-xs font-bold transition-all shadow-lg shadow-primary/20 hover:shadow-primary/40 dark:shadow-white/5 flex items-center gap-2 whitespace-nowrap active:scale-[0.98]"
+          >
+            <span className="hidden sm:inline">Get Early Access</span>
+            <span className="sm:hidden">Join</span>
+            <span className="material-symbols-outlined text-sm font-bold">arrow_forward</span>
+          </button>
+        </form>
+
+        <div className="mt-4 flex items-center justify-center gap-2 text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase tracking-widest opacity-80 transition-colors">
+          <span className="w-2 h-2 rounded-full bg-green-500/80 animate-pulse"></span>
+          Limited Spots Available
+        </div>
+      </div>
+
       {/* Product Mockup Container */}
       <div className="w-full max-w-2xl relative group animate-[fadeIn_0.7s_ease-out_0.2s_both]">
         {/* Glow Effect */}
@@ -72,34 +101,7 @@ const Hero: React.FC<HeroProps> = ({ onGetAccess }) => {
           </div>
         </div>
 
-        {/* Action Input */}
-        <div className="mt-8 w-full max-w-lg mx-auto transform transition-all duration-500">
-          <form onSubmit={handleSubmit} className="relative bg-white dark:bg-slate-800 p-2 pr-2 rounded-2xl shadow-xl shadow-slate-200/60 dark:shadow-none border border-slate-100 dark:border-slate-700 flex items-center group/input transition-all hover:shadow-2xl hover:shadow-primary/5 focus-within:shadow-2xl focus-within:shadow-primary/10 focus-within:border-primary/20 dark:focus-within:border-blue-400/50">
-            <div className="pl-4 text-slate-400 dark:text-slate-500 group-focus-within/input:text-primary dark:group-focus-within/input:text-white transition-colors">
-              <span className="material-symbols-outlined text-xl">mail</span>
-            </div>
-            <input
-              className="w-full border-none bg-transparent focus:ring-0 text-slate-800 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 text-sm font-medium h-12 outline-none"
-              placeholder="Enter your work email..."
-              type="email"
-              value={emailInput}
-              onChange={(e) => setEmailInput(e.target.value)}
-            />
-            <button
-              type="submit"
-              className="shrink-0 bg-primary dark:bg-white hover:bg-navy-deep dark:hover:bg-slate-200 text-white dark:text-primary h-11 px-6 rounded-xl text-xs font-bold transition-all shadow-lg shadow-primary/20 hover:shadow-primary/40 dark:shadow-white/5 flex items-center gap-2 whitespace-nowrap active:scale-[0.98]"
-            >
-              <span className="hidden sm:inline">Get Early Access</span>
-              <span className="sm:hidden">Join</span>
-              <span className="material-symbols-outlined text-sm font-bold">arrow_forward</span>
-            </button>
-          </form>
 
-          <div className="mt-4 flex items-center justify-center gap-2 text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase tracking-widest opacity-80 transition-colors">
-            <span className="w-2 h-2 rounded-full bg-green-500/80 animate-pulse"></span>
-            Limited Spots Available
-          </div>
-        </div>
 
         {/* Features/Trust Badges */}
         <div className="mt-12 flex flex-wrap items-center justify-center gap-8 opacity-40 dark:opacity-30">
