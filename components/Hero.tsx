@@ -89,7 +89,8 @@ const Hero: React.FC<HeroProps> = ({ onGetAccess }) => {
               type="submit"
               className="shrink-0 bg-primary dark:bg-white hover:bg-navy-deep dark:hover:bg-slate-200 text-white dark:text-primary h-11 px-6 rounded-xl text-xs font-bold transition-all shadow-lg shadow-primary/20 hover:shadow-primary/40 dark:shadow-white/5 flex items-center gap-2 whitespace-nowrap active:scale-[0.98]"
             >
-              Get Early Access
+              <span className="hidden sm:inline">Get Early Access</span>
+              <span className="sm:hidden">Join</span>
               <span className="material-symbols-outlined text-sm font-bold">arrow_forward</span>
             </button>
           </form>
