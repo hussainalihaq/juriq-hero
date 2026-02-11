@@ -8,6 +8,7 @@ import Settings from './pages/Settings';
 import ForgotPassword from './pages/ForgotPassword';
 import UpdatePassword from './pages/UpdatePassword';
 import PricingAndTerms from './pages/PricingAndTerms';
+import Waitlist from './pages/Waitlist';
 import { ThemeProvider } from './context/ThemeContext';
 
 import { Analytics } from "@vercel/analytics/react"
@@ -25,6 +26,7 @@ const App: React.FC = () => {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="/pricing" element={<PricingAndTerms />} />
+          <Route path="/waitlist" element={<Waitlist />} />
         </Routes>
       </Router>
       <Analytics />

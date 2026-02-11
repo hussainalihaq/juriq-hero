@@ -93,13 +93,10 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, initialEmail }) => {
   return (
     <div className={`fixed inset-0 z-[100] flex items-center justify-center px-4 sm:px-6 transition-all duration-300 ${isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
       {/* Backdrop */}
-      <div
-        className="absolute inset-0 bg-slate-900/30 dark:bg-black/60 backdrop-blur-sm transition-opacity"
-        onClick={onClose}
-      ></div>
+      <div className="absolute inset-0 bg-slate-900/30 dark:bg-black/60 backdrop-blur-sm transition-opacity" onClick={onClose}></div>
 
       {/* Modal Content */}
-      <div className={`relative w-full max-w-[420px] bg-white dark:bg-slate-900 rounded-3xl shadow-[0_20px_60px_-15px_rgba(15,23,42,0.3)] dark:shadow-none dark:border dark:border-white/10 p-8 overflow-hidden transition-all duration-300 transform ${isOpen ? 'scale-100 translate-y-0' : 'scale-95 translate-y-4'}`}>
+      <div className={`relative w-full max-w-[420px] bg-white dark:bg-slate-900 rounded-3xl shadow-[0_20px_60px_-15px_rgba(15,23,42,0.3)] dark:shadow-none dark:border dark:border-white/10 p-6 md:p-8 overflow-hidden transition-all duration-300 transform ${isOpen ? 'scale-100 translate-y-0' : 'scale-95 translate-y-4'}`}>
 
         {/* Close Button */}
         <button

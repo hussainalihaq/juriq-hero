@@ -10,9 +10,9 @@ interface HeaderProps {
 const Header: React.FC<HeaderProps> = ({ onGetAccess, darkMode, toggleDarkMode }) => {
   return (
     <nav className="sticky top-0 z-40 w-full bg-white/40 dark:bg-slate-900/40 backdrop-blur-md border-b border-white/20 dark:border-white/5 transition-colors duration-300">
-      <div className="flex items-center justify-between px-6 h-20 max-w-7xl mx-auto">
-        <div className="flex items-center gap-3 cursor-pointer" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
-          <div className="w-16 h-16 text-primary dark:text-white transition-colors duration-300">
+      <div className="flex items-center justify-between px-4 md:px-6 h-16 md:h-20 max-w-7xl mx-auto">
+        <div className="flex items-center gap-2 md:gap-3 cursor-pointer" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
+          <div className="w-10 h-10 md:w-16 md:h-16 text-primary dark:text-white transition-colors duration-300">
             <svg viewBox="0 0 96 96" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
               <defs>
                 <mask id="logo-mask-header">
@@ -27,7 +27,7 @@ const Header: React.FC<HeaderProps> = ({ onGetAccess, darkMode, toggleDarkMode }
             </svg>
           </div>
           <div className="flex items-baseline gap-1.5">
-            <h2 className="logo-text text-2xl">juriq</h2>
+            <h2 className="logo-text text-xl md:text-2xl">juriq</h2>
             <span className="px-1.5 py-0.5 rounded bg-primary dark:bg-white text-[8px] font-black text-white dark:text-primary tracking-widest uppercase transition-colors duration-300">Beta</span>
           </div>
         </div>
