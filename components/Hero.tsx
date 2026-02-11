@@ -13,20 +13,20 @@ const Hero: React.FC<HeroProps> = ({ onGetAccess }) => {
   };
 
   return (
-    <div className="w-full max-w-4xl mx-auto text-center flex flex-col items-center gap-8 md:gap-14">
+    <div className="w-full max-w-4xl mx-auto text-center flex flex-col items-center gap-4 md:gap-14">
       {/* Badge */}
-      <div className="space-y-6 md:space-y-8 animate-[fadeIn_0.5s_ease-out]">
-        <div className="inline-flex items-center gap-3 px-4 py-1.5 rounded-full bg-white/50 dark:bg-slate-800/50 border border-white/80 dark:border-white/10 shadow-sm backdrop-blur-sm transition-colors duration-300">
+      <div className="space-y-3 md:space-y-8 animate-[fadeIn_0.5s_ease-out]">
+        <div className="inline-flex items-center gap-3 px-4 py-1.5 rounded-full bg-white/50 dark:bg-slate-800/50 border border-white/80 dark:border-white/10 shadow-sm backdrop-blur-sm transition-colors duration-300 transform scale-90 md:scale-100">
           <span className="w-1.5 h-1.5 rounded-full bg-primary dark:bg-blue-400 animate-pulse"></span>
           <span className="text-[10px] font-bold text-primary dark:text-blue-100 tracking-[0.2em] uppercase">Waitlist Open</span>
         </div>
 
         {/* Headline */}
-        <h1 className="text-slate-900 dark:text-white text-4xl sm:text-6xl font-extrabold leading-[1.1] tracking-tighter md:text-8xl drop-shadow-sm transition-colors duration-300 px-4">
+        <h1 className="text-slate-900 dark:text-white text-3xl sm:text-6xl font-extrabold leading-[1.1] tracking-tighter md:text-8xl drop-shadow-sm transition-colors duration-300 px-4">
           Understand your legal world, <span className="italic font-serif font-bold text-primary dark:text-blue-200">instantly.</span>
         </h1>
 
-        <p className="text-slate-500 dark:text-slate-400 text-lg max-w-lg mx-auto font-medium leading-relaxed transition-colors duration-300">
+        <p className="text-slate-500 dark:text-slate-400 text-sm md:text-lg max-w-lg mx-auto font-medium leading-relaxed transition-colors duration-300">
           The high-fidelity intelligence platform for elite legal professional analysis.
         </p>
       </div>
