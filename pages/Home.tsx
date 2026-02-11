@@ -27,7 +27,7 @@ const Home: React.FC = () => {
                 toggleDarkMode={toggleTheme}
             />
 
-            <main className="relative flex flex-col items-center justify-center min-h-[calc(100vh-64px)] px-4 md:px-6 pt-4 md:pt-12 pb-16 md:pb-24 home-content">
+            <main className="relative flex flex-col items-center justify-start md:justify-center min-h-[calc(100vh-64px)] px-4 md:px-6 pt-6 md:pt-12 pb-10 md:pb-24 home-content">
                 <Hero onGetAccess={handleGetAccess} />
             </main>
 

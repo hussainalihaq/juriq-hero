@@ -125,7 +125,7 @@ const Hero: React.FC<HeroProps> = ({ onGetAccess }) => {
       </div>
 
       {/* Disclaimer */}
-      <div className="mt-auto pt-10 w-full max-w-2xl text-center">
+      <div className="mt-8 md:mt-auto pt-2 md:pt-10 w-full max-w-2xl text-center">
         <div className="px-6 py-4 rounded-3xl bg-slate-50/50 dark:bg-slate-800/30 border border-slate-100/50 dark:border-white/5 backdrop-blur-sm transition-colors duration-300">
           <p className="text-[10px] leading-relaxed text-slate-400 dark:text-slate-500 font-medium uppercase tracking-wider">
             juriq is an AI guide and does not provide professional legal advice. <br className="hidden sm:block" />
