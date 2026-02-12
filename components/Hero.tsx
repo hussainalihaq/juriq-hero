@@ -84,7 +84,7 @@ const Hero: React.FC<HeroProps> = ({ onGetAccess }) => {
             </div>
             <input
               className="w-full border-none bg-transparent focus:ring-0 text-slate-800 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 text-sm font-medium h-12 outline-none"
-              placeholder="Enter your work email..."
+              placeholder="Enter your email..."
               type="email"
               value={emailInput}
               onChange={(e) => setEmailInput(e.target.value)}

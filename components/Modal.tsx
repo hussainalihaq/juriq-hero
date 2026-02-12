@@ -169,7 +169,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, initialEmail }) => {
                   value={formData.email}
                   onChange={handleInputChange}
                   className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white text-sm font-semibold rounded-xl focus:ring-primary dark:focus:ring-white focus:border-primary dark:focus:border-white block p-3.5 placeholder:text-slate-400 dark:placeholder:text-slate-500 placeholder:font-medium transition-colors hover:bg-white dark:hover:bg-slate-700 focus:bg-white dark:focus:bg-slate-700 outline-none"
-                  placeholder="Work Email"
+                  placeholder="Email"
                   required
                   type="email"
                   disabled={status === 'submitting'}
