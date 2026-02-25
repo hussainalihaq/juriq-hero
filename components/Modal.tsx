@@ -10,9 +10,7 @@ interface ModalProps {
 const Modal: React.FC<ModalProps> = ({ isOpen, onClose, initialEmail }) => {
   const [isVisible, setIsVisible] = useState(false);
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    role: ''
+    email: ''
   });
   const [status, setStatus] = useState<'idle' | 'submitting' | 'success'>('idle');
 
@@ -32,7 +30,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, initialEmail }) => {
   useEffect(() => {
     if (!isVisible && !isOpen) {
       setStatus('idle');
-      setFormData({ name: '', email: '', role: '' });
+      setFormData({ email: '' });
     }
   }, [isVisible, isOpen]);
 
@@ -65,9 +63,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, initialEmail }) => {
         .from('waitlist')
         .insert([
           {
-            full_name: formData.name,
             email: formData.email,
-            role: formData.role,
             created_at: new Date().toISOString()
           }
         ]);
@@ -151,18 +147,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, initialEmail }) => {
             </p>
 
             <form onSubmit={handleSubmit} className="w-full space-y-3">
-              <div className="group relative">
-                <input
-                  name="name"
-                  value={formData.name}
-                  onChange={handleInputChange}
-                  className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white text-sm font-semibold rounded-xl focus:ring-primary dark:focus:ring-white focus:border-primary dark:focus:border-white block p-3.5 placeholder:text-slate-400 dark:placeholder:text-slate-500 placeholder:font-medium transition-colors hover:bg-white dark:hover:bg-slate-700 focus:bg-white dark:focus:bg-slate-700 outline-none"
-                  placeholder="Full Name"
-                  required
-                  type="text"
-                  disabled={status === 'submitting'}
-                />
-              </div>
+
               <div className="group relative">
                 <input
                   name="email"
@@ -175,27 +160,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, initialEmail }) => {
                   disabled={status === 'submitting'}
                 />
               </div>
-              <div className="relative">
-                <select
-                  name="role"
-                  value={formData.role}
-                  onChange={handleInputChange}
-                  required
-                  className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white text-sm font-semibold rounded-xl focus:ring-primary dark:focus:ring-white focus:border-primary dark:focus:border-white block p-3.5 pr-10 appearance-none cursor-pointer transition-colors hover:bg-white dark:hover:bg-slate-700 focus:bg-white dark:focus:bg-slate-700 outline-none invalid:text-slate-400 dark:invalid:text-slate-500"
-                  disabled={status === 'submitting'}
-                >
-                  <option value="" disabled>Professional Role</option>
-                  <option value="lawyer" className="text-slate-900 dark:text-slate-200 bg-white dark:bg-slate-800">Lawyer</option>
-                  <option value="student" className="text-slate-900 dark:text-slate-200 bg-white dark:bg-slate-800">Student</option>
-                  <option value="corporate" className="text-slate-900 dark:text-slate-200 bg-white dark:bg-slate-800">Corporate Counsel</option>
-                  <option value="paralegal" className="text-slate-900 dark:text-slate-200 bg-white dark:bg-slate-800">Paralegal</option>
-                  <option value="entrepreneur" className="text-slate-900 dark:text-slate-200 bg-white dark:bg-slate-800">Entrepreneur</option>
-                  <option value="other" className="text-slate-900 dark:text-slate-200 bg-white dark:bg-slate-800">Other</option>
-                </select>
-                <div className="absolute inset-y-0 right-0 flex items-center px-4 pointer-events-none text-slate-400">
-                  <span className="material-symbols-outlined text-xl">expand_more</span>
-                </div>
-              </div>
+
 
               <button
                 type="submit"

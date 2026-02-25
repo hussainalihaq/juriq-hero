@@ -13,7 +13,7 @@ const Hero: React.FC<HeroProps> = ({ onGetAccess }) => {
   };
 
   return (
-    <div className="w-full max-w-4xl mx-auto text-center flex flex-col items-center gap-2 md:gap-8">
+    <div className="w-full max-w-4xl mx-auto text-center flex flex-col items-center gap-2 md:gap-8 overflow-hidden px-2 sm:px-4">
       {/* Badge - Hidden on mobile to save space, tighter spacing on desktop */}
       <div className="hidden md:block space-y-4 animate-[fadeIn_0.5s_ease-out]">
         <div className="inline-flex items-center gap-3 px-4 py-1.5 rounded-full bg-white/50 dark:bg-slate-800/50 border border-white/80 dark:border-white/10 shadow-sm backdrop-blur-sm transition-colors duration-300">
@@ -37,7 +37,7 @@ const Hero: React.FC<HeroProps> = ({ onGetAccess }) => {
       {/* Significantly reduced margins and height for mobile */}
       <div className="w-full max-w-2xl relative group animate-[fadeIn_0.7s_ease-out_0.2s_both] mt-0 md:mt-2">
         {/* Glow Effect */}
-        <div className="absolute -inset-10 bg-gradient-to-b from-white/20 to-transparent dark:from-blue-500/10 dark:to-transparent rounded-[4rem] blur-3xl -z-10 transition-opacity opacity-70 group-hover:opacity-100 duration-1000"></div>
+        <div className="absolute -inset-4 md:-inset-10 bg-gradient-to-b from-white/20 to-transparent dark:from-blue-500/10 dark:to-transparent rounded-[4rem] blur-2xl md:blur-3xl -z-10 transition-opacity opacity-70 group-hover:opacity-100 duration-1000 transform-gpu"></div>
 
         {/* Mobile: Taller crop, smaller scale. Desktop: Normal */}
         <div className="glass-morphism rounded-2xl md:rounded-[2.5rem] p-1.5 md:p-3 relative overflow-hidden transform transition-transform duration-500 hover:scale-[1.01]">
