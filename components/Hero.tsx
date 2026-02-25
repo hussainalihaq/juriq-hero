@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { supabase } from '../lib/supabaseClient';
 
 interface HeroProps {
   onGetAccess: (email?: string) => void;
@@ -6,10 +7,52 @@ interface HeroProps {
 
 const Hero: React.FC<HeroProps> = ({ onGetAccess }) => {
   const [emailInput, setEmailInput] = useState('');
+  const [status, setStatus] = useState<'idle' | 'submitting' | 'success'>('idle');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    onGetAccess(emailInput);
+
+    if (!emailInput.trim()) return;
+
+    setStatus('submitting');
+
+    if (!supabase) {
+      alert('Waitlist is currently unavailable. Please try again later.');
+      setStatus('idle');
+      return;
+    }
+
+    try {
+      // BETA LIMIT CHECK
+      const { count, error: countError } = await supabase
+        .from('waitlist')
+        .select('*', { count: 'exact', head: true });
+
+      if (countError) throw countError;
+
+      if (count !== null && count >= 30) {
+        alert("The Beta is currently full (Limit reached). Please check back later.");
+        setStatus('idle');
+        return;
+      }
+
+      const { error } = await supabase
+        .from('waitlist')
+        .insert([
+          {
+            email: emailInput,
+            created_at: new Date().toISOString()
+          }
+        ]);
+
+      if (error) throw error;
+
+      setStatus('success');
+    } catch (error) {
+      console.error('Error submitting form:', error);
+      alert(`Error: ${(error as any).message || 'Something went wrong. Please try again.'}`);
+      setStatus('idle');
+    }
   };
 
   return (
@@ -79,23 +122,29 @@ const Hero: React.FC<HeroProps> = ({ onGetAccess }) => {
         {/* Action Input */}
         <div className="mt-4 md:mt-6 w-full max-w-lg mx-auto transform transition-all duration-500">
           <form onSubmit={handleSubmit} className="relative bg-white dark:bg-slate-800 p-2 pr-2 rounded-2xl shadow-xl shadow-slate-200/60 dark:shadow-none border border-slate-100 dark:border-slate-700 flex items-center group/input transition-all hover:shadow-2xl hover:shadow-primary/5 focus-within:shadow-2xl focus-within:shadow-primary/10 focus-within:border-primary/20 dark:focus-within:border-blue-400/50">
-            <div className="pl-4 text-slate-400 dark:text-slate-500 group-focus-within/input:text-primary dark:group-focus-within/input:text-white transition-colors">
-              <span className="material-symbols-outlined text-xl">mail</span>
+            <div className={`pl-4 transition-colors ${status === 'success' ? 'text-green-500' : 'text-slate-400 dark:text-slate-500 group-focus-within/input:text-primary dark:group-focus-within/input:text-white'}`}>
+              <span className="material-symbols-outlined text-xl">{status === 'success' ? 'check_circle' : 'mail'}</span>
             </div>
             <input
-              className="w-full border-none bg-transparent focus:ring-0 text-slate-800 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 text-sm font-medium h-12 outline-none"
-              placeholder="Enter your email..."
+              className={`w-full border-none bg-transparent focus:ring-0 text-sm font-medium h-12 outline-none ${status === 'success' ? 'text-green-600 dark:text-green-400 placeholder:text-green-500/50' : 'text-slate-800 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500'}`}
+              placeholder={status === 'success' ? "You're on the list!" : "Enter your email..."}
               type="email"
               value={emailInput}
               onChange={(e) => setEmailInput(e.target.value)}
+              disabled={status !== 'idle'}
             />
             <button
               type="submit"
-              className="shrink-0 bg-primary dark:bg-white hover:bg-navy-deep dark:hover:bg-slate-200 text-white dark:text-primary h-11 px-6 rounded-xl text-xs font-bold transition-all shadow-lg shadow-primary/20 hover:shadow-primary/40 dark:shadow-white/5 flex items-center gap-2 whitespace-nowrap active:scale-[0.98]"
+              disabled={status !== 'idle'}
+              className={`shrink-0 h-11 px-6 rounded-xl text-xs font-bold transition-all flex items-center gap-2 whitespace-nowrap ${status === 'success' ? 'bg-green-500 text-white shadow-lg shadow-green-500/20' : status === 'submitting' ? 'bg-slate-400 text-white cursor-not-allowed' : 'bg-primary dark:bg-white hover:bg-navy-deep dark:hover:bg-slate-200 text-white dark:text-primary shadow-lg shadow-primary/20 hover:shadow-primary/40 dark:shadow-white/5 active:scale-[0.98]'}`}
             >
-              <span className="hidden sm:inline">Get Early Access</span>
-              <span className="sm:hidden">Join</span>
-              <span className="material-symbols-outlined text-sm font-bold">arrow_forward</span>
+              <span className="hidden sm:inline">
+                {status === 'success' ? 'Joined!' : status === 'submitting' ? 'Joining...' : 'Get Early Access'}
+              </span>
+              <span className="sm:hidden">
+                {status === 'success' ? 'Joined!' : status === 'submitting' ? 'Wait...' : 'Join'}
+              </span>
+              {status === 'idle' && <span className="material-symbols-outlined text-sm font-bold">arrow_forward</span>}
             </button>
           </form>
 
