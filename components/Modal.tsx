@@ -64,6 +64,8 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, initialEmail }) => {
         .insert([
           {
             email: formData.email,
+            full_name: 'Not Provided',
+            role: 'other',
             created_at: new Date().toISOString()
           }
         ]);

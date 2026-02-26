@@ -41,6 +41,8 @@ const Hero: React.FC<HeroProps> = ({ onGetAccess }) => {
         .insert([
           {
             email: emailInput,
+            full_name: 'Not Provided',
+            role: 'other',
             created_at: new Date().toISOString()
           }
         ]);
