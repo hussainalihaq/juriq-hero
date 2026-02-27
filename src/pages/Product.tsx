@@ -14,16 +14,16 @@ import {
 const sections = [
   {
     icon: MessageSquare,
-    title: "Chat + Document Context",
-    desc: "Ask questions about your document and get answers with clause-level references. A context panel shows parties, dates, and key amounts extracted from the document.",
+    title: "Contract Chat + Document Context",
+    desc: "Ask questions about any contract and get answers with clause-level references. A context panel shows parties, dates, and key amounts — so you always know where you stand.",
     reverse: false,
     gradient: "from-blue-500/20 to-purple-500/20",
     iconColor: "text-blue-400",
   },
   {
     icon: AlertTriangle,
-    title: "Risk Analysis + Recommendations",
-    desc: "Every clause is evaluated for risk — from liability traps to overbroad definitions. Each finding includes a severity level and a recommended action.",
+    title: "Risk Radar + Recommendations",
+    desc: "Every clause is evaluated for risk — from liability traps to overbroad definitions. Each finding includes a severity level and a recommended action to help you negotiate smarter.",
     reverse: true,
     gradient: "from-amber-500/20 to-red-500/20",
     iconColor: "text-amber-400",
@@ -31,7 +31,7 @@ const sections = [
   {
     icon: Edit3,
     title: "Edit Suggestions (Before/After)",
-    desc: "See side-by-side diffs of original vs. suggested text. Insertions and deletions are highlighted so you can review changes at a glance. This is not Word Track Changes — it's a clear, redline-style comparison.",
+    desc: "See side-by-side diffs of original vs. suggested contract text. Insertions and deletions are highlighted so you can review changes at a glance — a clear, redline-style comparison.",
     reverse: false,
     gradient: "from-emerald-500/20 to-teal-500/20",
     iconColor: "text-emerald-400",
@@ -39,15 +39,15 @@ const sections = [
   {
     icon: FolderOpen,
     title: "Document Library",
-    desc: "Upload and manage all your contracts in one place. Search by name, filter by status, and open any document in the chat for instant analysis.",
+    desc: "Upload and manage all your legal documents in one place. Search by name, filter by status, and open any document in the chat for instant analysis.",
     reverse: true,
     gradient: "from-violet-500/20 to-indigo-500/20",
     iconColor: "text-violet-400",
   },
   {
     icon: Download,
-    title: "Exports",
-    desc: "Export your analysis summary as a PDF, or download the suggested edits as a DOCX file ready for review.",
+    title: "Case & Law Research (Best-Effort)",
+    desc: "Ask about case law, statutes, or legal concepts and get best-effort plain-English summaries. Helpful for research, coursework, and litigation prep — always verify with primary sources.",
     reverse: false,
     gradient: "from-cyan-500/20 to-blue-500/20",
     iconColor: "text-cyan-400",
@@ -128,10 +128,10 @@ export default function Product() {
         <div ref={heroRef} className="scroll-reveal mx-auto max-w-3xl text-center">
           <Badge variant="secondary" className="mb-6 animate-fade-in">Product</Badge>
           <h1 className="font-display text-4xl font-bold text-foreground sm:text-5xl lg:text-6xl">
-            See what Juriq can do
+            Your AI legal copilot
           </h1>
           <p className="mt-4 text-lg text-muted-foreground">
-            A deeper look at how Juriq helps you review, understand, and improve contracts.
+            Contract analysis, risk detection, and drafting help — plus best-effort support for case law and litigation research.
           </p>
         </div>
       </section>

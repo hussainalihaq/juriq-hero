@@ -29,9 +29,11 @@ const quickActions = [
 ];
 
 const suggestedPrompts = [
-  "Summarize this contract and list the key terms",
-  "What are the biggest risks in this document?",
-  "Explain the liability clause in simple terms",
+  "Summarize this contract and flag key risks.",
+  "Rewrite this clause to be safer for me.",
+  "Explain this legal term in simple English.",
+  "Summarize this case in 8 bullets (best-effort).",
+  "Turn these facts into issues and questions for a hearing (best-effort).",
 ];
 
 const clauseNav = [
@@ -62,7 +64,7 @@ export default function Chat() {
                 </div>
                 <h2 className="font-display text-xl font-bold text-foreground">Start a conversation</h2>
                 <p className="mt-2 text-sm text-muted-foreground max-w-md">
-                  Upload a document or ask a question to get started.
+                  Upload a document or ask a legal question to get started.
                 </p>
                 <div className="mt-8 space-y-2 w-full max-w-md">
                   {suggestedPrompts.map((prompt) => (
@@ -218,7 +220,7 @@ export default function Chat() {
               <textarea
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
-                placeholder="Ask about your document…"
+                placeholder="Ask about your document or legal question…"
                 rows={1}
                 className="flex-1 resize-none bg-transparent py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none"
               />

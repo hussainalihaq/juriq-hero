@@ -12,10 +12,10 @@ import {
 } from "@/components/ui/accordion";
 
 const tiers = [
-  { key: "starter" as const, name: "Starter", desc: "For individuals getting started.", cta: "Join Waitlist", popular: false, badge: null },
-  { key: "student" as const, name: "Student", desc: "For law students and academic use.", cta: "Join Waitlist", popular: false, badge: "🎓 Edu" },
-  { key: "pro" as const, name: "Pro", desc: "Full analysis power for professionals.", cta: "Join Waitlist", popular: true, badge: null },
-  { key: "team" as const, name: "Team", desc: "Collaborate with your team.", cta: "Join Waitlist", popular: false, badge: null },
+  { key: "starter" as const, name: "Starter", desc: "Contract-first basics + limited research help.", cta: "Join Waitlist", popular: false, badge: null },
+  { key: "student" as const, name: "Student", desc: "Contract review + case law research for students.", cta: "Join Waitlist", popular: false, badge: "🎓 Edu" },
+  { key: "pro" as const, name: "Pro", desc: "Higher limits + better drafting + exports.", cta: "Join Waitlist", popular: true, badge: null },
+  { key: "team" as const, name: "Team", desc: "Shared workspace + higher limits for teams.", cta: "Join Waitlist", popular: false, badge: null },
 ];
 
 const comparisonRows = [
@@ -74,10 +74,10 @@ export default function Pricing() {
               <div
                 key={tier.key}
                 className={`relative rounded-xl border p-6 transition-default ${tier.popular
-                    ? "border-primary bg-card shadow-lg shadow-primary/5"
-                    : tier.key === "student"
-                      ? "border-emerald-500/50 bg-card shadow-md shadow-emerald-500/5"
-                      : "border-border/50 bg-card hover:border-border"
+                  ? "border-primary bg-card shadow-lg shadow-primary/5"
+                  : tier.key === "student"
+                    ? "border-emerald-500/50 bg-card shadow-md shadow-emerald-500/5"
+                    : "border-border/50 bg-card hover:border-border"
                   }`}
               >
                 {tier.popular && (

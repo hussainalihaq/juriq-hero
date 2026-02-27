@@ -2,7 +2,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
 import MarketingLayout from "./layouts/MarketingLayout";
 import AppLayout from "./layouts/AppLayout";
@@ -56,8 +56,13 @@ const App = () => (
           <Route path="/signin" element={<SignIn />} />
           <Route path="/signup" element={<SignUp />} />
 
+          {/* Dashboard redirects */}
+          <Route path="/dashboard" element={<Navigate to="/app/chat" replace />} />
+          <Route path="/dashboard/*" element={<Navigate to="/app/chat" replace />} />
+
           {/* App pages */}
           <Route path="/app" element={<AppLayout />}>
+            <Route index element={<Navigate to="/app/chat" replace />} />
             <Route path="chat" element={<Chat />} />
             <Route path="documents" element={<Documents />} />
             <Route path="documents/:id" element={<DocumentDetail />} />

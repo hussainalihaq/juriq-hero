@@ -21,25 +21,25 @@ import {
 import { useState } from "react";
 
 const features = [
-  { icon: FileText, title: "Plain-English Explanation", desc: "Understand any contract clause without legal jargon." },
-  { icon: AlertTriangle, title: "Risk Levels (High/Med/Low)", desc: "Every clause gets a severity rating so you know what to fix first." },
-  { icon: Shield, title: "Clause Highlights & References", desc: "See exactly which section contains the risk, with jump-to navigation." },
-  { icon: Edit3, title: "Edit Suggestions (Before/After)", desc: "Get redline-style revision suggestions with diff highlighting." },
-  { icon: PenTool, title: "Draft Clauses", desc: "Generate NDA, liability, termination clauses from scratch." },
-  { icon: FileOutput, title: "Export Summary & Edits", desc: "Export analysis as PDF or suggested edits as DOCX." },
+  { icon: FileText, title: "Explain contracts in plain English", desc: "Upload any contract and get a clear, jargon-free summary of what it says and what it means for you." },
+  { icon: AlertTriangle, title: "Risk radar: High / Medium / Low", desc: "Every clause gets a severity rating so you know what to negotiate first — from liability traps to overbroad terms." },
+  { icon: Edit3, title: "Edit suggestions (before/after)", desc: "Get redline-style revision suggestions with diff highlighting. Review changes at a glance; accept or revise." },
+  { icon: PenTool, title: "Draft clauses & emails", desc: "Generate NDA, liability, and termination clauses from scratch — or draft response emails to counterparties." },
+  { icon: Shield, title: "Case & law explanations (best-effort)", desc: "Ask about case law or statutes and get best-effort plain-English summaries to help with research." },
+  { icon: FileOutput, title: "Litigation support (best-effort)", desc: "Outline issues, draft questions, and build arguments for hearings — best-effort assistance for your review." },
 ];
 
 const useCases = [
-  { icon: Briefcase, title: "Founders", desc: "Review investor agreements, NDAs, and vendor contracts before signing." },
-  { icon: GraduationCap, title: "Students", desc: "Learn contract law concepts by analyzing real documents." },
-  { icon: Users, title: "Teams", desc: "Share document analysis across your team with a common workspace." },
-  { icon: Briefcase, title: "Freelancers", desc: "Spot unfair payment terms and IP clauses in client contracts." },
+  { icon: Briefcase, title: "Founders", desc: "Contracts, NDAs, vendor terms — fast clarity + risk flags before you sign." },
+  { icon: GraduationCap, title: "Students", desc: "Understand legal concepts + break down case material for coursework and exams." },
+  { icon: Briefcase, title: "Lawyers", desc: "First-pass contract review + drafting assistance to speed up your workflow." },
+  { icon: Users, title: "Teams & Freelancers", desc: "Shared contract review workspace + research help when you need it." },
 ];
 
 const steps = [
-  { num: "01", title: "Upload", desc: "Drop your PDF or DOCX contract into Juriq." },
-  { num: "02", title: "Ask", desc: "Ask questions, request summaries, or find risks automatically." },
-  { num: "03", title: "Export", desc: "Download your analysis as PDF or edited text as DOCX." },
+  { num: "01", title: "Upload", desc: "Upload a contract or paste text — PDFs and DOCX supported." },
+  { num: "02", title: "Ask", desc: "Ask anything — contracts first; case law and research when needed." },
+  { num: "03", title: "Export", desc: "Export notes, summaries, and edits as PDF or DOCX." },
 ];
 
 export default function Landing() {
@@ -53,15 +53,15 @@ export default function Landing() {
         <div className="mx-auto max-w-7xl">
           <div className="mx-auto max-w-3xl text-center">
             <Badge variant="secondary" className="mb-6 px-3 py-1">
-              Now in early access
+              AI legal copilot — contract-first.
             </Badge>
             <h1 className="font-display text-4xl font-bold leading-tight tracking-tight text-foreground sm:text-5xl lg:text-6xl">
-              Understand contracts.{" "}
-              <span className="text-muted-foreground">Spot risks.</span>{" "}
-              Draft faster.
+              AI legal copilot for{" "}
+              <span className="text-muted-foreground">founders, students,</span>{" "}
+              and lawyers.
             </h1>
             <p className="mx-auto mt-6 max-w-2xl text-lg text-muted-foreground">
-              Juriq explains legal documents in plain English, flags risky clauses, and suggests edits — so you can sign with confidence.
+              Contract-first. Understand agreements in plain English, spot risks, and generate edit suggestions — plus quick help with cases, laws, and litigation prep.
             </p>
             <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
               <Button variant="hero" size="xl" asChild>
@@ -129,7 +129,7 @@ export default function Landing() {
       <section className="border-y border-border/30 py-10">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <p className="mb-6 text-center text-xs font-medium uppercase tracking-widest text-muted-foreground">
-            Trusted by teams at
+            Trusted by early adopters at
           </p>
           <div className="flex flex-wrap items-center justify-center gap-8 opacity-40">
             {["Acme Corp", "Vertex Labs", "Northwind", "Fabrikam", "Contoso"].map((name) => (
@@ -143,8 +143,8 @@ export default function Landing() {
       <section className="py-16 px-4 sm:px-6 lg:px-8">
         <div className="mx-auto grid max-w-4xl gap-6 md:grid-cols-2">
           {[
-            { quote: "Juriq caught a non-compete clause buried in our NDA that our team missed. Saved us months of legal headaches.", name: "Alex M.", role: "Startup Founder" },
-            { quote: "I use Juriq to review freelance contracts before signing. The risk breakdown makes complex legalese actually understandable.", name: "Priya K.", role: "Freelance Designer" },
+            { quote: "Juriq caught a non-compete clause buried in our NDA that our team missed. It also helped us outline arguments for a vendor dispute — all in one tool.", name: "Alex M.", role: "Startup Founder" },
+            { quote: "I use Juriq for contract review and case law research. The risk breakdown makes complex legalese actually understandable, and the case summaries save me hours.", name: "Priya K.", role: "Law Student" },
           ].map((t, i) => (
             <div key={i} className="rounded-xl border border-border/50 bg-card p-6">
               <Quote className="mb-3 h-5 w-5 text-muted-foreground/50" />
@@ -163,10 +163,10 @@ export default function Landing() {
         <div className="mx-auto max-w-7xl">
           <div className="mx-auto mb-14 max-w-2xl text-center">
             <h2 className="font-display text-3xl font-bold text-foreground sm:text-4xl">
-              Everything you need to review contracts
+              Contract copilot + legal research assistant
             </h2>
             <p className="mt-4 text-muted-foreground">
-              From plain-English explanations to export-ready edit suggestions.
+              From contract analysis and edit suggestions to case law summaries and litigation prep.
             </p>
           </div>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -190,7 +190,7 @@ export default function Landing() {
       <section className="border-t border-border/30 py-20 px-4 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-7xl">
           <h2 className="mb-12 text-center font-display text-3xl font-bold text-foreground sm:text-4xl">
-            Built for people who sign things
+            Built for people who deal with legal documents
           </h2>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {useCases.map((uc, i) => (
@@ -231,7 +231,7 @@ export default function Landing() {
           <h2 className="font-display text-2xl font-bold text-foreground">Your documents stay private</h2>
           <div className="mt-6 grid gap-4 text-left sm:grid-cols-3">
             {[
-              "Private by default — your documents are never shared or used for training.",
+              "Private by default — your legal documents are never shared or used for training.",
               "Encrypted in transit — all uploads are transmitted securely.",
               "Delete anytime — request full data deletion via support.",
             ].map((item, i) => (
@@ -249,7 +249,7 @@ export default function Landing() {
         <div className="mx-auto max-w-lg text-center">
           <h2 className="font-display text-3xl font-bold text-foreground">Get early access</h2>
           <p className="mt-3 text-muted-foreground">
-            Join the waitlist and be first to try Juriq.
+            Join the waitlist and be first to try your AI legal copilot.
           </p>
           <div className="mt-8 space-y-3">
             <input
@@ -271,7 +271,7 @@ export default function Landing() {
               <option value="freelancer">Freelancer</option>
               <option value="other">Other</option>
             </select>
-            <Button variant="hero" size="lg" className="w-full" onClick={() => {}}>
+            <Button variant="hero" size="lg" className="w-full" onClick={() => { }}>
               Join Waitlist
               <ArrowRight className="ml-1 h-4 w-4" />
             </Button>

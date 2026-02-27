@@ -6,6 +6,7 @@ const bullets = [
   "AI-powered contract analysis in plain English",
   "Risk flagging with severity levels",
   "Edit suggestions with before/after diffs",
+  "Case law & legal research (best-effort summaries)",
   "Export summaries as PDF, edits as DOCX",
   "Free tier available at launch",
 ];
@@ -19,10 +20,10 @@ export default function Waitlist() {
       <div className="mx-auto grid max-w-5xl gap-16 lg:grid-cols-2">
         <div>
           <h1 className="font-display text-4xl font-bold text-foreground sm:text-5xl">
-            Get early access to Juriq
+            Get early access to your AI legal copilot
           </h1>
           <p className="mt-4 text-lg text-muted-foreground">
-            Be among the first to review contracts with AI. No credit card required.
+            Be among the first to review contracts and research legal questions with AI. No credit card required.
           </p>
           <ul className="mt-8 space-y-3">
             {bullets.map((b) => (
@@ -36,7 +37,7 @@ export default function Waitlist() {
           <div className="mt-10 rounded-xl border border-border/50 bg-card p-5">
             <Quote className="mb-2 h-4 w-4 text-muted-foreground/50" />
             <p className="text-sm text-muted-foreground">
-              "I signed up for the waitlist after a friend showed me the risk analysis. Can't wait to use it on my next vendor contract."
+              "I signed up for the waitlist after a friend showed me the risk analysis. Can't wait to use it for contract review and case research."
             </p>
             <p className="mt-3 text-xs font-semibold text-foreground">
               Taylor R. <span className="font-normal text-muted-foreground">· Operations Manager</span>
@@ -68,7 +69,7 @@ export default function Waitlist() {
                 <option value="freelancer">Freelancer</option>
                 <option value="other">Other</option>
               </select>
-              <Button variant="hero" size="lg" className="w-full" onClick={() => {}}>
+              <Button variant="hero" size="lg" className="w-full" onClick={() => { }}>
                 Join Waitlist
                 <ArrowRight className="ml-1 h-4 w-4" />
               </Button>

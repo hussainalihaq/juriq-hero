@@ -25,9 +25,9 @@ export default function Documents() {
         <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <h1 className="font-display text-2xl font-bold text-foreground">Documents</h1>
-            <p className="mt-1 text-sm text-muted-foreground">Upload and manage your contracts.</p>
+            <p className="mt-1 text-sm text-muted-foreground">Upload and manage your legal documents. Contracts, NDAs, agreements, and more.</p>
           </div>
-          <Button variant="default" onClick={() => {}}>
+          <Button variant="default" onClick={() => { }}>
             <Upload className="mr-2 h-4 w-4" />
             Upload
           </Button>
@@ -40,7 +40,7 @@ export default function Documents() {
             Drag & drop your PDF or DOCX files here, or click to browse.
           </p>
           <p className="mt-1 text-xs text-muted-foreground/60">
-            Text-based PDFs and DOCX only. Max 20MB.
+            Contracts, NDAs, agreements, and other legal documents. Text-based PDFs and DOCX only. Max 20MB.
           </p>
         </div>
 
@@ -98,7 +98,7 @@ export default function Documents() {
                           <Edit3 className="h-3.5 w-3.5" />
                         </Link>
                       </Button>
-                      <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-danger" onClick={() => {}}>
+                      <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-danger" onClick={() => { }}>
                         <Trash2 className="h-3.5 w-3.5" />
                       </Button>
                     </div>

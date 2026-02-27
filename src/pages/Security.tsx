@@ -19,7 +19,7 @@ const items = [
   {
     icon: Shield,
     title: "No data sharing",
-    desc: "Your documents are never shared with third parties or used to train models. Your legal data is yours alone.",
+    desc: "Your legal documents are never shared with third parties or used to train models. Your legal data is yours alone.",
   },
 ];
 
@@ -32,6 +32,9 @@ export default function Security() {
           <h1 className="font-display text-4xl font-bold text-foreground">Security</h1>
           <p className="mt-4 text-lg text-muted-foreground">
             We take a straightforward approach to security. Here's what we do and what we don't.
+          </p>
+          <p className="mt-2 text-sm text-muted-foreground/70">
+            Juriq provides information and drafting assistance, not legal advice.
           </p>
         </div>
 

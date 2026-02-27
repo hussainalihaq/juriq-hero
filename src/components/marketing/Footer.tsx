@@ -24,7 +24,7 @@ export function Footer() {
           <div className="col-span-2 md:col-span-1">
             <span className="font-display text-lg font-bold text-foreground">Juriq</span>
             <p className="mt-2 text-sm text-muted-foreground">
-              Understand contracts. Spot risks. Draft faster.
+              AI legal copilot — contract-first.
             </p>
           </div>
           {Object.entries(footerLinks).map(([category, links]) => (
