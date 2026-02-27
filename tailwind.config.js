@@ -50,6 +50,13 @@ export default {
                 pulseGlow: {
                     '0%, 100%': { boxShadow: '0 0 20px -5px rgba(99, 102, 241, 0.1)' },
                     '50%': { boxShadow: '0 0 40px -5px rgba(99, 102, 241, 0.3)' },
+                },
+                typing: {
+                    from: { width: '0' },
+                    to: { width: '100%' }
+                },
+                blink: {
+                    '50%': { borderColor: 'transparent' }
                 }
             },
             backgroundImage: {
