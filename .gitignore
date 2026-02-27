@@ -31,3 +31,4 @@ backend/.env.*
 *.sln
 *.sw?
 clear-draft-hub
+backend/nohup.out

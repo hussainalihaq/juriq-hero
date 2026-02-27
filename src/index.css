@@ -71,14 +71,21 @@
 
   html {
     scroll-behavior: smooth;
+    font-size: 17px;
   }
 
   body {
     @apply bg-background text-foreground antialiased;
     font-family: var(--font-body);
+    line-height: 1.6;
   }
 
-  h1, h2, h3, h4, h5, h6 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     font-family: var(--font-display);
   }
 }
@@ -87,24 +94,31 @@
   .text-subtle {
     color: hsl(var(--text-subtle));
   }
+
   .text-link {
     color: hsl(var(--link));
   }
+
   .bg-surface {
     background-color: hsl(var(--card));
   }
+
   .bg-surface-raised {
     background-color: hsl(var(--surface-raised));
   }
+
   .border-divider {
     border-color: hsl(var(--divider) / 0.08);
   }
+
   .accent-soft-bg {
     background-color: hsl(var(--accent-soft) / 0.16);
   }
+
   .focus-accent {
     @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40 focus-visible:ring-offset-0;
   }
+
   .transition-default {
     @apply transition-all duration-200 ease-out;
   }

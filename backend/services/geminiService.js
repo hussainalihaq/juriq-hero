@@ -1,8 +1,31 @@
 const { GoogleGenerativeAI } = require('@google/generative-ai');
 
-// Initialize Gemini
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
-const MODEL_NAME = "gemini-2.0-flash";
+// Initialize Gemini with multiple API key support for rotation
+const API_KEYS = [
+    process.env.GEMINI_API_KEY,
+    process.env.GEMINI_API_KEY_2,
+    process.env.GEMINI_API_KEY_3,
+].filter(Boolean);
+
+let currentKeyIndex = 0;
+
+function getGenAI() {
+    const key = API_KEYS[currentKeyIndex] || '';
+    return new GoogleGenerativeAI(key);
+}
+
+function rotateKey() {
+    if (API_KEYS.length > 1) {
+        currentKeyIndex = (currentKeyIndex + 1) % API_KEYS.length;
+        console.log(`Rotated to API key #${currentKeyIndex + 1} of ${API_KEYS.length}`);
+        return true;
+    }
+    return false;
+}
+
+const genAI = getGenAI();
+// Use gemini-2.0-flash by default; override via env var
+const MODEL_NAME = process.env.GEMINI_MODEL || "gemini-2.0-flash";
 
 // ==========================================
 // BASE SYSTEM PROMPT (Always Included)
@@ -593,11 +616,9 @@ Apply ALL guidelines above. Maintain the highest standards of legal accuracy, cl
 // CHAT RESPONSE FUNCTION
 // ==========================================
 async function generateChatResponse(history, currentMessage, role = 'general', jurisdictions = [], outputStyle = 50) {
-    if (!process.env.GEMINI_API_KEY) {
-        throw new Error("GEMINI_API_KEY is not set in backend .env");
+    if (API_KEYS.length === 0) {
+        throw new Error("No GEMINI_API_KEY is set in backend .env");
     }
-
-    const model = genAI.getGenerativeModel({ model: MODEL_NAME });
 
     // Temperature based on output style (0 = creative = 0.9, 100 = precise = 0.3)
     const temperature = 0.9 - (outputStyle / 100) * 0.6;
@@ -608,22 +629,44 @@ async function generateChatResponse(history, currentMessage, role = 'general', j
     // Generate the comprehensive system prompt
     const systemPrompt = generateSystemPrompt(primaryJurisdiction, role, 'free');
 
-    const chat = model.startChat({
-        history: formatHistoryForGemini(history),
-        generationConfig: {
-            maxOutputTokens: 4000,
-            temperature: temperature,
-        },
-    });
-
     // Combine system prompt with user message
     const fullMessage = `${systemPrompt}\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nUSER QUERY:\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n${currentMessage}`;
 
-    const result = await chat.sendMessage(fullMessage);
-    const response = await result.response;
-    const text = response.text();
+    // Try each available API key
+    const maxAttempts = Math.max(API_KEYS.length * 2, 3);
+    let lastError;
 
-    return { text: text };
+    for (let attempt = 0; attempt < maxAttempts; attempt++) {
+        try {
+            const ai = getGenAI();
+            const model = ai.getGenerativeModel({ model: MODEL_NAME });
+            const chat = model.startChat({
+                history: formatHistoryForGemini(history),
+                generationConfig: { maxOutputTokens: 4000, temperature },
+            });
+
+            const result = await chat.sendMessage(fullMessage);
+            const response = await result.response;
+            return { text: response.text() };
+        } catch (err) {
+            lastError = err;
+            if (err.message && err.message.includes('429')) {
+                console.log(`Key #${currentKeyIndex + 1} rate limited (attempt ${attempt + 1}/${maxAttempts})`);
+                // Try rotating to next key
+                if (rotateKey()) {
+                    console.log('Trying next API key...');
+                    continue;
+                }
+                // No more keys — wait and retry with backoff
+                const waitTime = Math.pow(2, attempt) * 3000;
+                console.log(`All keys exhausted, waiting ${waitTime / 1000}s...`);
+                await new Promise(r => setTimeout(r, waitTime));
+                continue;
+            }
+            throw err;
+        }
+    }
+    throw lastError;
 }
 
 // ==========================================
