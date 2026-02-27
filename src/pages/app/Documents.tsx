@@ -2,7 +2,6 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { mockDocuments } from "@/data/mockData";
 import {
   Upload,
   Search,
@@ -10,12 +9,13 @@ import {
   MessageSquare,
   Edit3,
   Trash2,
-  MoreHorizontal,
 } from "lucide-react";
 
 export default function Documents() {
   const [search, setSearch] = useState("");
-  const filtered = mockDocuments.filter((d) =>
+  // Start with empty state until backend is wired
+  const documents: any[] = [];
+  const filtered = documents.filter((d) =>
     d.name.toLowerCase().includes(search.toLowerCase())
   );
 

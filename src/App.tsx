@@ -29,52 +29,56 @@ import Billing from "./pages/app/Billing";
 
 import NotFound from "./pages/NotFound";
 
+import { AuthProvider } from "./contexts/AuthContext";
+
 const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <Routes>
-          {/* Marketing pages */}
-          <Route element={<MarketingLayout />}>
-            <Route path="/" element={<Index />} />
-            <Route path="/product" element={<Product />} />
-            <Route path="/pricing" element={<Pricing />} />
-            <Route path="/security" element={<Security />} />
-            <Route path="/waitlist" element={<Waitlist />} />
-            <Route path="/blog" element={<Blog />} />
-            <Route path="/blog/:slug" element={<BlogPost />} />
-            <Route path="/terms" element={<Terms />} />
-            <Route path="/privacy" element={<Privacy />} />
-            <Route path="/contact" element={<Contact />} />
-          </Route>
+    <AuthProvider>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <Routes>
+            {/* Marketing pages */}
+            <Route element={<MarketingLayout />}>
+              <Route path="/" element={<Index />} />
+              <Route path="/product" element={<Product />} />
+              <Route path="/pricing" element={<Pricing />} />
+              <Route path="/security" element={<Security />} />
+              <Route path="/waitlist" element={<Waitlist />} />
+              <Route path="/blog" element={<Blog />} />
+              <Route path="/blog/:slug" element={<BlogPost />} />
+              <Route path="/terms" element={<Terms />} />
+              <Route path="/privacy" element={<Privacy />} />
+              <Route path="/contact" element={<Contact />} />
+            </Route>
 
-          {/* Auth (no layout wrapper) */}
-          <Route path="/signin" element={<SignIn />} />
-          <Route path="/signup" element={<SignUp />} />
+            {/* Auth (no layout wrapper) */}
+            <Route path="/signin" element={<SignIn />} />
+            <Route path="/signup" element={<SignUp />} />
 
-          {/* Dashboard redirects */}
-          <Route path="/dashboard" element={<Navigate to="/app/chat" replace />} />
-          <Route path="/dashboard/*" element={<Navigate to="/app/chat" replace />} />
+            {/* Dashboard redirects */}
+            <Route path="/dashboard" element={<Navigate to="/app/chat" replace />} />
+            <Route path="/dashboard/*" element={<Navigate to="/app/chat" replace />} />
 
-          {/* App pages */}
-          <Route path="/app" element={<AppLayout />}>
-            <Route index element={<Navigate to="/app/chat" replace />} />
-            <Route path="chat" element={<Chat />} />
-            <Route path="documents" element={<Documents />} />
-            <Route path="documents/:id" element={<DocumentDetail />} />
-            <Route path="documents/:id/edit-suggestions" element={<EditSuggestions />} />
-            <Route path="settings" element={<Settings />} />
-            <Route path="billing" element={<Billing />} />
-          </Route>
+            {/* App pages */}
+            <Route path="/app" element={<AppLayout />}>
+              <Route index element={<Navigate to="/app/chat" replace />} />
+              <Route path="chat" element={<Chat />} />
+              <Route path="documents" element={<Documents />} />
+              <Route path="documents/:id" element={<DocumentDetail />} />
+              <Route path="documents/:id/edit-suggestions" element={<EditSuggestions />} />
+              <Route path="settings" element={<Settings />} />
+              <Route path="billing" element={<Billing />} />
+            </Route>
 
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
-    </TooltipProvider>
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </BrowserRouter>
+      </TooltipProvider>
+    </AuthProvider>
   </QueryClientProvider>
 );
 

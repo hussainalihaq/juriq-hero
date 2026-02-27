@@ -1,13 +1,22 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { User, Building, CreditCard, AlertTriangle } from "lucide-react";
+import { User, Building, CreditCard, AlertTriangle, LogOut } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function Settings() {
-  const [name, setName] = useState("Jane Doe");
-  const [email] = useState("jane@company.com");
-  const [workspace, setWorkspace] = useState("Acme Legal");
+  const { user, signOut } = useAuth();
+  const navigate = useNavigate();
+
+  const [name, setName] = useState(user?.user_metadata?.name || "User");
+  const email = user?.email || "";
+  const [workspace, setWorkspace] = useState("My Workspace");
+
+  const handleSignOut = async () => {
+    await signOut();
+    navigate("/signin");
+  };
 
   return (
     <div className="p-6 sm:p-8">
@@ -39,7 +48,7 @@ export default function Settings() {
                 className="w-full rounded-lg border border-border bg-secondary/30 px-4 py-2.5 text-sm text-muted-foreground cursor-not-allowed"
               />
             </div>
-            <Button variant="default" size="sm" onClick={() => {}}>Save Changes</Button>
+            <Button variant="default" size="sm" onClick={() => { }}>Save Changes</Button>
           </div>
         </section>
 
@@ -59,7 +68,7 @@ export default function Settings() {
                 className="w-full rounded-lg border border-border bg-background px-4 py-2.5 text-sm text-foreground focus-accent"
               />
             </div>
-            <Button variant="default" size="sm" onClick={() => {}}>Update</Button>
+            <Button variant="default" size="sm" onClick={() => { }}>Update</Button>
           </div>
         </section>
 
@@ -80,18 +89,21 @@ export default function Settings() {
           </div>
         </section>
 
-        {/* Danger zone */}
+        {/* Danger zone & Sign out */}
         <section className="rounded-xl border border-danger/30 bg-card p-6">
           <div className="flex items-center gap-3 mb-4">
             <AlertTriangle className="h-5 w-5 text-danger" />
-            <h2 className="font-display text-lg font-semibold text-danger">Danger Zone</h2>
+            <h2 className="font-display text-lg font-semibold text-danger">Account Actions</h2>
           </div>
-          <p className="text-sm text-muted-foreground mb-4">
-            Permanently delete your account and all associated data. This action cannot be undone.
-          </p>
-          <Button variant="destructive" size="sm" onClick={() => {}}>
-            Delete Account
-          </Button>
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
+            <Button variant="outline" size="sm" onClick={handleSignOut} className="gap-2">
+              <LogOut className="h-4 w-4" />
+              Sign Out
+            </Button>
+            <Button variant="destructive" size="sm">
+              Delete Account
+            </Button>
+          </div>
         </section>
       </div>
     </div>
