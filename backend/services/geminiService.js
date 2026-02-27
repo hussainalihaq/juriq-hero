@@ -673,11 +673,11 @@ async function generateChatResponse(history, currentMessage, role = 'general', j
 // DOCUMENT ANALYSIS FUNCTION
 // ==========================================
 async function analyzeDocument(documentText, analysisType = 'general', jurisdiction = 'pak', userRole = 'general') {
-    if (!process.env.GEMINI_API_KEY) {
-        throw new Error("GEMINI_API_KEY is not set in backend .env");
+    if (API_KEYS.length === 0) {
+        throw new Error("No GEMINI_API_KEY is set in backend .env");
     }
 
-    const model = genAI.getGenerativeModel({ model: MODEL_NAME });
+    const model = getGenAI().getGenerativeModel({ model: MODEL_NAME });
 
     // Get the analysis prompt template
     const analysisPromptFn = DOCUMENT_ANALYSIS_PROMPTS[analysisType] || DOCUMENT_ANALYSIS_PROMPTS.general;
@@ -709,11 +709,11 @@ ${documentText.slice(0, 100000)}`;
 // LEGACY ANALYZE TEXT (for backward compatibility)
 // ==========================================
 async function analyzeText(text, promptType) {
-    if (!process.env.GEMINI_API_KEY) {
-        throw new Error("GEMINI_API_KEY is not set in backend .env");
+    if (API_KEYS.length === 0) {
+        throw new Error("No GEMINI_API_KEY is set in backend .env");
     }
 
-    const model = genAI.getGenerativeModel({ model: MODEL_NAME });
+    const model = getGenAI().getGenerativeModel({ model: MODEL_NAME });
 
     let specificPrompt = "";
     switch (promptType) {
