@@ -20,13 +20,14 @@ const tiers = [
 
 const comparisonRows = [
   { feature: "Documents/month", starter: "5", student: "15", pro: "50", team: "200" },
-  { feature: "Plain-English explanations", starter: "✓", student: "✓", pro: "✓", team: "✓" },
-  { feature: "Risk analysis", starter: "Basic", student: "Full", pro: "Full", team: "Full" },
-  { feature: "Edit suggestions", starter: "—", student: "✓", pro: "✓", team: "✓" },
-  { feature: "Clause drafting", starter: "—", student: "—", pro: "✓", team: "✓" },
+  { feature: "Plain-English summaries", starter: "✓", student: "✓", pro: "✓", team: "✓" },
+  { feature: "Ask legal questions (Chat)", starter: "Basic", student: "✓", pro: "✓", team: "✓" },
+  { feature: "Clause extraction", starter: "✓", student: "✓", pro: "✓", team: "✓" },
+  { feature: "Risk & red-flag detection", starter: "Basic", student: "Full", pro: "Full", team: "Full" },
+  { feature: "Obligations & deadlines", starter: "—", student: "✓", pro: "✓", team: "✓" },
+  { feature: "Rewrite / improve clauses", starter: "—", student: "✓", pro: "✓", team: "✓" },
   { feature: "Exports", starter: "1/mo", student: "5/mo", pro: "Unlimited", team: "Unlimited" },
-  { feature: "Team seats", starter: "1", student: "1", pro: "1", team: "5" },
-  { feature: "Shared workspace", starter: "—", student: "—", pro: "—", team: "✓" },
+  { feature: "Team workspace", starter: "—", student: "—", pro: "—", team: "✓" },
 ];
 
 export default function Pricing() {

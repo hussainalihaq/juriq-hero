@@ -103,15 +103,15 @@ export const mockBlogPosts = [
 
 export const mockPricing = {
   monthly: {
-    starter: { price: "Free", docs: "5 documents/month", features: ["Plain-English explanations", "Basic risk flagging", "1 export/month"] },
-    student: { price: "$5", docs: "15 documents/month", features: ["Plain-English explanations", "Full risk analysis", "Edit suggestions", "5 exports/month", "Student-verified access"] },
-    pro: { price: "$29", docs: "50 documents/month", features: ["Full risk analysis", "Edit suggestions", "Unlimited exports", "Clause drafting", "Priority processing"] },
+    starter: { price: "Free", docs: "5 documents/month", features: ["Plain-English summaries", "Basic risk flagging", "Clause extraction", "1 export/month"] },
+    student: { price: "$5", docs: "15 documents/month", features: ["Plain-English summaries", "Risk & red-flag detection", "Ask legal questions (Chat)", "Obligations & deadlines", "Rewrite / improve clauses", "5 exports/month"] },
+    pro: { price: "$29", docs: "50 documents/month", features: ["Everything in Student", "Clause drafting", "Unlimited exports", "Priority processing"] },
     team: { price: "$79", docs: "200 documents/month", features: ["Everything in Pro", "5 team seats", "Shared workspace", "Team document library", "Admin controls"] },
   },
   yearly: {
-    starter: { price: "Free", docs: "5 documents/month", features: ["Plain-English explanations", "Basic risk flagging", "1 export/month"] },
-    student: { price: "$4", docs: "15 documents/month", features: ["Plain-English explanations", "Full risk analysis", "Edit suggestions", "5 exports/month", "Student-verified access"] },
-    pro: { price: "$24", docs: "50 documents/month", features: ["Full risk analysis", "Edit suggestions", "Unlimited exports", "Clause drafting", "Priority processing"] },
+    starter: { price: "Free", docs: "5 documents/month", features: ["Plain-English summaries", "Basic risk flagging", "Clause extraction", "1 export/month"] },
+    student: { price: "$4", docs: "15 documents/month", features: ["Plain-English summaries", "Risk & red-flag detection", "Ask legal questions (Chat)", "Obligations & deadlines", "Rewrite / improve clauses", "5 exports/month"] },
+    pro: { price: "$24", docs: "50 documents/month", features: ["Everything in Student", "Clause drafting", "Unlimited exports", "Priority processing"] },
     team: { price: "$65", docs: "200 documents/month", features: ["Everything in Pro", "5 team seats", "Shared workspace", "Team document library", "Admin controls"] },
   },
 };
