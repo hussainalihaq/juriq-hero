@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const multer = require('multer');
+const pdf = require('pdf-parse');
 const { generateChatResponse, analyzeText } = require('./services/geminiService');
 
 const app = express();
@@ -65,15 +66,29 @@ app.post('/api/upload', upload.single('file'), async (req, res) => {
             return res.status(400).json({ error: 'No file uploaded' });
         }
 
-        // TODO: Processing logic (Parse PDF -> Chunk -> Store in Supabase)
-        // For now, prompt the frontend that we received it.
-
         console.log(`Received file: ${req.file.originalname} (${req.file.mimetype})`);
+
+        let extractedText = "";
+
+        // Simple PDF parser integration for MVP
+        if (req.file.mimetype === 'application/pdf') {
+            try {
+                const data = await pdf(req.file.buffer);
+                extractedText = data.text;
+                console.log(`Extracted ${extractedText.length} characters from PDF.`);
+            } catch (parseError) {
+                console.error("Failed to parse PDF:", parseError);
+                extractedText = "[Unable to extract text from this PDF format]";
+            }
+        } else {
+            extractedText = "[Text extraction for non-PDFs not yet supported in MVP]";
+        }
 
         res.json({
             message: 'File uploaded successfully',
             filename: req.file.originalname,
-            size: req.file.size
+            size: req.file.size,
+            extractedText
         });
     } catch (error) {
         console.error('Upload API Error:', error);
