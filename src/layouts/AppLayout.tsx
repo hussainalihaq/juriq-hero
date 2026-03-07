@@ -36,7 +36,7 @@ export default function AppLayout() {
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <span className="font-display font-semibold text-foreground">Juriq</span>
               <span>/</span>
-              <span>Workspace</span>
+              <span>{user.user_metadata?.workspace || "Workspace"}</span>
             </div>
             <div className="ml-auto flex items-center gap-2">
               <div

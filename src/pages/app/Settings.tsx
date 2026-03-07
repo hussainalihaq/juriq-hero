@@ -2,8 +2,10 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { User, Building, CreditCard, AlertTriangle, LogOut } from "lucide-react";
+import { User, Building, CreditCard, AlertTriangle, LogOut, Loader2 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
+import { supabase } from "@/lib/supabaseClient";
+import { toast } from "sonner";
 
 export default function Settings() {
   const { user, signOut } = useAuth();
@@ -11,7 +13,42 @@ export default function Settings() {
 
   const [name, setName] = useState(user?.user_metadata?.name || "User");
   const email = user?.email || "";
-  const [workspace, setWorkspace] = useState("My Workspace");
+  const [workspace, setWorkspace] = useState(user?.user_metadata?.workspace || "My Workspace");
+
+  const [updatingProfile, setUpdatingProfile] = useState(false);
+  const [updatingWorkspace, setUpdatingWorkspace] = useState(false);
+
+  const handleSaveProfile = async () => {
+    if (!name.trim()) return;
+    setUpdatingProfile(true);
+    try {
+      const { error } = await supabase.auth.updateUser({
+        data: { name: name.trim() },
+      });
+      if (error) throw error;
+      toast.success("Profile updated successfully!");
+    } catch (err: any) {
+      toast.error(err.message || "Failed to update profile");
+    } finally {
+      setUpdatingProfile(false);
+    }
+  };
+
+  const handleUpdateWorkspace = async () => {
+    if (!workspace.trim()) return;
+    setUpdatingWorkspace(true);
+    try {
+      const { error } = await supabase.auth.updateUser({
+        data: { workspace: workspace.trim() },
+      });
+      if (error) throw error;
+      toast.success("Workspace updated successfully!");
+    } catch (err: any) {
+      toast.error(err.message || "Failed to update workspace");
+    } finally {
+      setUpdatingWorkspace(false);
+    }
+  };
 
   const handleSignOut = async () => {
     await signOut();
@@ -48,7 +85,10 @@ export default function Settings() {
                 className="w-full rounded-lg border border-border bg-secondary/30 px-4 py-2.5 text-sm text-muted-foreground cursor-not-allowed"
               />
             </div>
-            <Button variant="default" size="sm" onClick={() => { }}>Save Changes</Button>
+            <Button variant="default" size="sm" onClick={handleSaveProfile} disabled={updatingProfile}>
+              {updatingProfile && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              Save Changes
+            </Button>
           </div>
         </section>
 
@@ -68,7 +108,10 @@ export default function Settings() {
                 className="w-full rounded-lg border border-border bg-background px-4 py-2.5 text-sm text-foreground focus-accent"
               />
             </div>
-            <Button variant="default" size="sm" onClick={() => { }}>Update</Button>
+            <Button variant="default" size="sm" onClick={handleUpdateWorkspace} disabled={updatingWorkspace}>
+              {updatingWorkspace && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              Update
+            </Button>
           </div>
         </section>
 
