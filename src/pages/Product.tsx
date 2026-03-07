@@ -1,5 +1,5 @@
-import { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -54,40 +54,14 @@ const sections = [
   },
 ];
 
-function useScrollReveal() {
-  const ref = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("revealed");
-            observer.unobserve(entry.target);
-          }
-        });
-      },
-      { threshold: 0.15, rootMargin: "0px 0px -50px 0px" }
-    );
-
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
-
-  return ref;
-}
-
 function FeatureSection({ s, index }: { s: typeof sections[0]; index: number }) {
-  const ref = useScrollReveal();
-
   return (
-    <div
-      ref={ref}
-      className={`scroll-reveal flex flex-col gap-10 lg:flex-row lg:items-center ${s.reverse ? "lg:flex-row-reverse" : ""}`}
-      style={{ transitionDelay: `${index * 80}ms` }}
+    <motion.div
+      initial={{ opacity: 0, y: 32 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-50px" }}
+      transition={{ duration: 0.7, delay: index * 0.1, ease: "easeOut" }}
+      className={`flex flex-col gap-10 lg:flex-row lg:items-center ${s.reverse ? "lg:flex-row-reverse" : ""}`}
     >
       <div className="flex-1">
         <div className={`mb-4 inline-flex rounded-xl bg-gradient-to-br ${s.gradient} p-3 backdrop-blur-sm`}>
@@ -102,30 +76,21 @@ function FeatureSection({ s, index }: { s: typeof sections[0]; index: number }) 
           <s.icon className="relative h-16 w-16 text-muted-foreground/30 transition-transform duration-500 group-hover:scale-110 group-hover:text-muted-foreground/50" />
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }
 
 export default function Product() {
-  const heroRef = useScrollReveal();
-
   return (
     <div>
-      {/* Inline styles for scroll-reveal animation */}
-      <style>{`
-        .scroll-reveal {
-          opacity: 0;
-          transform: translateY(32px);
-          transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-        .scroll-reveal.revealed {
-          opacity: 1;
-          transform: translateY(0);
-        }
-      `}</style>
-
       <section className="px-4 py-20 sm:px-6 lg:px-8">
-        <div ref={heroRef} className="scroll-reveal mx-auto max-w-3xl text-center">
+        <motion.div
+          initial={{ opacity: 0, y: 32 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-50px" }}
+          transition={{ duration: 0.7, ease: "easeOut" }}
+          className="mx-auto max-w-3xl text-center"
+        >
           <Badge variant="secondary" className="mb-6 animate-fade-in">Product</Badge>
           <h1 className="font-display text-4xl font-bold text-foreground sm:text-5xl lg:text-6xl">
             Your AI legal copilot
@@ -133,7 +98,7 @@ export default function Product() {
           <p className="mt-4 text-lg text-muted-foreground">
             Contract analysis, risk detection, and drafting help — plus best-effort support for case law and litigation research.
           </p>
-        </div>
+        </motion.div>
       </section>
 
       <section className="px-4 pb-20 sm:px-6 lg:px-8">
@@ -147,9 +112,9 @@ export default function Product() {
       <section className="border-t border-border/30 py-20 px-4 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-lg text-center">
           <h2 className="font-display text-3xl font-bold text-foreground">Ready to try it?</h2>
-          <p className="mt-3 text-muted-foreground">Join the waitlist for early access.</p>
+          <p className="mt-3 text-muted-foreground">Sign up to get started.</p>
           <Button variant="hero" size="xl" className="mt-6 transition-transform duration-300 hover:scale-105" asChild>
-            <Link to="/waitlist">Join Waitlist</Link>
+            <Link to="/signup">Sign Up</Link>
           </Button>
         </div>
       </section>

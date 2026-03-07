@@ -11,7 +11,7 @@ import Index from "./pages/Index";
 import Product from "./pages/Product";
 import Pricing from "./pages/Pricing";
 import Security from "./pages/Security";
-import Waitlist from "./pages/Waitlist";
+
 import Blog from "./pages/Blog";
 import BlogPost from "./pages/BlogPost";
 import Terms from "./pages/Terms";
@@ -47,7 +47,7 @@ const App = () => (
               <Route path="/product" element={<Product />} />
               <Route path="/pricing" element={<Pricing />} />
               <Route path="/security" element={<Security />} />
-              <Route path="/waitlist" element={<Waitlist />} />
+
               <Route path="/blog" element={<Blog />} />
               <Route path="/blog/:slug" element={<BlogPost />} />
               <Route path="/terms" element={<Terms />} />

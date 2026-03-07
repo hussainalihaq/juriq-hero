@@ -12,10 +12,10 @@ import {
 } from "@/components/ui/accordion";
 
 const tiers = [
-  { key: "starter" as const, name: "Starter", desc: "Contract-first basics + limited research help.", cta: "Join Waitlist", popular: false, badge: null },
-  { key: "student" as const, name: "Student", desc: "Contract review + case law research for students.", cta: "Join Waitlist", popular: false, badge: "🎓 Edu" },
-  { key: "pro" as const, name: "Pro", desc: "Higher limits + better drafting + exports.", cta: "Join Waitlist", popular: true, badge: null },
-  { key: "team" as const, name: "Team", desc: "Shared workspace + higher limits for teams.", cta: "Join Waitlist", popular: false, badge: null },
+  { key: "starter" as const, name: "Starter", desc: "Contract-first basics + limited research help.", cta: "Sign Up", popular: false, badge: null },
+  { key: "student" as const, name: "Student", desc: "Contract review + case law research for students.", cta: "Sign Up", popular: false, badge: "🎓 Edu" },
+  { key: "pro" as const, name: "Pro", desc: "Higher limits + better drafting + exports.", cta: "Sign Up", popular: true, badge: null },
+  { key: "team" as const, name: "Team", desc: "Shared workspace + higher limits for teams.", cta: "Sign Up", popular: false, badge: null },
 ];
 
 const comparisonRows = [

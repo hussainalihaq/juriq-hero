@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -42,6 +43,30 @@ const steps = [
   { num: "03", title: "Export", desc: "Export notes, summaries, and edits as PDF or DOCX." },
 ];
 
+import { Variants } from "framer-motion";
+
+const containerVariants: Variants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+    },
+  },
+};
+
+const itemVariants: Variants = {
+  hidden: { y: 20, opacity: 0 },
+  visible: {
+    y: 0,
+    opacity: 1,
+    transition: {
+      type: "spring",
+      stiffness: 100,
+    },
+  },
+};
+
 export default function Landing() {
   const [email, setEmail] = useState("");
   const [role, setRole] = useState("");
@@ -51,7 +76,12 @@ export default function Landing() {
       {/* Hero */}
       <section className="relative overflow-hidden px-4 pb-20 pt-16 sm:px-6 lg:px-8 lg:pt-24">
         <div className="mx-auto max-w-7xl">
-          <div className="mx-auto max-w-3xl text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, ease: "easeOut" }}
+            className="mx-auto max-w-3xl text-center"
+          >
             <Badge variant="secondary" className="mb-6 px-3 py-1">
               AI legal copilot — contract-first.
             </Badge>
@@ -65,16 +95,21 @@ export default function Landing() {
             </p>
             <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
               <Button variant="hero" size="xl" asChild>
-                <Link to="/waitlist">Join Waitlist</Link>
+                <Link to="/signup">Sign Up</Link>
               </Button>
               <Button variant="hero-secondary" size="xl" asChild>
                 <Link to="/product">View Demo</Link>
               </Button>
             </div>
-          </div>
+          </motion.div>
 
           {/* Hero visual — dashboard mock */}
-          <div className="mx-auto mt-16 max-w-4xl">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95, y: 40 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
+            className="mx-auto mt-16 max-w-4xl"
+          >
             <div className="overflow-hidden rounded-xl border border-border/50 bg-card shadow-2xl shadow-background/80">
               <div className="flex h-8 items-center gap-2 border-b border-border/50 bg-secondary/50 px-4">
                 <div className="h-2.5 w-2.5 rounded-full bg-danger/60" />
@@ -121,13 +156,19 @@ export default function Landing() {
                 </div>
               </div>
             </div>
-          </div>
+          </motion.div>
         </div>
       </section>
 
       {/* Social proof */}
       <section className="border-y border-border/30 py-10">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.8 }}
+          className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8"
+        >
           <p className="mb-6 text-center text-xs font-medium uppercase tracking-widest text-muted-foreground">
             Trusted by early adopters at
           </p>
@@ -136,43 +177,62 @@ export default function Landing() {
               <span key={name} className="font-display text-lg font-semibold text-foreground">{name}</span>
             ))}
           </div>
-        </div>
+        </motion.div>
       </section>
 
       {/* Testimonials */}
       <section className="py-16 px-4 sm:px-6 lg:px-8">
-        <div className="mx-auto grid max-w-4xl gap-6 md:grid-cols-2">
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-100px" }}
+          className="mx-auto grid max-w-4xl gap-6 md:grid-cols-2"
+        >
           {[
             { quote: "Juriq caught a non-compete clause buried in our NDA that our team missed. It also helped us outline arguments for a vendor dispute — all in one tool.", name: "Alex M.", role: "Startup Founder" },
             { quote: "I use Juriq for contract review and case law research. The risk breakdown makes complex legalese actually understandable, and the case summaries save me hours.", name: "Priya K.", role: "Law Student" },
           ].map((t, i) => (
-            <div key={i} className="rounded-xl border border-border/50 bg-card p-6">
+            <motion.div key={i} variants={itemVariants} className="rounded-xl border border-border/50 bg-card p-6">
               <Quote className="mb-3 h-5 w-5 text-muted-foreground/50" />
               <p className="text-sm leading-relaxed text-muted-foreground">{t.quote}</p>
               <div className="mt-4">
                 <p className="text-sm font-semibold text-foreground">{t.name}</p>
                 <p className="text-xs text-muted-foreground">{t.role}</p>
               </div>
-            </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       </section>
 
       {/* Features grid */}
       <section className="py-20 px-4 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-7xl">
-          <div className="mx-auto mb-14 max-w-2xl text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.5 }}
+            className="mx-auto mb-14 max-w-2xl text-center"
+          >
             <h2 className="font-display text-3xl font-bold text-foreground sm:text-4xl">
               Contract copilot + legal research assistant
             </h2>
             <p className="mt-4 text-muted-foreground">
               From contract analysis and edit suggestions to case law summaries and litigation prep.
             </p>
-          </div>
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          </motion.div>
+          <motion.div
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-100px" }}
+            className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
+          >
             {features.map((f, i) => (
-              <div
+              <motion.div
                 key={i}
+                variants={itemVariants}
                 className="group rounded-xl border border-border/50 bg-card p-6 transition-default hover:border-border hover:bg-secondary/30"
               >
                 <div className="mb-4 inline-flex rounded-lg p-2.5 accent-soft-bg">
@@ -180,53 +240,83 @@ export default function Landing() {
                 </div>
                 <h3 className="font-display text-base font-semibold text-foreground">{f.title}</h3>
                 <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{f.desc}</p>
-              </div>
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
         </div>
       </section>
 
       {/* Use cases */}
       <section className="border-t border-border/30 py-20 px-4 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-7xl">
-          <h2 className="mb-12 text-center font-display text-3xl font-bold text-foreground sm:text-4xl">
+          <motion.h2
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.5 }}
+            className="mb-12 text-center font-display text-3xl font-bold text-foreground sm:text-4xl"
+          >
             Built for people who deal with legal documents
-          </h2>
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          </motion.h2>
+          <motion.div
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-100px" }}
+            className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4"
+          >
             {useCases.map((uc, i) => (
-              <div key={i} className="rounded-xl border border-border/50 bg-card p-6">
+              <motion.div key={i} variants={itemVariants} className="rounded-xl border border-border/50 bg-card p-6">
                 <uc.icon className="mb-3 h-6 w-6 text-primary" />
                 <h3 className="font-display text-sm font-semibold text-foreground">{uc.title}</h3>
                 <p className="mt-2 text-sm text-muted-foreground">{uc.desc}</p>
-              </div>
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
         </div>
       </section>
 
       {/* How it works */}
       <section className="border-t border-border/30 py-20 px-4 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-4xl">
-          <h2 className="mb-14 text-center font-display text-3xl font-bold text-foreground sm:text-4xl">
+          <motion.h2
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.5 }}
+            className="mb-14 text-center font-display text-3xl font-bold text-foreground sm:text-4xl"
+          >
             How it works
-          </h2>
-          <div className="grid gap-8 md:grid-cols-3">
+          </motion.h2>
+          <motion.div
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-100px" }}
+            className="grid gap-8 md:grid-cols-3"
+          >
             {steps.map((s) => (
-              <div key={s.num} className="text-center">
+              <motion.div key={s.num} variants={itemVariants} className="text-center">
                 <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 font-display text-lg font-bold text-primary">
                   {s.num}
                 </div>
                 <h3 className="font-display text-lg font-semibold text-foreground">{s.title}</h3>
                 <p className="mt-2 text-sm text-muted-foreground">{s.desc}</p>
-              </div>
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
         </div>
       </section>
 
       {/* Security snippet */}
       <section className="border-t border-border/30 py-16 px-4 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-3xl text-center">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.6 }}
+          className="mx-auto max-w-3xl text-center"
+        >
           <Shield className="mx-auto mb-4 h-8 w-8 text-primary" />
           <h2 className="font-display text-2xl font-bold text-foreground">Your documents stay private</h2>
           <div className="mt-6 grid gap-4 text-left sm:grid-cols-3">
@@ -241,12 +331,18 @@ export default function Landing() {
               </div>
             ))}
           </div>
-        </div>
+        </motion.div>
       </section>
 
       {/* Final CTA */}
       <section className="border-t border-border/30 py-20 px-4 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-lg text-center">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.7 }}
+          className="mx-auto max-w-lg text-center"
+        >
           <h2 className="font-display text-3xl font-bold text-foreground">Get early access</h2>
           <p className="mt-3 text-muted-foreground">
             Join the waitlist and be first to try your AI legal copilot.
@@ -271,12 +367,11 @@ export default function Landing() {
               <option value="freelancer">Freelancer</option>
               <option value="other">Other</option>
             </select>
-            <Button variant="hero" size="lg" className="w-full" onClick={() => { }}>
-              Join Waitlist
-              <ArrowRight className="ml-1 h-4 w-4" />
+            <Button variant="hero" size="lg" className="w-full" asChild>
+              <Link to="/signup">Sign Up</Link>
             </Button>
           </div>
-        </div>
+        </motion.div>
       </section>
     </div>
   );

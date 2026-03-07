@@ -29,8 +29,8 @@ export function Navbar() {
               key={link.href}
               to={link.href}
               className={`rounded-md px-3 py-2 text-sm font-medium transition-default ${location.pathname === link.href
-                  ? "text-foreground"
-                  : "text-muted-foreground hover:text-foreground"
+                ? "text-foreground"
+                : "text-muted-foreground hover:text-foreground"
                 }`}
             >
               {link.label}
@@ -43,7 +43,7 @@ export function Navbar() {
             <Link to="/signin">Sign in</Link>
           </Button>
           <Button variant="default" size="sm" asChild>
-            <Link to="/waitlist">Join Waitlist</Link>
+            <Link to="/signup">Sign Up</Link>
           </Button>
         </div>
 
@@ -75,7 +75,7 @@ export function Navbar() {
               <Link to="/signin" onClick={() => setMobileOpen(false)}>Sign in</Link>
             </Button>
             <Button variant="default" size="sm" asChild>
-              <Link to="/waitlist" onClick={() => setMobileOpen(false)}>Join Waitlist</Link>
+              <Link to="/signup" onClick={() => setMobileOpen(false)}>Sign Up</Link>
             </Button>
           </div>
         </div>
