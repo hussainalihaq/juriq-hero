@@ -20,6 +20,7 @@ import {
   Quote,
 } from "lucide-react";
 import { useState } from "react";
+import { useAuth } from "@/contexts/AuthContext";
 
 const features = [
   { icon: FileText, title: "Explain contracts in plain English", desc: "Upload any contract and get a clear, jargon-free summary of what it says and what it means for you." },
@@ -70,6 +71,7 @@ const itemVariants: Variants = {
 export default function Landing() {
   const [email, setEmail] = useState("");
   const [role, setRole] = useState("");
+  const { user } = useAuth();
 
   return (
     <div>
@@ -94,9 +96,15 @@ export default function Landing() {
               Contract-first. Understand agreements in plain English, spot risks, and generate edit suggestions — plus quick help with cases, laws, and litigation prep.
             </p>
             <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-              <Button variant="hero" size="xl" asChild>
-                <Link to="/signup">Sign Up</Link>
-              </Button>
+              {user ? (
+                <Button variant="hero" size="xl" asChild>
+                  <Link to="/app">Go to Dashboard</Link>
+                </Button>
+              ) : (
+                <Button variant="hero" size="xl" asChild>
+                  <Link to="/signup">Sign Up</Link>
+                </Button>
+              )}
               <Button variant="hero-secondary" size="xl" asChild>
                 <Link to="/product">View Demo</Link>
               </Button>
@@ -367,9 +375,15 @@ export default function Landing() {
               <option value="freelancer">Freelancer</option>
               <option value="other">Other</option>
             </select>
-            <Button variant="hero" size="lg" className="w-full" asChild>
-              <Link to="/signup">Sign Up</Link>
-            </Button>
+            {user ? (
+              <Button variant="hero" size="lg" className="w-full" asChild>
+                <Link to="/app">Go to Dashboard</Link>
+              </Button>
+            ) : (
+              <Button variant="hero" size="lg" className="w-full" asChild>
+                <Link to="/signup">Sign Up</Link>
+              </Button>
+            )}
           </div>
         </motion.div>
       </section>

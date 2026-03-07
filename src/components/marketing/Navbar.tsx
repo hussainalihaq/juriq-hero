@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
 
 const navLinks = [
   { label: "Product", href: "/product" },
@@ -13,6 +14,7 @@ const navLinks = [
 export function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const location = useLocation();
+  const { user } = useAuth();
 
   return (
     <nav className="sticky top-0 z-50 border-b border-border/50 bg-background/80 backdrop-blur-xl">
@@ -39,12 +41,20 @@ export function Navbar() {
         </div>
 
         <div className="hidden items-center gap-3 md:flex">
-          <Button variant="ghost" size="sm" asChild>
-            <Link to="/signin">Sign in</Link>
-          </Button>
-          <Button variant="default" size="sm" asChild>
-            <Link to="/signup">Sign Up</Link>
-          </Button>
+          {user ? (
+            <Button variant="default" size="sm" asChild>
+              <Link to="/app">Dashboard</Link>
+            </Button>
+          ) : (
+            <>
+              <Button variant="ghost" size="sm" asChild>
+                <Link to="/signin">Sign in</Link>
+              </Button>
+              <Button variant="default" size="sm" asChild>
+                <Link to="/signup">Sign Up</Link>
+              </Button>
+            </>
+          )}
         </div>
 
         {/* Mobile menu toggle */}
@@ -71,12 +81,20 @@ export function Navbar() {
             </Link>
           ))}
           <div className="mt-3 flex flex-col gap-2">
-            <Button variant="ghost" size="sm" asChild>
-              <Link to="/signin" onClick={() => setMobileOpen(false)}>Sign in</Link>
-            </Button>
-            <Button variant="default" size="sm" asChild>
-              <Link to="/signup" onClick={() => setMobileOpen(false)}>Sign Up</Link>
-            </Button>
+            {user ? (
+              <Button variant="default" size="sm" asChild>
+                <Link to="/app" onClick={() => setMobileOpen(false)}>Dashboard</Link>
+              </Button>
+            ) : (
+              <>
+                <Button variant="ghost" size="sm" asChild>
+                  <Link to="/signin" onClick={() => setMobileOpen(false)}>Sign in</Link>
+                </Button>
+                <Button variant="default" size="sm" asChild>
+                  <Link to="/signup" onClick={() => setMobileOpen(false)}>Sign Up</Link>
+                </Button>
+              </>
+            )}
           </div>
         </div>
       )}
