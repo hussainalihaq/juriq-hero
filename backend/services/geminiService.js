@@ -616,8 +616,8 @@ Apply ALL guidelines above. Maintain the highest standards of legal accuracy, cl
 // CHAT RESPONSE FUNCTION
 // ==========================================
 async function generateChatResponse(history, currentMessage, role = 'general', jurisdictions = [], outputStyle = 50) {
-    if (API_KEYS.length === 0) {
-        throw new Error("No GEMINI_API_KEY is set in backend .env");
+    if (API_KEYS.length === 0 && !process.env.GROQ_API_KEY) {
+        throw new Error("No GEMINI_API_KEY or GROQ_API_KEY is set in backend .env");
     }
 
     // Temperature based on output style (0 = creative = 0.9, 100 = precise = 0.3)
@@ -666,7 +666,62 @@ async function generateChatResponse(history, currentMessage, role = 'general', j
             throw err;
         }
     }
-    throw lastError;
+
+    // Fallback to Groq if all Gemini keys fail or rate limit exhaustion
+    console.log("Gemini keys exhausted or failed, falling back to Groq...");
+    try {
+        return await fallbackToGroq(history, currentMessage, systemPrompt);
+    } catch (groqError) {
+        console.error("Groq fallback also failed:", groqError);
+        throw lastError; // Throw the original Gemini error if Groq also fails
+    }
+}
+
+// ==========================================
+// GROQ FALLBACK FUNCTION
+// ==========================================
+async function fallbackToGroq(history, currentMessage, systemPrompt) {
+    if (!process.env.GROQ_API_KEY) {
+        throw new Error("No GROQ_API_KEY is set for fallback.");
+    }
+
+    const messages = [
+        { role: 'system', content: systemPrompt }
+    ];
+
+    if (history && history.length > 0) {
+        history.forEach(msg => {
+            messages.push({
+                role: msg.role === 'ai' ? 'assistant' : 'user',
+                content: msg.text
+            });
+        });
+    }
+
+    messages.push({ role: 'user', content: currentMessage });
+
+    const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+            'Authorization': `Bearer ${process.env.GROQ_API_KEY}`,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            model: 'llama3-70b-8192',
+            messages: messages,
+            temperature: 0.5,
+            max_tokens: 4000
+        })
+    });
+
+    if (!response.ok) {
+        const err = await response.json().catch(() => ({}));
+        throw new Error(`Groq Fallback Failed: ${response.status} - ${JSON.stringify(err)}`);
+    }
+
+    const data = await response.json();
+    console.log("Successfully generated response using Groq.");
+    return { text: data.choices[0].message.content };
 }
 
 // ==========================================

@@ -12,6 +12,27 @@ const port = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
+// Rate Limiter Config (Free Tier enforcement)
+const rateLimits = new Map();
+const RATE_LIMIT_WINDOW_MS = 60000; // 1 minute window
+const MAX_REQUESTS_PER_MINUTE = 15; // Aligning with Gemini Free Tier limit
+
+setInterval(() => rateLimits.clear(), RATE_LIMIT_WINDOW_MS);
+
+function enforceRateLimit(req, res, next) {
+    const ip = req.ip || req.connection?.remoteAddress || 'unknown';
+    const currentRequests = rateLimits.get(ip) || 0;
+
+    if (currentRequests >= MAX_REQUESTS_PER_MINUTE) {
+        return res.status(429).json({ error: 'Usage limit reached for this minute. Please pause for a moment and try again.' });
+    }
+
+    rateLimits.set(ip, currentRequests + 1);
+    next();
+}
+
+app.use('/api', enforceRateLimit);
+
 // File Upload Config (Memory Storage for processing)
 const upload = multer({ storage: multer.memoryStorage() });
 

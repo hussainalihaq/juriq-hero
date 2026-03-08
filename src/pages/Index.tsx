@@ -69,8 +69,6 @@ const itemVariants: Variants = {
 };
 
 export default function Landing() {
-  const [email, setEmail] = useState("");
-  const [role, setRole] = useState("");
   const { user } = useAuth();
 
   return (
@@ -351,37 +349,18 @@ export default function Landing() {
           transition={{ duration: 0.7 }}
           className="mx-auto max-w-lg text-center"
         >
-          <h2 className="font-display text-3xl font-bold text-foreground">Get early access</h2>
+          <h2 className="font-display text-3xl font-bold text-foreground">Start using Juriq today</h2>
           <p className="mt-3 text-muted-foreground">
-            Join the waitlist and be first to try your AI legal copilot.
+            Create an account to analyze contracts and answer legal questions in seconds.
           </p>
-          <div className="mt-8 space-y-3">
-            <input
-              type="email"
-              placeholder="you@company.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full rounded-lg border border-border bg-card px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus-accent"
-            />
-            <select
-              value={role}
-              onChange={(e) => setRole(e.target.value)}
-              className="w-full rounded-lg border border-border bg-card px-4 py-3 text-sm text-foreground focus-accent"
-            >
-              <option value="">Select your role (optional)</option>
-              <option value="founder">Founder / CEO</option>
-              <option value="legal">Legal Professional</option>
-              <option value="student">Student</option>
-              <option value="freelancer">Freelancer</option>
-              <option value="other">Other</option>
-            </select>
+          <div className="mt-8 flex justify-center">
             {user ? (
-              <Button variant="hero" size="lg" className="w-full" asChild>
+              <Button variant="hero" size="lg" asChild>
                 <Link to="/app">Go to Dashboard</Link>
               </Button>
             ) : (
-              <Button variant="hero" size="lg" className="w-full" asChild>
-                <Link to="/signup">Sign Up</Link>
+              <Button variant="hero" size="lg" asChild>
+                <Link to="/signup">Create Free Account</Link>
               </Button>
             )}
           </div>
