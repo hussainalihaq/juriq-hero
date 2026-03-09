@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Check, GraduationCap } from "lucide-react";
@@ -38,12 +39,22 @@ export default function Pricing() {
     <div>
       <section className="px-4 py-20 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-3xl text-center">
-          <h1 className="font-display text-4xl font-bold text-foreground sm:text-5xl">
-            Simple, transparent pricing
-          </h1>
-          <p className="mt-4 text-lg text-muted-foreground">
+          <motion.h1
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
+            className="font-display text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl"
+          >
+            Simple, <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-primary/60">transparent</span> pricing
+          </motion.h1>
+          <motion.p
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.1, ease: "easeOut" }}
+            className="mt-6 text-lg text-muted-foreground"
+          >
             Start free. Upgrade when you need more.
-          </p>
+          </motion.p>
 
           {/* Toggle */}
           <div className="mt-8 inline-flex items-center gap-3 rounded-lg border border-border bg-card p-1">
@@ -68,57 +79,63 @@ export default function Pricing() {
 
       {/* Pricing cards */}
       <section className="px-4 pb-20 sm:px-6 lg:px-8">
-        <div className="mx-auto grid max-w-6xl gap-6 lg:grid-cols-4">
-          {tiers.map((tier) => {
+        <div className="mx-auto grid max-w-7xl gap-6 lg:gap-8 lg:grid-cols-4 items-center mt-8">
+          {tiers.map((tier, index) => {
             const plan = data[tier.key];
             return (
-              <div
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.2 + (index * 0.1), ease: "easeOut" }}
                 key={tier.key}
-                className={`relative rounded-xl border p-6 transition-default ${tier.popular
-                  ? "border-primary bg-card shadow-lg shadow-primary/5"
-                  : tier.key === "student"
-                    ? "border-emerald-500/50 bg-card shadow-md shadow-emerald-500/5"
-                    : "border-border/50 bg-card hover:border-border"
+                className={`relative rounded-2xl border p-8 transition-all duration-300 hover:-translate-y-1 flex flex-col h-full bg-background/40 backdrop-blur-sm ${tier.popular
+                    ? "border-primary/50 bg-gradient-to-b from-primary/10 to-transparent shadow-[0_0_30px_rgba(59,130,246,0.15)] ring-1 ring-primary/20 md:scale-105 z-10"
+                    : tier.key === "student"
+                      ? "border-emerald-500/30 bg-gradient-to-b from-emerald-500/5 to-transparent hover:border-emerald-500/50 hover:shadow-[0_0_20px_rgba(16,185,129,0.1)]"
+                      : "border-border/50 hover:border-border hover:shadow-xl hover:shadow-primary/5"
                   }`}
               >
                 {tier.popular && (
-                  <Badge variant="default" className="absolute -top-3 left-6">
-                    Most popular
-                  </Badge>
+                  <div className="absolute -top-3 left-0 right-0 mx-auto w-max rounded-full bg-gradient-to-r from-primary to-primary/80 px-4 py-1.5 text-xs font-bold tracking-wide uppercase text-primary-foreground shadow-sm">
+                    Most Popular
+                  </div>
                 )}
                 {tier.badge && (
-                  <Badge className="absolute -top-3 left-6 bg-emerald-600 text-white hover:bg-emerald-700">
+                  <div className="absolute -top-3 left-0 right-0 mx-auto w-max rounded-full bg-emerald-500 px-4 py-1.5 text-xs font-bold tracking-wide uppercase text-white shadow-sm">
                     {tier.badge}
-                  </Badge>
+                  </div>
                 )}
-                <div className="flex items-center gap-2">
-                  <h3 className="font-display text-lg font-bold text-foreground">{tier.name}</h3>
+                <div className="flex items-center gap-2 mt-2">
+                  <h3 className="font-display text-xl font-bold text-foreground">{tier.name}</h3>
                   {tier.key === "student" && <GraduationCap className="h-5 w-5 text-emerald-400" />}
                 </div>
-                <p className="mt-1 text-sm text-muted-foreground">{tier.desc}</p>
-                <div className="mt-6">
-                  <span className="font-display text-4xl font-bold text-foreground">{plan.price}</span>
+                <p className="mt-3 text-sm text-muted-foreground min-h-[40px] leading-relaxed">{tier.desc}</p>
+                <div className="mt-8">
+                  <span className="font-display text-5xl font-bold tracking-tight text-foreground">{plan.price}</span>
                   {plan.price !== "Free" && (
-                    <span className="text-sm text-muted-foreground">/{yearly ? "mo (billed yearly)" : "month"}</span>
+                    <span className="text-sm font-medium text-muted-foreground ml-1">/{yearly ? "mo (yearly)" : "month"}</span>
                   )}
                 </div>
-                <p className="mt-2 text-sm text-muted-foreground">{plan.docs}</p>
+                <p className="mt-3 text-sm font-medium text-muted-foreground">{plan.docs}</p>
                 <Button
                   variant={tier.popular ? "hero" : "outline"}
-                  className={`mt-6 w-full ${tier.key === "student" ? "border-emerald-500/50 hover:bg-emerald-600 hover:text-white" : ""}`}
+                  size="lg"
+                  className={`mt-8 w-full transition-transform active:scale-95 ${tier.key === "student" ? "border-emerald-500/50 text-emerald-500 hover:bg-emerald-500 hover:text-white" : ""}`}
                   asChild
                 >
-                  <Link to="/waitlist">{tier.cta}</Link>
+                  <Link to="/signup">{tier.cta}</Link>
                 </Button>
-                <ul className="mt-6 space-y-2.5">
+                <ul className="mt-8 space-y-4 flex-1">
                   {plan.features.map((f) => (
-                    <li key={f} className="flex items-start gap-2 text-sm text-muted-foreground">
-                      <Check className="mt-0.5 h-4 w-4 flex-shrink-0 text-success" />
-                      {f}
+                    <li key={f} className="flex items-start gap-3 text-sm text-foreground">
+                      <div className={`mt-0.5 rounded-full p-0.5 ${tier.popular ? "bg-primary/20 text-primary" : tier.key === "student" ? "bg-emerald-500/20 text-emerald-500" : "bg-success/20 text-success"}`}>
+                        <Check className="h-3 w-3 flex-shrink-0" strokeWidth={3} />
+                      </div>
+                      <span className="leading-relaxed text-muted-foreground">{f}</span>
                     </li>
                   ))}
                 </ul>
-              </div>
+              </motion.div>
             );
           })}
         </div>
@@ -141,12 +158,12 @@ export default function Pricing() {
               </thead>
               <tbody>
                 {comparisonRows.map((row) => (
-                  <tr key={row.feature} className="border-b border-border/30">
-                    <td className="py-3 text-muted-foreground">{row.feature}</td>
-                    <td className="py-3 text-center text-muted-foreground">{row.starter}</td>
-                    <td className="py-3 text-center text-muted-foreground">{row.student}</td>
-                    <td className="py-3 text-center text-foreground">{row.pro}</td>
-                    <td className="py-3 text-center text-muted-foreground">{row.team}</td>
+                  <tr key={row.feature} className="border-b border-border/30 hover:bg-muted/20 transition-colors group">
+                    <td className="py-4 px-2 text-muted-foreground group-hover:text-foreground transition-colors">{row.feature}</td>
+                    <td className="py-4 text-center text-muted-foreground">{row.starter}</td>
+                    <td className="py-4 text-center text-muted-foreground group-hover:text-emerald-400 transition-colors">{row.student}</td>
+                    <td className="py-4 text-center text-foreground font-medium">{row.pro}</td>
+                    <td className="py-4 text-center text-muted-foreground">{row.team}</td>
                   </tr>
                 ))}
               </tbody>
