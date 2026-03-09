@@ -239,13 +239,18 @@ export default function Landing() {
               <motion.div
                 key={i}
                 variants={itemVariants}
-                className="group rounded-xl border border-border/50 bg-card p-6 transition-default hover:border-border hover:bg-secondary/30"
+                whileHover={{ y: -5, scale: 1.02 }}
+                className="group relative overflow-hidden rounded-2xl border border-border/50 bg-background/50 backdrop-blur-sm p-8 transition-all duration-300 hover:border-primary/50 hover:shadow-[0_0_30px_rgba(59,130,246,0.15)]"
               >
-                <div className="mb-4 inline-flex rounded-lg p-2.5 accent-soft-bg">
-                  <f.icon className="h-5 w-5 text-primary" />
+                <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-primary/5 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+
+                <div className="relative z-10">
+                  <div className="mb-6 inline-flex rounded-xl bg-primary/10 p-3 ring-1 ring-primary/20 transition-all duration-500 group-hover:scale-110 group-hover:bg-primary group-hover:text-primary-foreground text-primary shadow-sm">
+                    <f.icon className="h-6 w-6 transition-colors" />
+                  </div>
+                  <h3 className="font-display text-xl font-bold text-foreground">{f.title}</h3>
+                  <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{f.desc}</p>
                 </div>
-                <h3 className="font-display text-base font-semibold text-foreground">{f.title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{f.desc}</p>
               </motion.div>
             ))}
           </motion.div>
@@ -272,10 +277,18 @@ export default function Landing() {
             className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4"
           >
             {useCases.map((uc, i) => (
-              <motion.div key={i} variants={itemVariants} className="rounded-xl border border-border/50 bg-card p-6">
-                <uc.icon className="mb-3 h-6 w-6 text-primary" />
-                <h3 className="font-display text-sm font-semibold text-foreground">{uc.title}</h3>
-                <p className="mt-2 text-sm text-muted-foreground">{uc.desc}</p>
+              <motion.div
+                key={i}
+                variants={itemVariants}
+                whileHover={{ y: -8 }}
+                className="group relative overflow-hidden rounded-2xl border border-border/50 bg-background/50 backdrop-blur-sm p-8 transition-all duration-300 hover:border-emerald-500/50 hover:shadow-[0_0_30px_rgba(16,185,129,0.15)]"
+              >
+                <div className="absolute inset-0 bg-gradient-to-tr from-emerald-500/10 via-emerald-500/5 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+                <div className="relative z-10">
+                  <uc.icon className="mb-6 h-8 w-8 text-muted-foreground transition-all duration-500 group-hover:text-emerald-500 group-hover:scale-110 drop-shadow-sm" />
+                  <h3 className="font-display text-lg font-bold text-foreground">{uc.title}</h3>
+                  <p className="mt-3 text-sm text-muted-foreground leading-relaxed">{uc.desc}</p>
+                </div>
               </motion.div>
             ))}
           </motion.div>

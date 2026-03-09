@@ -8,12 +8,17 @@ export default function SignUp() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [termsAccepted, setTermsAccepted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
   const navigate = useNavigate();
 
   const handleSignUp = async () => {
+    if (!termsAccepted) {
+      setError("You must accept the Terms of Service and Privacy Policy.");
+      return;
+    }
     setLoading(true);
     setError("");
     try {
@@ -37,6 +42,10 @@ export default function SignUp() {
   };
 
   const handleGoogleSignUp = async () => {
+    if (!termsAccepted) {
+      setError("You must accept the Terms of Service and Privacy Policy.");
+      return;
+    }
     const { error: authError } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: { redirectTo: window.location.origin + "/app/chat" },
@@ -117,7 +126,26 @@ export default function SignUp() {
                 onKeyDown={(e) => e.key === "Enter" && handleSignUp()}
               />
             </div>
-            <Button variant="hero" className="w-full" onClick={handleSignUp} disabled={loading}>
+
+            <div className="flex items-start gap-2 pt-2">
+              <input
+                type="checkbox"
+                id="terms"
+                checked={termsAccepted}
+                onChange={(e) => setTermsAccepted(e.target.checked)}
+                className="mt-1 h-4 w-4 rounded border-border text-primary focus:ring-primary"
+              />
+              <label htmlFor="terms" className="text-sm text-muted-foreground">
+                I accept the <a href="#" className="text-primary hover:underline">Terms of Service</a> and <a href="#" className="text-primary hover:underline">Privacy Policy</a>
+              </label>
+            </div>
+
+            <Button
+              variant="hero"
+              className="w-full mt-2"
+              onClick={handleSignUp}
+              disabled={loading || !termsAccepted}
+            >
               {loading ? "Creating account…" : "Create Account"}
             </Button>
           </div>
@@ -131,7 +159,12 @@ export default function SignUp() {
             </div>
           </div>
 
-          <Button variant="outline" className="w-full" onClick={handleGoogleSignUp}>
+          <Button
+            variant="outline"
+            className="w-full"
+            onClick={handleGoogleSignUp}
+            disabled={!termsAccepted}
+          >
             <Mail className="mr-2 h-4 w-4" />
             Continue with Google
           </Button>
