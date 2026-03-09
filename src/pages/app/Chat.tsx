@@ -16,7 +16,7 @@ import {
   FileText,
   X,
   Lock,
-  AlertTriangle,
+  MessageSquare,
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { Link } from "react-router-dom";
@@ -165,6 +165,7 @@ export default function Chat() {
   const [chatId, setChatId] = useState<string>("");
   const [messages, setMessages] = useState<UIMessage[]>([]);
   const [input, setInput] = useState("");
+  const [emptyStateMode, setEmptyStateMode] = useState<"upload" | "chat">("upload");
   const [rightPanel, setRightPanel] = useState(false);
   const [sending, setSending] = useState(false);
   const [uploadedFileName, setUploadedFileName] = useState<string | null>(null);
@@ -395,38 +396,62 @@ export default function Chat() {
           <div className="mx-auto max-w-3xl">
             {/* Empty state */}
             {isEmpty && (
-              <div className="flex flex-col items-center justify-center py-12 sm:py-24 text-center animate-fade-in">
+              <div className="flex flex-col items-center justify-center py-8 sm:py-16 text-center animate-fade-in">
                 <div className="rounded-full p-4 accent-soft-bg mb-4">
                   <Sparkles className="h-8 w-8 text-primary" />
                 </div>
-                <h2 className="font-display text-lg sm:text-xl font-bold text-foreground">Start a conversation</h2>
-                <p className="mt-2 text-sm text-muted-foreground max-w-md px-4">
-                  Upload a document or ask a legal question to get started.
-                </p>
+                <h2 className="font-display text-lg sm:text-xl font-bold text-foreground mb-6">How can Juriq help you today?</h2>
 
-                {/* Upload area */}
-                <div
-                  className="mt-6 w-full max-w-md cursor-pointer rounded-xl border-2 border-dashed border-border/50 bg-card/50 p-6 sm:p-8 text-center hover:border-primary/50 hover:bg-primary/5 transition-default"
-                  onClick={() => fileInputRef.current?.click()}
-                >
-                  <FileText className="mx-auto h-10 w-10 text-muted-foreground/50 mb-3" />
-                  <p className="text-sm font-medium text-foreground">Upload a contract or legal document</p>
-                  <p className="text-xs text-muted-foreground mt-1">PDF or DOCX · Drag & drop or click to browse</p>
+                {/* Toggle Box */}
+                <div className="flex items-center rounded-lg bg-secondary/80 p-1 mb-8 border border-border/50">
+                  <button
+                    onClick={() => setEmptyStateMode("upload")}
+                    className={`flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-all ${emptyStateMode === "upload"
+                      ? "bg-background text-foreground shadow-sm border border-border/50"
+                      : "text-muted-foreground hover:text-foreground hover:bg-background/50"
+                      }`}
+                  >
+                    <FileText className="h-4 w-4" />
+                    Analyze Document
+                  </button>
+                  <button
+                    onClick={() => setEmptyStateMode("chat")}
+                    className={`flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-all ${emptyStateMode === "chat"
+                      ? "bg-background text-foreground shadow-sm border border-border/50"
+                      : "text-muted-foreground hover:text-foreground hover:bg-background/50"
+                      }`}
+                  >
+                    <MessageSquare className="h-4 w-4" />
+                    Ask a Question
+                  </button>
                 </div>
 
-                {/* Suggested prompts */}
-                <div className="mt-6 space-y-2 w-full max-w-md px-4 sm:px-0">
-                  <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground/50 mb-2">Or try a question</p>
-                  {suggestedPrompts.map((prompt) => (
-                    <button
-                      key={prompt}
-                      onClick={() => handleSend(prompt)}
-                      className="w-full rounded-lg border border-border/50 bg-card p-3 text-left text-sm text-muted-foreground hover:border-border hover:text-foreground transition-default"
-                    >
-                      {prompt}
-                    </button>
-                  ))}
-                </div>
+                {emptyStateMode === "upload" ? (
+                  <div
+                    className="w-full max-w-md cursor-pointer rounded-xl border-2 border-dashed border-border/50 bg-card/50 p-6 sm:p-8 text-center hover:border-primary/50 hover:bg-primary/5 transition-default animate-fade-in"
+                    onClick={() => fileInputRef.current?.click()}
+                  >
+                    <FileText className="mx-auto h-10 w-10 text-muted-foreground/50 mb-3" />
+                    <p className="text-sm font-medium text-foreground">Upload a contract or legal document</p>
+                    <p className="text-xs text-muted-foreground mt-1">PDF or DOCX · Drag & drop or click to browse</p>
+                  </div>
+                ) : (
+                  <div className="w-full max-w-md space-y-2 px-4 sm:px-0 text-left animate-fade-in">
+                    <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground/50 mb-3">Suggested topics</p>
+                    {suggestedPrompts.map((prompt) => (
+                      <button
+                        key={prompt}
+                        onClick={() => handleSend(prompt)}
+                        className="w-full rounded-xl border border-border/50 bg-card p-3 text-left text-sm text-foreground hover:border-primary/50 hover:bg-primary/5 transition-default flex items-center gap-3 group"
+                      >
+                        <div className="rounded-full bg-secondary p-1.5 group-hover:bg-primary/10 group-hover:text-primary transition-colors text-muted-foreground">
+                          <MessageSquare className="h-3 w-3" />
+                        </div>
+                        {prompt}
+                      </button>
+                    ))}
+                  </div>
+                )}
               </div>
             )}
 
