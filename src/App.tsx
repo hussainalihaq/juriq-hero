@@ -34,6 +34,7 @@ import Billing from "./pages/app/Billing";
 import Upgrade from "./pages/app/Upgrade";
 
 import NotFound from "./pages/NotFound";
+import LaunchGraphics from "./pages/LaunchGraphics";
 
 import { AuthProvider } from "./contexts/AuthContext";
 
@@ -85,6 +86,9 @@ const App = () => (
               <Route path="billing" element={<Billing />} />
               <Route path="upgrade" element={<Upgrade />} />
             </Route>
+
+            {/* Internal tools */}
+            <Route path="/launch-graphics" element={<LaunchGraphics />} />
 
             <Route path="*" element={<NotFound />} />
           </Routes>
