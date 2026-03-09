@@ -17,6 +17,12 @@ import BlogPost from "./pages/BlogPost";
 import Terms from "./pages/Terms";
 import Privacy from "./pages/Privacy";
 import Contact from "./pages/Contact";
+import Disclaimer from "./pages/Disclaimer";
+import Subprocessors from "./pages/Subprocessors";
+import DataRetention from "./pages/DataRetention";
+import AcceptableUse from "./pages/AcceptableUse";
+import Cookies from "./pages/Cookies";
+import Refunds from "./pages/Refunds";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 
@@ -54,6 +60,13 @@ const App = () => (
               <Route path="/terms" element={<Terms />} />
               <Route path="/privacy" element={<Privacy />} />
               <Route path="/contact" element={<Contact />} />
+              <Route path="/disclaimer" element={<Disclaimer />} />
+              <Route path="/subprocessors" element={<Subprocessors />} />
+              <Route path="/data-retention" element={<DataRetention />} />
+              <Route path="/acceptable-use" element={<AcceptableUse />} />
+              <Route path="/cookies" element={<Cookies />} />
+              <Route path="/refunds" element={<Refunds />} />
+              <Route path="/billing-policy" element={<Navigate to="/refunds" replace />} />
             </Route>
 
             {/* Auth (no layout wrapper) */}

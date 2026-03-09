@@ -586,7 +586,7 @@ export default function Chat() {
               </Button>
             </div>
             <p className="mt-1.5 text-center text-[10px] text-muted-foreground/60">
-              Juriq can make mistakes. Review important information.
+              Juriq provides informational assistance, not legal advice. AI models can make mistakes.
             </p>
           </div>
         </div>

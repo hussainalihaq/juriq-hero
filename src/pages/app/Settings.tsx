@@ -225,8 +225,10 @@ export default function Settings() {
               <LogOut className="h-4 w-4" />
               Sign Out
             </Button>
-            <Button variant="destructive" size="sm">
-              Delete Account
+            <Button variant="destructive" size="sm" asChild>
+              <a href="mailto:privacy@juriq.com?subject=Account%20Deletion%20Request&body=Please%20delete%20my%20account%20and%20all%20associated%20data.">
+                Delete Account
+              </a>
             </Button>
           </div>
         </section>

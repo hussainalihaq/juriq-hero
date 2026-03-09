@@ -1,4 +1,5 @@
 import { Outlet, Navigate, Link, useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -9,7 +10,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Settings, CreditCard, LogOut } from "lucide-react";
+import { Settings, CreditCard, LogOut, AlertTriangle } from "lucide-react";
 import {
   SidebarProvider,
   SidebarTrigger,
@@ -20,6 +21,19 @@ import { useAuth } from "@/contexts/AuthContext";
 export default function AppLayout() {
   const { user, loading, signOut } = useAuth();
   const navigate = useNavigate();
+  const [showAck, setShowAck] = useState(false);
+
+  useEffect(() => {
+    if (!loading && user) {
+      const ack = localStorage.getItem("juriq_first_use_ack");
+      if (!ack) setShowAck(true);
+    }
+  }, [loading, user]);
+
+  const handleAck = () => {
+    localStorage.setItem("juriq_first_use_ack", "true");
+    setShowAck(false);
+  };
 
   // Show nothing while checking auth session initially
   if (loading) return null;
@@ -115,6 +129,34 @@ export default function AppLayout() {
           </main>
         </div>
       </div>
+
+      {showAck && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-background/80 p-4 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="w-full max-w-md rounded-xl border border-border/50 bg-card p-6 shadow-2xl">
+            <div className="mb-4 flex items-center gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-primary">
+                <AlertTriangle className="h-5 w-5" />
+              </div>
+              <h2 className="font-display text-lg font-bold text-foreground">Welcome to Juriq</h2>
+            </div>
+            <div className="space-y-3 text-sm text-muted-foreground">
+              <p>Before you get started, please acknowledge the following:</p>
+              <ul className="list-inside list-disc space-y-2">
+                <li><strong className="text-foreground">Juriq is not a law firm</strong> and does not provide legal advice.</li>
+                <li>Using Juriq does <strong className="text-foreground">not create an attorney-client relationship</strong>.</li>
+                <li>Juriq is an AI tool. Outputs may be incomplete or inaccurate and should be reviewed before relying on them.</li>
+              </ul>
+              <p className="pt-2">Juriq is for informational assistance only.</p>
+            </div>
+            <div className="mt-6 flex justify-end">
+              <Button onClick={handleAck} variant="hero" className="w-full">
+                I Understand & Agree
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
     </SidebarProvider>
   );
 }

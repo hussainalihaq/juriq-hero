@@ -4,15 +4,23 @@ const footerLinks = {
   Product: [
     { label: "Product", href: "/product" },
     { label: "Pricing", href: "/pricing" },
-    { label: "Security", href: "/security" },
   ],
   Resources: [
     { label: "Blog", href: "/blog" },
     { label: "Contact", href: "/contact" },
   ],
+  Trust: [
+    { label: "Security", href: "/security" },
+    { label: "Refunds", href: "/refunds" },
+    { label: "Subprocessors", href: "/subprocessors" },
+    { label: "Data Retention", href: "/data-retention" },
+  ],
   Legal: [
     { label: "Terms", href: "/terms" },
     { label: "Privacy", href: "/privacy" },
+    { label: "Acceptable Use", href: "/acceptable-use" },
+    { label: "Disclaimer", href: "/disclaimer" },
+    { label: "Cookies", href: "/cookies" },
   ],
 };
 

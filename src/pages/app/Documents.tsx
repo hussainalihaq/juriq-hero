@@ -101,7 +101,7 @@ export default function Documents() {
         {/* Upload area */}
         <div
           onClick={() => fileInputRef.current?.click()}
-          className="mb-8 rounded-xl border-2 border-dashed border-border/50 bg-card/50 p-10 text-center hover:border-border transition-default cursor-pointer"
+          className="mb-6 rounded-xl border-2 border-dashed border-border/50 bg-card/50 p-10 text-center hover:border-border transition-default cursor-pointer"
         >
           <Upload className="mx-auto mb-3 h-8 w-8 text-muted-foreground/50" />
           <p className="text-sm text-muted-foreground">
@@ -109,6 +109,13 @@ export default function Documents() {
           </p>
           <p className="mt-1 text-xs text-muted-foreground/60">
             Contracts, NDAs, agreements, and other legal documents. Text-based PDFs and DOCX only. Max 20MB.
+          </p>
+        </div>
+
+        {/* Legal Disclaimer */}
+        <div className="mb-8 rounded-lg bg-secondary/30 border border-border/50 p-4 text-center">
+          <p className="text-xs text-muted-foreground">
+            <span className="font-semibold text-foreground">Notice:</span> Only upload documents you are authorized to share. Juriq is an AI tool and does not replace a lawyer.
           </p>
         </div>
 
