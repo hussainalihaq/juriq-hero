@@ -534,7 +534,7 @@ export default function Landing() {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+          <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
             {/* Free */}
             <div className="rounded-2xl border border-border/50 bg-card p-8 flex flex-col">
               <div className="mb-6">
@@ -558,8 +558,35 @@ export default function Landing() {
               </ul>
             </div>
 
+            {/* Student */}
+            <div className="rounded-2xl border border-primary/30 bg-primary/5 p-8 flex flex-col">
+              <div className="mb-6">
+                <h3 className="font-display text-2xl font-bold text-foreground">Student</h3>
+                <p className="text-muted-foreground mt-2">Discounted pro features for law students.</p>
+                <div className="mt-4 font-display text-4xl font-bold tracking-tight">$9 <span className="text-lg font-normal text-muted-foreground tracking-normal">/mo</span></div>
+                <div className="mt-2 text-xs text-muted-foreground font-medium flex items-center gap-1">
+                  Requires <span className="text-primary bg-primary/10 px-1.5 rounded">.edu</span> email
+                </div>
+              </div>
+              <ul className="space-y-4 flex-1 mb-8">
+                {[
+                  "50 Document Uploads / mo",
+                  "Deep Contextual Analysis",
+                  "Advanced Risk Radar",
+                  "AI Clause Redlining",
+                  "Export to Word / PDF",
+                  "Standard Support"
+                ].map((feature, i) => (
+                  <li key={i} className="flex items-start gap-3 text-sm text-muted-foreground">
+                    <CheckCircle className="h-5 w-5 text-primary/70 shrink-0" />
+                    <span>{feature}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
             {/* Pro */}
-            <div className="rounded-2xl border-2 border-primary bg-primary/5 p-8 flex flex-col relative shadow-2xl shadow-primary/10">
+            <div className="rounded-2xl border-2 border-primary bg-primary/10 p-8 flex flex-col relative shadow-2xl shadow-primary/20 scale-105 z-10">
               <div className="absolute top-0 right-8 -translate-y-1/2">
                 <span className="inline-block rounded-full bg-primary px-3 py-1 text-xs font-bold uppercase tracking-wider text-primary-foreground shadow-sm">
                   Most Popular
@@ -567,8 +594,8 @@ export default function Landing() {
               </div>
               <div className="mb-6">
                 <h3 className="font-display text-2xl font-bold text-primary">Pro</h3>
-                <p className="text-muted-foreground mt-2">Zero limits. Full legal intelligence at your fingertips.</p>
-                <div className="mt-4 font-display text-4xl font-bold tracking-tight text-foreground">$29 <span className="text-lg font-normal text-muted-foreground tracking-normal">/mo</span></div>
+                <p className="text-foreground/80 mt-2">Zero limits. Full legal intelligence at your fingertips.</p>
+                <div className="mt-4"><span className="text-sm font-medium text-muted-foreground mr-1">Starting at</span><span className="font-display text-4xl font-bold tracking-tight text-foreground">$29</span> <span className="text-lg font-normal text-muted-foreground tracking-normal">/mo</span></div>
               </div>
               <ul className="space-y-4 flex-1 mb-8">
                 {[
