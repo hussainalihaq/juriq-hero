@@ -26,6 +26,7 @@ import DocumentDetail from "./pages/app/DocumentDetail";
 import EditSuggestions from "./pages/app/EditSuggestions";
 import Settings from "./pages/app/Settings";
 import Billing from "./pages/app/Billing";
+import Upgrade from "./pages/app/Upgrade";
 
 import NotFound from "./pages/NotFound";
 
@@ -72,6 +73,7 @@ const App = () => (
               <Route path="documents/:id/edit-suggestions" element={<EditSuggestions />} />
               <Route path="settings" element={<Settings />} />
               <Route path="billing" element={<Billing />} />
+              <Route path="upgrade" element={<Upgrade />} />
             </Route>
 
             <Route path="*" element={<NotFound />} />

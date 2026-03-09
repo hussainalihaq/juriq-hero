@@ -17,6 +17,7 @@ import {
   X,
   Lock,
   MessageSquare,
+  Settings,
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { Link } from "react-router-dom";
@@ -47,18 +48,18 @@ interface UIMessage {
 /* ------------------------------------------------------------------ */
 const quickActions = [
   "Summarize",
-  "Find risks",
-  "Explain simply",
-  "Draft clause",
-  "Edit suggestions",
+  "Risk analysis",
+  "Extract clauses",
+  "Find obligations",
+  "Rewrite clause",
 ];
 
 const suggestedPrompts = [
-  "Summarize this contract and flag key risks.",
-  "Rewrite this clause to be safer for me.",
-  "Explain this legal term in simple English.",
-  "Summarize this case in 8 bullets (best-effort).",
-  "Turn these facts into issues and questions for a hearing (best-effort).",
+  "Summarize this document in plain English.",
+  "Identify the top risks and red flags.",
+  "Extract all confidentiality and indemnification clauses.",
+  "List all upcoming obligations and hard deadlines.",
+  "Rewrite the limit of liability clause to be more protective.",
 ];
 
 /* ------------------------------------------------------------------ */
@@ -603,31 +604,41 @@ export default function Chat() {
       {rightPanel && (
         <div className="hidden w-80 flex-shrink-0 border-l border-border/50 bg-card lg:block overflow-y-auto animate-slide-in-right">
           <div className="p-5 space-y-6">
-            <div>
-              <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3">Chat Info</h3>
-              <div className="space-y-2 text-sm">
-                <div className="flex justify-between">
+            <div className="bg-secondary/20 p-4 rounded-xl border border-border/50">
+              <h3 className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-4 flex items-center gap-2">
+                <Settings className="h-3 w-3" /> Chat Info
+              </h3>
+              <div className="space-y-4 text-sm">
+                <div className="flex justify-between items-center">
                   <span className="text-muted-foreground">Messages</span>
-                  <span className="text-foreground font-medium">{messages.filter(m => !m.loading).length}</span>
+                  <span className="text-foreground font-semibold bg-background px-2 py-0.5 rounded-md border border-border/50 text-xs shadow-sm">
+                    {messages.filter((m) => !m.loading).length}
+                  </span>
                 </div>
-                <div className="flex justify-between">
+                <div className="flex justify-between items-center">
                   <span className="text-muted-foreground">Status</span>
-                  <Badge variant="secondary" className="text-[10px]">{sending ? "Thinking…" : "Ready"}</Badge>
+                  <Badge variant="secondary" className="text-[10px] font-medium tracking-wide">
+                    {sending ? "Thinking…" : "Ready"}
+                  </Badge>
                 </div>
                 {uploadedFileName && (
-                  <div className="flex justify-between">
+                  <div className="flex justify-between items-center pt-2 border-t border-border/30 mt-2">
                     <span className="text-muted-foreground">Document</span>
-                    <span className="text-foreground font-medium text-xs truncate max-w-[140px]">{uploadedFileName}</span>
+                    <span className="text-foreground font-medium text-xs truncate max-w-[130px]" title={uploadedFileName}>
+                      {uploadedFileName}
+                    </span>
                   </div>
                 )}
               </div>
             </div>
-            <div>
-              <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3">Quick Tips</h3>
-              <div className="space-y-2">
+            <div className="bg-secondary/20 p-4 rounded-xl border border-border/50">
+              <h3 className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-4 flex items-center gap-2">
+                <Sparkles className="h-3 w-3" /> Quick Tips
+              </h3>
+              <div className="space-y-3 leading-relaxed">
                 {["Upload a contract to get risk analysis", "Ask about any legal concept", "Use 'Summarize' for quick overviews", "Try 'Find risks' after uploading a doc"].map((tip, i) => (
-                  <div key={i} className="flex items-start gap-2 text-xs text-muted-foreground">
-                    <span className="text-primary">•</span>
+                  <div key={i} className="flex items-start gap-3 text-sm text-muted-foreground bg-background/50 p-2.5 rounded-lg border border-border/30 shadow-sm leading-relaxed">
+                    <span className="text-muted-foreground/50 mt-1 shrink-0 text-[10px]">●</span>
                     <span>{tip}</span>
                   </div>
                 ))}

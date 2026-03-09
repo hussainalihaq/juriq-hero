@@ -33,12 +33,20 @@ export default function Billing() {
               <span className="text-foreground font-medium">Feb 1, 2025</span>
             </div>
           </div>
-          <div className="mt-4 flex gap-2">
+          <div className="mt-6 pt-6 border-t border-border/50 flex flex-wrap gap-2">
             <Button variant="outline" size="sm" asChild>
-              <Link to="/pricing">
+              <Link to="/app/upgrade">
                 Upgrade Plan
                 <ExternalLink className="ml-1 h-3.5 w-3.5" />
               </Link>
+            </Button>
+            <Button variant="secondary" size="sm" asChild>
+              <Link to="/app/billing/portal">
+                Billing Portal
+              </Link>
+            </Button>
+            <Button variant="outline" size="sm" className="border-destructive/30 text-destructive hover:bg-destructive hover:text-destructive-foreground ml-auto">
+              Cancel Subscription
             </Button>
           </div>
         </section>

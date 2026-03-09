@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -20,6 +20,8 @@ import {
   Sparkles,
   Scale,
   BrainCircuit,
+  Minus,
+  Plus
 } from "lucide-react";
 import { useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
@@ -56,9 +58,9 @@ const scrollyFeatures = [
 ];
 
 const steps = [
-  { num: "01", title: "Upload", desc: "Upload a contract or paste text — PDFs and DOCX supported." },
-  { num: "02", title: "Ask", desc: "Ask anything — contracts first; case law and research when needed." },
-  { num: "03", title: "Export", desc: "Export notes, summaries, and edits as PDF or DOCX." },
+  { num: "01", title: "Upload & Scan", desc: "Drop your PDF or DOCX into the secure encrypted vault." },
+  { num: "02", title: "Instant Analysis", desc: "Juriq reads every line, summarizing terms and flagging risks." },
+  { num: "03", title: "Act confidently", desc: "Use AI to redline, ask questions, or draft response emails." },
 ];
 
 import { Variants } from "framer-motion";
@@ -87,6 +89,7 @@ const itemVariants: Variants = {
 
 export default function Landing() {
   const { user } = useAuth();
+  const [activeStep, setActiveStep] = useState(0);
 
   return (
     <div>
@@ -228,14 +231,16 @@ export default function Landing() {
         </motion.div>
       </section>
 
-      {/* Scrollytelling Features */}
+
+
+      {/* Scrollytelling Features -> Converted to Inline Animation Blocks */}
       <section className="relative bg-background py-32 px-4 sm:px-6 lg:px-8 overflow-hidden">
         {/* Decorative background blurs */}
         <div className="absolute top-0 right-0 -mr-64 -mt-64 h-[500px] w-[500px] rounded-full bg-primary/5 blur-[120px]" />
         <div className="absolute bottom-0 left-0 -ml-64 -mb-64 h-[500px] w-[500px] rounded-full bg-blue-500/5 blur-[120px]" />
 
         <div className="mx-auto max-w-7xl">
-          <div className="mb-20 text-center">
+          <div className="mb-24 text-center">
             <Badge variant="outline" className="mb-4 bg-primary/5 text-primary border-primary/20 px-4 py-1.5 text-sm">
               <Sparkles className="mr-2 h-4 w-4" /> Next-Generation Legal AI
             </Badge>
@@ -245,112 +250,219 @@ export default function Landing() {
             </h2>
           </div>
 
-          <div className="flex flex-col lg:flex-row gap-16 lg:gap-24 items-start">
-            {/* Left side: Scrollable Text Content */}
-            <div className="w-full lg:w-5/12 space-y-32 py-10">
-              {scrollyFeatures.map((feature, i) => (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, y: 40 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ margin: "-40% 0px -40% 0px", once: false }}
-                  transition={{ duration: 0.6 }}
-                  className="relative"
-                >
-                  <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-secondary border border-border/50 text-foreground shadow-sm">
-                    <feature.icon className="h-6 w-6" />
-                  </div>
-                  <div className="text-sm font-bold text-primary mb-2 tracking-wider">0{i + 1}</div>
-                  <h3 className="font-display text-3xl font-bold text-foreground mb-4">{feature.title}</h3>
-                  <p className="text-lg text-muted-foreground leading-relaxed">
-                    {feature.desc}
-                  </p>
-                </motion.div>
-              ))}
-            </div>
+          <div className="flex flex-col gap-32">
+            {scrollyFeatures.map((feature, i) => {
+              const isEven = i % 2 === 0;
+              return (
+                <div key={i} className={`flex flex-col ${isEven ? 'lg:flex-row' : 'lg:flex-row-reverse'} gap-12 lg:gap-20 items-center`}>
 
-            {/* Right side: Sticky UI Visualizer */}
-            <div className="hidden w-full lg:flex lg:w-7/12 sticky top-32 h-[600px] items-center justify-center">
-              <div className="relative w-full aspect-[4/3] rounded-3xl border border-border/50 bg-card/40 backdrop-blur-xl shadow-2xl shadow-primary/5 overflow-hidden">
-                {/* Mac window header */}
-                <div className="flex h-12 w-full items-center gap-2 border-b border-border/40 bg-background/50 px-5 backdrop-blur-md">
-                  <div className="h-3 w-3 rounded-full bg-[#FF5F56] border border-[#E0443E]" />
-                  <div className="h-3 w-3 rounded-full bg-[#FFBD2E] border border-[#DEA123]" />
-                  <div className="h-3 w-3 rounded-full bg-[#27C93F] border border-[#1AAB29]" />
-                  <div className="ml-4 flex-1 text-center text-xs text-muted-foreground font-medium flex items-center justify-center gap-2">
-                    <Shield className="h-3 w-3" /> juriq-secure-viewer.app
-                  </div>
-                </div>
-
-                {/* UI Mock Area - Will crossfade based on scroll (using a simplified static complex UI for now due to implementation limits of scrollSpy, but highly visually complex) */}
-                <div className="p-6 h-[calc(100%-3rem)] bg-gradient-to-br from-background to-secondary/20 flex flex-col items-center justify-center relative overflow-hidden">
-                  {/* Floating abstract elements */}
+                  {/* Text Content */}
                   <motion.div
-                    animate={{ rotate: 360 }}
-                    transition={{ duration: 50, repeat: Infinity, ease: "linear" }}
-                    className="absolute -right-20 -top-20 h-64 w-64 rounded-full border border-primary/20 bg-primary/5 blur-3xl"
-                  />
-
-                  {/* Central App Mock */}
-                  <motion.div
-                    initial={{ scale: 0.95, opacity: 0 }}
-                    whileInView={{ scale: 1, opacity: 1 }}
-                    transition={{ duration: 0.8 }}
-                    className="w-full h-full border border-border/50 rounded-xl bg-background shadow-lg overflow-hidden flex flex-col"
+                    initial={{ opacity: 0, x: isEven ? -40 : 40 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ margin: "-20% 0px", once: false }}
+                    transition={{ duration: 0.6, type: "spring", stiffness: 100 }}
+                    className="w-full lg:w-5/12"
                   >
-                    {/* Fake App header */}
-                    <div className="h-14 border-b border-border flex items-center justify-between px-4 bg-secondary/30">
-                      <div className="flex items-center gap-3">
-                        <FileText className="h-5 w-5 text-primary" />
-                        <span className="font-semibold text-sm">Mutual_NDA_Final.pdf</span>
-                        <Badge variant="outline" className="text-[10px] h-5">Analyzed</Badge>
-                      </div>
-                      <Button variant="default" size="sm" className="h-8">Export</Button>
+                    <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-full border bg-primary/20 border-primary text-primary shadow-[0_0_30px_rgba(255,255,255,0.15)] ring-4 ring-primary/10">
+                      <feature.icon className="h-7 w-7 text-primary" />
                     </div>
-                    {/* Fake App Body */}
-                    <div className="flex flex-1 overflow-hidden">
-                      {/* Fake Document */}
-                      <div className="w-2/3 border-r border-border p-6 space-y-4">
-                        <div className="h-4 w-3/4 bg-secondary rounded-md" />
-                        <div className="h-4 w-full bg-secondary rounded-md" />
-                        <div className="h-4 w-5/6 bg-secondary rounded-md" />
+                    <div className="text-xs font-black text-primary mb-3 tracking-[0.2em] uppercase">Step 0{i + 1}</div>
+                    <h3 className="font-display text-4xl font-bold text-foreground mb-4">{feature.title}</h3>
+                    <p className="text-lg text-muted-foreground leading-relaxed">
+                      {feature.desc}
+                    </p>
+                  </motion.div>
 
-                        <div className="my-6 p-4 border border-danger/30 bg-danger/5 rounded-lg relative overflow-hidden">
-                          <div className="absolute left-0 top-0 bottom-0 w-1 bg-danger" />
-                          <div className="flex gap-2 mb-2">
-                            <AlertTriangle className="h-4 w-4 text-danger" />
-                            <span className="text-xs font-bold text-danger">HIGH RISK DETECTED</span>
-                          </div>
-                          <p className="text-sm font-medium">9. Limitation of Liability.</p>
-                          <p className="text-xs text-muted-foreground mt-1">"In no event shall either party's aggregate liability exceed the sum of $100."</p>
+                  {/* UI Visualizer */}
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    viewport={{ margin: "-20% 0px", once: false }}
+                    transition={{ duration: 0.6 }}
+                    className="w-full lg:w-7/12"
+                  >
+                    <div className="relative w-full aspect-[4/3] sm:aspect-video lg:aspect-[4/3] rounded-3xl border border-border/50 bg-card/40 backdrop-blur-xl shadow-2xl shadow-primary/5 overflow-hidden">
+                      {/* Mac window header */}
+                      <div className="flex h-12 w-full items-center gap-2 border-b border-border/40 bg-background/50 px-5 backdrop-blur-md">
+                        <div className="h-3 w-3 rounded-full bg-[#FF5F56] border border-[#E0443E]" />
+                        <div className="h-3 w-3 rounded-full bg-[#FFBD2E] border border-[#DEA123]" />
+                        <div className="h-3 w-3 rounded-full bg-[#27C93F] border border-[#1AAB29]" />
+                        <div className="ml-4 flex-1 text-center text-xs text-muted-foreground font-medium flex items-center justify-center gap-2">
+                          <Shield className="h-3 w-3" /> juriq-secure-viewer.app
                         </div>
-
-                        <div className="h-4 w-full bg-secondary rounded-md" />
-                        <div className="h-4 w-2/3 bg-secondary rounded-md" />
                       </div>
-                      {/* Fake Chat Sidebar */}
-                      <div className="w-1/3 bg-secondary/10 p-4 flex flex-col">
-                        <div className="flex-1 space-y-4">
-                          <div className="bg-background border border-border/50 p-3 rounded-xl rounded-tr-none ml-auto w-11/12 shadow-sm">
-                            <p className="text-xs">Is the liability cap mutual?</p>
-                          </div>
-                          <div className="bg-primary/10 border border-primary/20 p-3 rounded-xl rounded-tl-none w-11/12 shadow-sm">
-                            <p className="text-xs text-foreground">Yes, Section 9 caps liability mutually at $100. <span className="text-danger font-medium text-[10px] block mt-1">Warning: This cap is unusually low for this transaction size.</span></p>
-                          </div>
-                        </div>
-                        <div className="mt-4 border border-border/50 bg-background rounded-full p-2 px-4 text-xs text-muted-foreground flex justify-between items-center shadow-inner">
-                          Ask Juriq anything...
-                          <ArrowRight className="h-3 w-3" />
+
+                      {/* UI Mock Area - Dedicated for each step */}
+                      <div className="p-6 h-[calc(100%-3rem)] bg-[#09090b] flex flex-col items-center justify-center relative overflow-hidden">
+                        <motion.div animate={{ rotate: 360 }} transition={{ duration: 50, repeat: Infinity, ease: "linear" }} className="absolute -right-20 -top-20 h-64 w-64 rounded-full border border-primary/20 bg-primary/5 blur-3xl opacity-50" />
+
+                        <div className="w-full h-full relative">
+
+                          {/* Render specific animation based on the feature step */}
+                          {i === 0 && (
+                            <div className="absolute inset-0 w-full h-full border border-white/10 rounded-xl bg-black shadow-2xl overflow-hidden flex flex-col">
+                              <div className="h-12 border-b border-white/10 flex items-center px-4 bg-white/5">
+                                <div className="h-4 w-32 bg-white/10 rounded-md" />
+                              </div>
+                              <div className="p-6 space-y-4 relative flex-1">
+                                <motion.div animate={{ top: ["0%", "100%", "0%"] }} transition={{ duration: 2.5, repeat: Infinity, ease: "linear" }} className="absolute left-0 right-0 h-32 bg-gradient-to-b from-transparent via-primary/20 to-transparent border-b border-primary z-10" />
+                                <div className="h-4 w-full bg-white/5 rounded-md" />
+                                <div className="h-4 w-5/6 bg-white/5 rounded-md" />
+                                <div className="h-4 w-4/6 bg-white/5 rounded-md" />
+                                <div className="mt-8 h-4 w-full bg-white/5 rounded-md" />
+                                <div className="h-4 w-5/6 bg-white/5 rounded-md" />
+
+                                <motion.div initial={{ opacity: 0, scale: 0.9 }} whileInView={{ opacity: 1, scale: 1 }} transition={{ delay: 0.5 }} className="absolute bottom-6 right-6 left-6 p-4 rounded-xl border border-primary/30 bg-primary/10 backdrop-blur-md shadow-2xl">
+                                  <div className="flex items-center gap-2 mb-3">
+                                    <Sparkles className="h-4 w-4 text-primary" />
+                                    <span className="text-sm font-bold text-white">AI Summary Complete</span>
+                                  </div>
+                                  <div className="space-y-2">
+                                    <div className="h-2 w-full bg-white/30 rounded-full" />
+                                    <div className="h-2 w-4/5 bg-white/30 rounded-full" />
+                                    <div className="h-2 w-3/4 bg-white/30 rounded-full" />
+                                  </div>
+                                </motion.div>
+                              </div>
+                            </div>
+                          )}
+
+                          {i === 1 && (
+                            <div className="absolute inset-0 w-full h-full border border-white/10 rounded-xl bg-black shadow-2xl overflow-hidden flex flex-col sm:flex-row">
+                              <div className="w-full sm:w-2/3 p-6 space-y-6 border-b sm:border-b-0 sm:border-r border-white/10 relative">
+                                <div className="space-y-2 opacity-20 hidden sm:block">
+                                  <div className="h-3 w-full bg-white text-white rounded-md" />
+                                  <div className="h-3 w-4/5 bg-white text-white rounded-md" />
+                                </div>
+
+                                <motion.div initial={{ x: -20, opacity: 0 }} whileInView={{ x: 0, opacity: 1 }} transition={{ delay: 0.2 }} className="p-4 border border-red-500/30 bg-red-500/10 rounded-lg relative">
+                                  <div className="absolute -left-px top-0 bottom-0 w-1 bg-red-500 rounded-l-lg" />
+                                  <div className="h-3 w-full bg-red-500/40 rounded-md mb-2" />
+                                  <div className="h-3 w-3/4 bg-red-500/40 rounded-md" />
+                                </motion.div>
+
+                                <motion.div initial={{ x: -20, opacity: 0 }} whileInView={{ x: 0, opacity: 1 }} transition={{ delay: 0.4 }} className="p-4 border border-yellow-500/30 bg-yellow-500/10 rounded-lg relative">
+                                  <div className="absolute -left-px top-0 bottom-0 w-1 bg-yellow-500 rounded-l-lg" />
+                                  <div className="h-3 w-full bg-yellow-500/40 rounded-md mb-2" />
+                                  <div className="h-3 w-2/3 bg-yellow-500/40 rounded-md" />
+                                </motion.div>
+                              </div>
+                              <div className="w-full sm:w-1/3 bg-white/[0.02] p-4 flex flex-col gap-3">
+                                <div className="text-[10px] font-bold text-white/40 mb-2 uppercase tracking-widest hidden sm:block">Risk Radar</div>
+                                <motion.div initial={{ scale: 0.9, opacity: 0 }} whileInView={{ scale: 1, opacity: 1 }} transition={{ delay: 0.3 }} className="p-3 rounded-lg bg-red-500/10 border border-red-500/20">
+                                  <AlertTriangle className="h-4 w-4 text-red-500 mb-2" />
+                                  <div className="text-xs text-white font-medium">Undefined Liability Cap</div>
+                                </motion.div>
+                                <motion.div initial={{ scale: 0.9, opacity: 0 }} whileInView={{ scale: 1, opacity: 1 }} transition={{ delay: 0.5 }} className="p-3 rounded-lg bg-yellow-500/10 border border-yellow-500/20">
+                                  <Shield className="h-4 w-4 text-yellow-500 mb-2" />
+                                  <div className="text-xs text-white font-medium">Broad IP Assignment</div>
+                                </motion.div>
+                              </div>
+                            </div>
+                          )}
+
+                          {i === 2 && (
+                            <div className="absolute inset-0 w-full h-full border border-white/10 rounded-xl bg-black shadow-2xl overflow-hidden flex flex-col">
+                              <div className="p-6 flex-1 flex flex-col justify-center">
+                                <div className="text-[10px] font-bold text-white/40 uppercase tracking-widest mb-4">AI Revision Proposal</div>
+
+                                <motion.div initial={{ scale: 0.95, opacity: 0 }} whileInView={{ scale: 1, opacity: 1 }} transition={{ delay: 0.2 }} className="rounded-xl border border-white/10 overflow-hidden bg-white/5">
+                                  <div className="p-4 border-b border-white/5 bg-red-500/10 relative">
+                                    <div className="absolute top-4 left-4 h-5 w-5 rounded-full bg-red-500/20 flex items-center justify-center"><Minus className="h-3 w-3 text-red-500" /></div>
+                                    <p className="ml-8 text-sm text-white/60 line-through leading-relaxed">The receiving party agrees to hold all information strictly confidential in perpetuity.</p>
+                                  </div>
+                                  <div className="p-4 border-b border-white/5 bg-emerald-500/10 relative shadow-inner">
+                                    <div className="absolute top-4 left-4 h-5 w-5 rounded-full bg-emerald-500/20 flex items-center justify-center"><Plus className="h-3 w-3 text-emerald-500" /></div>
+                                    <p className="ml-8 text-sm text-emerald-400 font-medium leading-relaxed">The receiving party agrees to hold all information strictly confidential for a period of three (3) years.</p>
+                                  </div>
+                                  <div className="p-3 bg-black flex justify-end gap-2">
+                                    <div className="px-4 py-1.5 text-xs text-white/50 border border-white/10 rounded hover:bg-white/5 cursor-pointer">Reject</div>
+                                    <div className="px-4 py-1.5 text-xs text-primary-foreground bg-primary/80 rounded border border-primary hover:bg-primary cursor-pointer">Accept</div>
+                                  </div>
+                                </motion.div>
+                              </div>
+                            </div>
+                          )}
+
+                          {i === 3 && (
+                            <div className="absolute inset-0 w-full h-full border border-white/10 rounded-xl bg-black shadow-2xl overflow-hidden flex flex-col">
+                              <div className="flex-1 p-5 space-y-4 flex flex-col justify-end pb-20 bg-gradient-to-t from-primary/5 to-transparent">
+                                <motion.div initial={{ opacity: 0, x: 20 }} whileInView={{ opacity: 1, x: 0 }} transition={{ delay: 0.2 }} className="self-end max-w-[80%] p-3 rounded-2xl rounded-tr-none bg-white/10 border border-white/10 shadow-sm">
+                                  <p className="text-sm text-white/90">Does this prevent me from working with competitors?</p>
+                                </motion.div>
+                                <motion.div initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} transition={{ delay: 0.6 }} className="self-start max-w-[90%] p-4 rounded-2xl rounded-tl-none bg-primary/20 border border-primary/30 relative shadow-lg">
+                                  <Sparkles className="absolute -left-2 -top-2 h-5 w-5 text-primary drop-shadow-md" />
+                                  <p className="text-sm text-white/90 leading-relaxed">Yes. Section 4.2 contains a strict non-compete clause that prohibits engagement with any direct competitors for 12 months after termination.</p>
+                                  <div className="mt-3 p-2 bg-black/60 rounded-lg border border-white/10 text-xs text-white/50 flex items-center gap-2 w-max">
+                                    <FileText className="h-3 w-3" /> Cite: Section 4.2 (Non-Compete)
+                                  </div>
+                                </motion.div>
+                              </div>
+                              <div className="absolute bottom-4 left-4 right-4 h-12 rounded-full bg-white/5 border border-white/10 flex items-center px-4 backdrop-blur-md">
+                                <span className="text-sm text-white/30">Message Juriq...</span>
+                                <div className="ml-auto h-8 w-8 rounded-full bg-primary/30 flex items-center justify-center border border-primary/50">
+                                  <ArrowRight className="h-4 w-4 text-primary" />
+                                </div>
+                              </div>
+                            </div>
+                          )}
+
                         </div>
                       </div>
                     </div>
                   </motion.div>
                 </div>
-              </div>
-            </div>
+              );
+            })}
           </div>
         </div>
       </section>
+      {/* How it works */}
+      <section className="border-t border-border/30 bg-secondary/20 py-24 px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-5xl">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.5 }}
+            className="mb-16 text-center"
+          >
+            <h2 className="font-display text-3xl font-bold text-foreground sm:text-4xl">
+              How Juriq Works
+            </h2>
+            <p className="mt-4 text-muted-foreground">Three simple steps to contract clarity.</p>
+          </motion.div>
+          <motion.div
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-100px" }}
+            className="relative grid gap-8 md:grid-cols-3"
+          >
+            {/* Connecting Line behind steps (hidden on mobile) */}
+            <div className="absolute top-1/2 left-0 right-0 h-0.5 -translate-y-1/2 bg-gradient-to-r from-transparent via-border/50 to-transparent hidden md:block w-full z-0" />
+
+            {steps.map((s, i) => (
+              <motion.div
+                key={s.num}
+                variants={itemVariants}
+                whileHover={{ y: -8 }}
+                className="relative z-10 text-center group bg-card border border-border/50 p-8 rounded-2xl shadow-xl hover:shadow-[0_0_40px_rgba(59,130,246,0.1)] transition-all duration-300"
+              >
+                <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100 rounded-2xl" />
+
+                <div className="relative mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-background border-2 border-primary/20 font-display text-xl font-bold text-primary shadow-[0_0_20px_rgba(59,130,246,0.2)] group-hover:scale-110 group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-500">
+                  {s.num}
+                </div>
+                <h3 className="font-display relative z-10 text-xl font-bold text-foreground mb-3">{s.title}</h3>
+                <p className="relative z-10 text-sm text-muted-foreground leading-relaxed">{s.desc}</p>
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
+      </section>
+
 
       {/* Our Story / Mission */}
       <section className="bg-foreground py-32 px-4 sm:px-6 lg:px-8 text-background">
@@ -384,48 +496,6 @@ export default function Landing() {
         </motion.div>
       </section>
 
-      {/* How it works */}
-      <section className="border-t border-border/30 py-20 px-4 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-4xl">
-          <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.5 }}
-            className="mb-14 text-center font-display text-3xl font-bold text-foreground sm:text-4xl"
-          >
-            How it works
-          </motion.h2>
-          <motion.div
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-100px" }}
-            className="relative grid gap-8 md:grid-cols-3"
-          >
-            {/* Connecting Line behind steps (hidden on mobile) */}
-            <div className="absolute top-1/2 left-0 right-0 h-0.5 -translate-y-1/2 bg-gradient-to-r from-transparent via-border/50 to-transparent hidden md:block w-full z-0" />
-
-            {steps.map((s, i) => (
-              <motion.div
-                key={s.num}
-                variants={itemVariants}
-                whileHover={{ y: -8 }}
-                className="relative z-10 text-center group bg-card border border-border/50 p-8 rounded-2xl shadow-xl hover:shadow-[0_0_40px_rgba(59,130,246,0.1)] transition-all duration-300"
-              >
-                <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100 rounded-2xl" />
-
-                <div className="relative mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-background border-2 border-primary/20 font-display text-xl font-bold text-primary shadow-[0_0_20px_rgba(59,130,246,0.2)] group-hover:scale-110 group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-500">
-                  {s.num}
-                </div>
-                <h3 className="font-display relative z-10 text-xl font-bold text-foreground mb-3">{s.title}</h3>
-                <p className="relative z-10 text-sm text-muted-foreground leading-relaxed">{s.desc}</p>
-              </motion.div>
-            ))}
-          </motion.div>
-        </div>
-      </section>
-
       {/* Security snippet */}
       <section className="border-t border-border/30 py-16 px-4 sm:px-6 lg:px-8">
         <motion.div
@@ -450,6 +520,74 @@ export default function Landing() {
             ))}
           </div>
         </motion.div>
+      </section>
+
+      {/* Free vs Pro Comparison */}
+      <section className="bg-background py-24 px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-5xl">
+          <div className="text-center mb-16">
+            <h2 className="font-display text-3xl font-bold text-foreground sm:text-4xl">
+              Why upgrade to Pro?
+            </h2>
+            <p className="mt-4 text-muted-foreground max-w-2xl mx-auto">
+              Our free tier is great for quick reviews, but founders and legal professionals need the unthrottled power of Pro.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+            {/* Free */}
+            <div className="rounded-2xl border border-border/50 bg-card p-8 flex flex-col">
+              <div className="mb-6">
+                <h3 className="font-display text-2xl font-bold text-foreground">Free</h3>
+                <p className="text-muted-foreground mt-2">Essential AI tools to understand what you sign.</p>
+                <div className="mt-4 font-display text-4xl font-bold tracking-tight">$0 <span className="text-lg font-normal text-muted-foreground tracking-normal">/mo</span></div>
+              </div>
+              <ul className="space-y-4 flex-1 mb-8">
+                {[
+                  "5 Document Uploads / mo",
+                  "Standard Plain-English Summaries",
+                  "Basic Risk Detection",
+                  "Fair Use Chat Limits",
+                  "Community Support"
+                ].map((feature, i) => (
+                  <li key={i} className="flex items-start gap-3 text-sm text-muted-foreground">
+                    <CheckCircle className="h-5 w-5 text-muted-foreground/50 shrink-0" />
+                    <span>{feature}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Pro */}
+            <div className="rounded-2xl border-2 border-primary bg-primary/5 p-8 flex flex-col relative shadow-2xl shadow-primary/10">
+              <div className="absolute top-0 right-8 -translate-y-1/2">
+                <span className="inline-block rounded-full bg-primary px-3 py-1 text-xs font-bold uppercase tracking-wider text-primary-foreground shadow-sm">
+                  Most Popular
+                </span>
+              </div>
+              <div className="mb-6">
+                <h3 className="font-display text-2xl font-bold text-primary">Pro</h3>
+                <p className="text-muted-foreground mt-2">Zero limits. Full legal intelligence at your fingertips.</p>
+                <div className="mt-4 font-display text-4xl font-bold tracking-tight text-foreground">$29 <span className="text-lg font-normal text-muted-foreground tracking-normal">/mo</span></div>
+              </div>
+              <ul className="space-y-4 flex-1 mb-8">
+                {[
+                  "Unlimited Document Uploads",
+                  "Deep Contextual Analysis",
+                  "Advanced Risk & Red-flag Radar",
+                  "AI Clause Redlining & Suggestions",
+                  "Export to Word / PDF",
+                  "Priority Email Support"
+                ].map((feature, i) => (
+                  <li key={i} className="flex items-start gap-3 text-sm text-foreground font-medium">
+                    <CheckCircle className="h-5 w-5 text-primary shrink-0" />
+                    <span>{feature}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
       </section>
 
       {/* Final CTA */}

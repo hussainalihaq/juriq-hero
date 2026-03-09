@@ -6,37 +6,37 @@ const items = [
     icon: Eye,
     title: "What we store",
     desc: "When you upload a document, we store the file temporarily to perform analysis. Extracted text and analysis results are stored in your account until you delete them.",
-    color: "text-blue-500",
-    bg: "bg-blue-500/10",
-    border: "group-hover:border-blue-500/50",
+    color: "text-primary",
+    bg: "bg-primary/10",
+    border: "group-hover:border-primary/50",
     shadow: "group-hover:shadow-[0_0_30px_rgba(59,130,246,0.15)]",
   },
   {
     icon: Lock,
     title: "Encryption in transit",
     desc: "All file uploads and API communication use TLS encryption. We are working toward additional at-rest encryption and will update this page as we make progress.",
-    color: "text-emerald-500",
-    bg: "bg-emerald-500/10",
-    border: "group-hover:border-emerald-500/50",
-    shadow: "group-hover:shadow-[0_0_30px_rgba(16,185,129,0.15)]",
+    color: "text-primary",
+    bg: "bg-primary/10",
+    border: "group-hover:border-primary/50",
+    shadow: "group-hover:shadow-[0_0_30px_rgba(59,130,246,0.15)]",
   },
   {
     icon: Trash2,
     title: "Data deletion",
     desc: "You can delete any document from your account at any time. For full account data deletion, email support@juriq.com and we will process your request within 7 business days.",
-    color: "text-danger",
-    bg: "bg-danger/10",
-    border: "group-hover:border-danger/50",
-    shadow: "group-hover:shadow-[0_0_30px_rgba(239,68,68,0.15)]",
+    color: "text-primary",
+    bg: "bg-primary/10",
+    border: "group-hover:border-primary/50",
+    shadow: "group-hover:shadow-[0_0_30px_rgba(59,130,246,0.15)]",
   },
   {
     icon: Shield,
     title: "No data sharing",
     desc: "Your legal documents are never shared with third parties or used to train models. Your legal data is yours alone.",
-    color: "text-purple-500",
-    bg: "bg-purple-500/10",
-    border: "group-hover:border-purple-500/50",
-    shadow: "group-hover:shadow-[0_0_30px_rgba(168,85,247,0.15)]",
+    color: "text-primary",
+    bg: "bg-primary/10",
+    border: "group-hover:border-primary/50",
+    shadow: "group-hover:shadow-[0_0_30px_rgba(59,130,246,0.15)]",
   },
 ];
 
@@ -139,7 +139,7 @@ export default function Security() {
               key={i}
               className={`group relative overflow-hidden rounded-2xl border border-border/50 bg-background/50 backdrop-blur-sm p-8 transition-all duration-300 ${item.border} ${item.shadow}`}
             >
-              <div className={`absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100 bg-gradient-to-br from-${item.color.split('-')[1]}-500/5 to-transparent`} />
+              <div className={`absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100 bg-gradient-to-br from-primary/5 to-transparent`} />
               <div className="relative z-10">
                 <div className={`mb-6 inline-flex rounded-xl ${item.bg} p-3 transition-transform duration-300 group-hover:scale-110`}>
                   <item.icon className={`h-6 w-6 ${item.color}`} />
