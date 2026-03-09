@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -21,6 +21,7 @@ export default function Documents() {
   const [documents, setDocuments] = useState<DocHistoryItem[]>([]);
   const [uploading, setUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     setDocuments(getDocHistory());
@@ -54,6 +55,8 @@ export default function Documents() {
       window.dispatchEvent(new Event("juriq_history_update"));
 
       toast.success("Document uploaded successfully!", { id: loadingToast });
+      // Automatically navigate to the Chat interface with the new document
+      navigate(`/app/chat?new=1&docId=${newDoc.id}`);
     } catch (err: any) {
       toast.error(`Upload failed: ${err.message}`, { id: loadingToast });
     } finally {
@@ -135,10 +138,14 @@ export default function Documents() {
             </thead>
             <tbody>
               {filtered.map((doc) => (
-                <tr key={doc.id} className="border-b border-border/30 last:border-0 hover:bg-secondary/30 transition-default">
+                <tr
+                  key={doc.id}
+                  className="border-b border-border/30 last:border-0 hover:bg-secondary/30 transition-default cursor-pointer group"
+                  onClick={() => navigate(`/app/chat?new=1`)}
+                >
                   <td className="px-4 py-3">
-                    <div className="flex items-center gap-2 text-foreground">
-                      <FileText className="h-4 w-4 text-muted-foreground" />
+                    <div className="flex items-center gap-2 text-foreground group-hover:text-primary transition-colors">
+                      <FileText className="h-4 w-4 text-muted-foreground group-hover:text-primary/70" />
                       <span className="font-medium">{doc.filename}</span>
                     </div>
                   </td>
@@ -154,7 +161,7 @@ export default function Documents() {
                     </Badge>
                   </td>
                   <td className="px-4 py-3">
-                    <div className="flex items-center justify-end gap-1">
+                    <div className="flex items-center justify-end gap-1" onClick={(e) => e.stopPropagation()}>
                       <Button variant="ghost" size="icon" className="h-8 w-8" asChild>
                         <Link to={`/app/chat?new=1`} title="Open in chat">
                           <MessageSquare className="h-3.5 w-3.5" />

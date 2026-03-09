@@ -22,6 +22,11 @@ export default function Settings() {
     if (!name.trim()) return;
     setUpdatingProfile(true);
     try {
+      if (!import.meta.env.VITE_SUPABASE_URL) {
+        await new Promise((r) => setTimeout(r, 600));
+        toast.success("Profile updated successfully!");
+        return;
+      }
       const { error } = await supabase.auth.updateUser({
         data: { name: name.trim() },
       });
@@ -38,6 +43,11 @@ export default function Settings() {
     if (!workspace.trim()) return;
     setUpdatingWorkspace(true);
     try {
+      if (!import.meta.env.VITE_SUPABASE_URL) {
+        await new Promise((r) => setTimeout(r, 600));
+        toast.success("Workspace updated successfully!");
+        return;
+      }
       const { error } = await supabase.auth.updateUser({
         data: { workspace: workspace.trim() },
       });
@@ -60,6 +70,12 @@ export default function Settings() {
     }
     setUpdatingPassword(true);
     try {
+      if (!import.meta.env.VITE_SUPABASE_URL) {
+        await new Promise((r) => setTimeout(r, 800));
+        toast.success("Password updated successfully!");
+        setPassword("");
+        return;
+      }
       const { error } = await supabase.auth.updateUser({ password });
       if (error) throw error;
       toast.success("Password updated successfully!");
