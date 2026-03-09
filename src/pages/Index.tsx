@@ -11,31 +11,48 @@ import {
   PenTool,
   Upload,
   MessageSquare,
-  Download,
   ArrowRight,
   CheckCircle,
   Users,
   GraduationCap,
   Briefcase,
   Quote,
+  Sparkles,
+  Scale,
+  BrainCircuit,
 } from "lucide-react";
 import { useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 
-const features = [
-  { icon: FileText, title: "Explain contracts in plain English", desc: "Upload any contract and get a clear, jargon-free summary of what it says and what it means for you." },
-  { icon: AlertTriangle, title: "Risk radar: High / Medium / Low", desc: "Every clause gets a severity rating so you know what to negotiate first — from liability traps to overbroad terms." },
-  { icon: Edit3, title: "Edit suggestions (before/after)", desc: "Get redline-style revision suggestions with diff highlighting. Review changes at a glance; accept or revise." },
-  { icon: PenTool, title: "Draft clauses & emails", desc: "Generate NDA, liability, and termination clauses from scratch — or draft response emails to counterparties." },
-  { icon: Shield, title: "Case & law explanations (best-effort)", desc: "Ask about case law or statutes and get best-effort plain-English summaries to help with research." },
-  { icon: FileOutput, title: "Litigation support (best-effort)", desc: "Outline issues, draft questions, and build arguments for hearings — best-effort assistance for your review." },
-];
-
-const useCases = [
-  { icon: Briefcase, title: "Founders", desc: "Contracts, NDAs, vendor terms — fast clarity + risk flags before you sign." },
-  { icon: GraduationCap, title: "Students", desc: "Understand legal concepts + break down case material for coursework and exams." },
-  { icon: Briefcase, title: "Lawyers", desc: "First-pass contract review + drafting assistance to speed up your workflow." },
-  { icon: Users, title: "Teams & Freelancers", desc: "Shared contract review workspace + research help when you need it." },
+const scrollyFeatures = [
+  {
+    step: "01",
+    title: "Upload & Summarize",
+    desc: "Drop any complex PDF or DOCX into Juriq. Within seconds, our AI breaks down the densest legalese into a clean, plain-English summary. Never sign a document you don't fully understand again.",
+    icon: Upload,
+    visualType: "summary"
+  },
+  {
+    step: "02",
+    title: "Instant Risk Radar",
+    desc: "Juriq automatically scans every sentence for highly adversarial clauses. We flag unlimited liability traps, aggressive non-competes, and overbroad IP assignments with severity ratings so you know exactly what to negotiate.",
+    icon: AlertTriangle,
+    visualType: "risk"
+  },
+  {
+    step: "03",
+    title: "Suggest & Redline",
+    desc: "Don't just find problems—fix them. Juriq generates standard, protective counter-clauses and redlines your document automatically. Accept or reject the AI's suggestions directly in the editor.",
+    icon: Edit3,
+    visualType: "edit"
+  },
+  {
+    step: "04",
+    title: "Chat with your Contract",
+    desc: "Got a specific question? Ask Juriq. 'Does this NDA prevent me from working with competitors?' or 'What is the governing law here?' Juriq answers instantly, citing the exact clause.",
+    icon: MessageSquare,
+    visualType: "chat"
+  }
 ];
 
 const steps = [
@@ -211,88 +228,160 @@ export default function Landing() {
         </motion.div>
       </section>
 
-      {/* Features grid */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-7xl">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.5 }}
-            className="mx-auto mb-14 max-w-2xl text-center"
-          >
-            <h2 className="font-display text-3xl font-bold text-foreground sm:text-4xl">
-              Contract copilot + legal research assistant
-            </h2>
-            <p className="mt-4 text-muted-foreground">
-              From contract analysis and edit suggestions to case law summaries and litigation prep.
-            </p>
-          </motion.div>
-          <motion.div
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-100px" }}
-            className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
-          >
-            {features.map((f, i) => (
-              <motion.div
-                key={i}
-                variants={itemVariants}
-                whileHover={{ y: -5, scale: 1.02 }}
-                className="group relative overflow-hidden rounded-2xl border border-border/50 bg-background/50 backdrop-blur-sm p-8 transition-all duration-300 hover:border-primary/50 hover:shadow-[0_0_30px_rgba(59,130,246,0.15)]"
-              >
-                <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-primary/5 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+      {/* Scrollytelling Features */}
+      <section className="relative bg-background py-32 px-4 sm:px-6 lg:px-8 overflow-hidden">
+        {/* Decorative background blurs */}
+        <div className="absolute top-0 right-0 -mr-64 -mt-64 h-[500px] w-[500px] rounded-full bg-primary/5 blur-[120px]" />
+        <div className="absolute bottom-0 left-0 -ml-64 -mb-64 h-[500px] w-[500px] rounded-full bg-blue-500/5 blur-[120px]" />
 
-                <div className="relative z-10">
-                  <div className="mb-6 inline-flex rounded-xl bg-primary/10 p-3 ring-1 ring-primary/20 transition-all duration-500 group-hover:scale-110 group-hover:bg-primary group-hover:text-primary-foreground text-primary shadow-sm">
-                    <f.icon className="h-6 w-6 transition-colors" />
+        <div className="mx-auto max-w-7xl">
+          <div className="mb-20 text-center">
+            <Badge variant="outline" className="mb-4 bg-primary/5 text-primary border-primary/20 px-4 py-1.5 text-sm">
+              <Sparkles className="mr-2 h-4 w-4" /> Next-Generation Legal AI
+            </Badge>
+            <h2 className="font-display text-4xl font-bold text-foreground sm:text-5xl md:text-6xl tracking-tight">
+              An elite legal team,<br />
+              <span className="text-muted-foreground">living in your browser.</span>
+            </h2>
+          </div>
+
+          <div className="flex flex-col lg:flex-row gap-16 lg:gap-24 items-start">
+            {/* Left side: Scrollable Text Content */}
+            <div className="w-full lg:w-5/12 space-y-32 py-10">
+              {scrollyFeatures.map((feature, i) => (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, y: 40 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ margin: "-40% 0px -40% 0px", once: false }}
+                  transition={{ duration: 0.6 }}
+                  className="relative"
+                >
+                  <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-secondary border border-border/50 text-foreground shadow-sm">
+                    <feature.icon className="h-6 w-6" />
                   </div>
-                  <h3 className="font-display text-xl font-bold text-foreground">{f.title}</h3>
-                  <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{f.desc}</p>
+                  <div className="text-sm font-bold text-primary mb-2 tracking-wider">0{i + 1}</div>
+                  <h3 className="font-display text-3xl font-bold text-foreground mb-4">{feature.title}</h3>
+                  <p className="text-lg text-muted-foreground leading-relaxed">
+                    {feature.desc}
+                  </p>
+                </motion.div>
+              ))}
+            </div>
+
+            {/* Right side: Sticky UI Visualizer */}
+            <div className="hidden w-full lg:flex lg:w-7/12 sticky top-32 h-[600px] items-center justify-center">
+              <div className="relative w-full aspect-[4/3] rounded-3xl border border-border/50 bg-card/40 backdrop-blur-xl shadow-2xl shadow-primary/5 overflow-hidden">
+                {/* Mac window header */}
+                <div className="flex h-12 w-full items-center gap-2 border-b border-border/40 bg-background/50 px-5 backdrop-blur-md">
+                  <div className="h-3 w-3 rounded-full bg-[#FF5F56] border border-[#E0443E]" />
+                  <div className="h-3 w-3 rounded-full bg-[#FFBD2E] border border-[#DEA123]" />
+                  <div className="h-3 w-3 rounded-full bg-[#27C93F] border border-[#1AAB29]" />
+                  <div className="ml-4 flex-1 text-center text-xs text-muted-foreground font-medium flex items-center justify-center gap-2">
+                    <Shield className="h-3 w-3" /> juriq-secure-viewer.app
+                  </div>
                 </div>
-              </motion.div>
-            ))}
-          </motion.div>
+
+                {/* UI Mock Area - Will crossfade based on scroll (using a simplified static complex UI for now due to implementation limits of scrollSpy, but highly visually complex) */}
+                <div className="p-6 h-[calc(100%-3rem)] bg-gradient-to-br from-background to-secondary/20 flex flex-col items-center justify-center relative overflow-hidden">
+                  {/* Floating abstract elements */}
+                  <motion.div
+                    animate={{ rotate: 360 }}
+                    transition={{ duration: 50, repeat: Infinity, ease: "linear" }}
+                    className="absolute -right-20 -top-20 h-64 w-64 rounded-full border border-primary/20 bg-primary/5 blur-3xl"
+                  />
+
+                  {/* Central App Mock */}
+                  <motion.div
+                    initial={{ scale: 0.95, opacity: 0 }}
+                    whileInView={{ scale: 1, opacity: 1 }}
+                    transition={{ duration: 0.8 }}
+                    className="w-full h-full border border-border/50 rounded-xl bg-background shadow-lg overflow-hidden flex flex-col"
+                  >
+                    {/* Fake App header */}
+                    <div className="h-14 border-b border-border flex items-center justify-between px-4 bg-secondary/30">
+                      <div className="flex items-center gap-3">
+                        <FileText className="h-5 w-5 text-primary" />
+                        <span className="font-semibold text-sm">Mutual_NDA_Final.pdf</span>
+                        <Badge variant="outline" className="text-[10px] h-5">Analyzed</Badge>
+                      </div>
+                      <Button variant="default" size="sm" className="h-8">Export</Button>
+                    </div>
+                    {/* Fake App Body */}
+                    <div className="flex flex-1 overflow-hidden">
+                      {/* Fake Document */}
+                      <div className="w-2/3 border-r border-border p-6 space-y-4">
+                        <div className="h-4 w-3/4 bg-secondary rounded-md" />
+                        <div className="h-4 w-full bg-secondary rounded-md" />
+                        <div className="h-4 w-5/6 bg-secondary rounded-md" />
+
+                        <div className="my-6 p-4 border border-danger/30 bg-danger/5 rounded-lg relative overflow-hidden">
+                          <div className="absolute left-0 top-0 bottom-0 w-1 bg-danger" />
+                          <div className="flex gap-2 mb-2">
+                            <AlertTriangle className="h-4 w-4 text-danger" />
+                            <span className="text-xs font-bold text-danger">HIGH RISK DETECTED</span>
+                          </div>
+                          <p className="text-sm font-medium">9. Limitation of Liability.</p>
+                          <p className="text-xs text-muted-foreground mt-1">"In no event shall either party's aggregate liability exceed the sum of $100."</p>
+                        </div>
+
+                        <div className="h-4 w-full bg-secondary rounded-md" />
+                        <div className="h-4 w-2/3 bg-secondary rounded-md" />
+                      </div>
+                      {/* Fake Chat Sidebar */}
+                      <div className="w-1/3 bg-secondary/10 p-4 flex flex-col">
+                        <div className="flex-1 space-y-4">
+                          <div className="bg-background border border-border/50 p-3 rounded-xl rounded-tr-none ml-auto w-11/12 shadow-sm">
+                            <p className="text-xs">Is the liability cap mutual?</p>
+                          </div>
+                          <div className="bg-primary/10 border border-primary/20 p-3 rounded-xl rounded-tl-none w-11/12 shadow-sm">
+                            <p className="text-xs text-foreground">Yes, Section 9 caps liability mutually at $100. <span className="text-danger font-medium text-[10px] block mt-1">Warning: This cap is unusually low for this transaction size.</span></p>
+                          </div>
+                        </div>
+                        <div className="mt-4 border border-border/50 bg-background rounded-full p-2 px-4 text-xs text-muted-foreground flex justify-between items-center shadow-inner">
+                          Ask Juriq anything...
+                          <ArrowRight className="h-3 w-3" />
+                        </div>
+                      </div>
+                    </div>
+                  </motion.div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
-      {/* Use cases */}
-      <section className="border-t border-border/30 py-20 px-4 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-7xl">
-          <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.5 }}
-            className="mb-12 text-center font-display text-3xl font-bold text-foreground sm:text-4xl"
-          >
-            Built for people who deal with legal documents
-          </motion.h2>
-          <motion.div
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-100px" }}
-            className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4"
-          >
-            {useCases.map((uc, i) => (
-              <motion.div
-                key={i}
-                variants={itemVariants}
-                whileHover={{ y: -8 }}
-                className="group relative overflow-hidden rounded-2xl border border-border/50 bg-background/50 backdrop-blur-sm p-8 transition-all duration-300 hover:border-emerald-500/50 hover:shadow-[0_0_30px_rgba(16,185,129,0.15)]"
-              >
-                <div className="absolute inset-0 bg-gradient-to-tr from-emerald-500/10 via-emerald-500/5 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
-                <div className="relative z-10">
-                  <uc.icon className="mb-6 h-8 w-8 text-muted-foreground transition-all duration-500 group-hover:text-emerald-500 group-hover:scale-110 drop-shadow-sm" />
-                  <h3 className="font-display text-lg font-bold text-foreground">{uc.title}</h3>
-                  <p className="mt-3 text-sm text-muted-foreground leading-relaxed">{uc.desc}</p>
-                </div>
-              </motion.div>
-            ))}
-          </motion.div>
-        </div>
+      {/* Our Story / Mission */}
+      <section className="bg-foreground py-32 px-4 sm:px-6 lg:px-8 text-background">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.8 }}
+          className="mx-auto max-w-4xl"
+        >
+          <div className="mb-8 flex items-center justify-center gap-4 text-background/50">
+            <div className="h-px w-12 bg-background/20" />
+            <Scale className="h-6 w-6" />
+            <div className="h-px w-12 bg-background/20" />
+          </div>
+          <h2 className="font-display text-4xl sm:text-5xl md:text-6xl font-black text-center mb-12 leading-tight tracking-tight">
+            The law shouldn't be a black box.
+          </h2>
+          <div className="space-y-8 text-lg sm:text-xl md:text-2xl text-background/80 font-serif leading-relaxed text-center">
+            <p>
+              For decades, legal documents have been guarded by predatory legalese—a language designed not to clarify, but to confuse. It forces founders, freelancers, and everyday people to sign away their rights merely because they can't afford a $600/hour associate.
+            </p>
+            <p>
+              <strong className="text-background font-display tracking-wide uppercase text-sm mb-2 block">Our Mission</strong>
+              We built Juriq to weaponize elite artificial intelligence for the underdog. By combining ultra-fast inference with heavily fine-tuned legal models, we are democratizing access to contract clarity, risk detection, and litigation support.
+            </p>
+            <p className="text-background/60 italic text-lg mt-12">
+              Balance the scales. Know what you sign.
+            </p>
+          </div>
+        </motion.div>
       </section>
 
       {/* How it works */}
