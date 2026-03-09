@@ -25,6 +25,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
+import { EarlyAccessModal } from "@/components/marketing/EarlyAccessModal";
 
 const scrollyFeatures = [
   {
@@ -90,6 +91,7 @@ const itemVariants: Variants = {
 export default function Landing() {
   const { user } = useAuth();
   const [activeStep, setActiveStep] = useState(0);
+  const [showWaitlist, setShowWaitlist] = useState(false);
 
   return (
     <div>
@@ -119,8 +121,8 @@ export default function Landing() {
                   <Link to="/app">Go to Dashboard</Link>
                 </Button>
               ) : (
-                <Button variant="hero" size="xl" asChild>
-                  <Link to="/signup">Join Waitlist</Link>
+                <Button variant="hero" size="xl" onClick={() => setShowWaitlist(true)}>
+                  Join Waitlist
                 </Button>
               )}
               <Button variant="hero-secondary" size="xl" asChild>
@@ -636,13 +638,15 @@ export default function Landing() {
                 <Link to="/app">Go to Dashboard</Link>
               </Button>
             ) : (
-              <Button variant="hero" size="lg" asChild>
-                <Link to="/signup">Join Waitlist</Link>
+              <Button variant="hero" size="lg" onClick={() => setShowWaitlist(true)}>
+                Join Waitlist
               </Button>
             )}
           </div>
         </motion.div>
       </section>
+
+      <EarlyAccessModal isOpen={showWaitlist} onClose={() => setShowWaitlist(false)} />
     </div>
   );
 }

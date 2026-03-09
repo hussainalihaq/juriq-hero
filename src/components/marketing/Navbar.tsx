@@ -3,6 +3,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
+import { EarlyAccessModal } from "@/components/marketing/EarlyAccessModal";
 
 const navLinks = [
   { label: "Product", href: "/product" },
@@ -16,6 +17,7 @@ export function Navbar() {
   const location = useLocation();
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
+  const [showWaitlist, setShowWaitlist] = useState(false);
 
   const handleSignOut = async () => {
     await signOut();
@@ -61,8 +63,8 @@ export function Navbar() {
               <Button variant="ghost" size="sm" asChild>
                 <Link to="/signin">Sign in</Link>
               </Button>
-              <Button variant="default" size="sm" asChild>
-                <Link to="/signup">Join Waitlist</Link>
+              <Button variant="default" size="sm" onClick={() => setShowWaitlist(true)}>
+                Join Waitlist
               </Button>
             </>
           )}
@@ -109,14 +111,19 @@ export function Navbar() {
                 <Button variant="ghost" size="sm" asChild>
                   <Link to="/signin" onClick={() => setMobileOpen(false)}>Sign in</Link>
                 </Button>
-                <Button variant="default" size="sm" asChild>
-                  <Link to="/signup" onClick={() => setMobileOpen(false)}>Join Waitlist</Link>
+                <Button variant="default" size="sm" onClick={() => {
+                  setMobileOpen(false);
+                  setShowWaitlist(true);
+                }}>
+                  Join Waitlist
                 </Button>
               </>
             )}
           </div>
         </div>
       )}
+
+      <EarlyAccessModal isOpen={showWaitlist} onClose={() => setShowWaitlist(false)} />
     </nav>
   );
 }
