@@ -24,8 +24,7 @@ export function CookieConsent() {
     };
 
     const handleDecline = () => {
-        // Even if declined, we set a flag so we don't bother them again this session
-        sessionStorage.setItem("juriq-cookie-consent", "false");
+        // Just hide it for this page load, but we want it to show up on fresh visits if unsupported
         setIsVisible(false);
     };
 

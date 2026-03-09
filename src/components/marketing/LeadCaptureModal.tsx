@@ -2,11 +2,12 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Sparkles, FileText, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
+import { EarlyAccessModal } from "@/components/marketing/EarlyAccessModal";
 
 export function LeadCaptureModal() {
     const [isOpen, setIsOpen] = useState(false);
+    const [showWaitlist, setShowWaitlist] = useState(false);
     const { user } = useAuth();
 
     useEffect(() => {
@@ -94,11 +95,11 @@ export function LeadCaptureModal() {
                         </div>
 
                         <h4 className="text-2xl font-bold leading-tight text-foreground mb-3">
-                            Analyze your first 3 contracts completely free.
+                            Join the Private Beta Waitlist
                         </h4>
 
                         <p className="text-muted-foreground mb-6">
-                            Create your free Juriq account today and instantly find hidden risks, summarize dense clauses, and track obligations in seconds with our AI Copilot.
+                            Juriq is currently in private beta. Skip the line and get early access to our AI Legal Copilot before the public launch. Let us help you find hidden risks, summarize dense clauses, and track obligations in seconds.
                         </p>
 
                         <ul className="mb-8 space-y-3">
@@ -119,10 +120,11 @@ export function LeadCaptureModal() {
                         </ul>
 
                         <div className="flex flex-col gap-3 sm:flex-row">
-                            <Button variant="hero" className="w-full sm:w-auto" asChild>
-                                <Link to="/signup">
-                                    Claim Free Account <ArrowRight className="ml-2 h-4 w-4" />
-                                </Link>
+                            <Button variant="hero" className="w-full sm:w-auto" onClick={() => {
+                                setIsOpen(false);
+                                setShowWaitlist(true);
+                            }}>
+                                Join Waitlist <ArrowRight className="ml-2 h-4 w-4" />
                             </Button>
                             <Button variant="ghost" className="w-full sm:w-auto" onClick={() => setIsOpen(false)}>
                                 Maybe later
@@ -131,6 +133,8 @@ export function LeadCaptureModal() {
                     </div>
                 </motion.div>
             </div>
+
+            <EarlyAccessModal isOpen={showWaitlist} onClose={() => setShowWaitlist(false)} />
         </AnimatePresence>
     );
 }
