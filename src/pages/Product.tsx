@@ -11,9 +11,16 @@ import {
   FolderOpen,
 } from "lucide-react";
 
+import { ChatAnimation } from "@/components/marketing/animations/ChatAnimation";
+import { RiskRadarAnimation } from "@/components/marketing/animations/RiskRadarAnimation";
+import { DiffAnimation } from "@/components/marketing/animations/DiffAnimation";
+import { LibraryAnimation } from "@/components/marketing/animations/LibraryAnimation";
+import { ResearchAnimation } from "@/components/marketing/animations/ResearchAnimation";
+
 const sections = [
   {
     icon: MessageSquare,
+    animation: ChatAnimation,
     title: "Contract Chat + Document Context",
     desc: "Ask questions about any contract and get answers with clause-level references. A context panel shows parties, dates, and key amounts — so you always know where you stand.",
     reverse: false,
@@ -22,6 +29,7 @@ const sections = [
   },
   {
     icon: AlertTriangle,
+    animation: RiskRadarAnimation,
     title: "Risk Radar + Recommendations",
     desc: "Every clause is evaluated for risk — from liability traps to overbroad definitions. Each finding includes a severity level and a recommended action to help you negotiate smarter.",
     reverse: true,
@@ -30,6 +38,7 @@ const sections = [
   },
   {
     icon: Edit3,
+    animation: DiffAnimation,
     title: "Edit Suggestions (Before/After)",
     desc: "See side-by-side diffs of original vs. suggested contract text. Insertions and deletions are highlighted so you can review changes at a glance — a clear, redline-style comparison.",
     reverse: false,
@@ -38,6 +47,7 @@ const sections = [
   },
   {
     icon: FolderOpen,
+    animation: LibraryAnimation,
     title: "Document Library",
     desc: "Upload and manage all your legal documents in one place. Search by name, filter by status, and open any document in the chat for instant analysis.",
     reverse: true,
@@ -46,6 +56,7 @@ const sections = [
   },
   {
     icon: Download,
+    animation: ResearchAnimation,
     title: "Case & Law Research (Best-Effort)",
     desc: "Ask about case law, statutes, or legal concepts and get best-effort plain-English summaries. Helpful for research, coursework, and litigation prep — always verify with primary sources.",
     reverse: false,
@@ -70,11 +81,8 @@ function FeatureSection({ s, index }: { s: typeof sections[0]; index: number }) 
         <h2 className="font-display text-2xl font-bold text-foreground lg:text-3xl">{s.title}</h2>
         <p className="mt-3 max-w-md leading-relaxed text-muted-foreground">{s.desc}</p>
       </div>
-      <div className="flex-1">
-        <div className={`group relative aspect-video overflow-hidden rounded-xl border border-border/50 bg-gradient-to-br ${s.gradient} p-8 flex items-center justify-center transition-all duration-500 hover:scale-[1.02] hover:shadow-xl hover:shadow-primary/5`}>
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,transparent_30%,hsl(var(--background))_70%)]" />
-          <s.icon className="relative h-16 w-16 text-muted-foreground/30 transition-transform duration-500 group-hover:scale-110 group-hover:text-muted-foreground/50" />
-        </div>
+      <div className="flex-1 w-full max-w-[500px] lg:max-w-none mx-auto">
+        <s.animation />
       </div>
     </motion.div>
   );
