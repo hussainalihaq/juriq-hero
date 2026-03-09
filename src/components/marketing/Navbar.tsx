@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
@@ -14,7 +14,13 @@ const navLinks = [
 export function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const location = useLocation();
-  const { user } = useAuth();
+  const { user, signOut } = useAuth();
+  const navigate = useNavigate();
+
+  const handleSignOut = async () => {
+    await signOut();
+    navigate("/");
+  };
 
   return (
     <nav className="sticky top-0 z-50 border-b border-border/50 bg-background/80 backdrop-blur-xl">
@@ -42,9 +48,14 @@ export function Navbar() {
 
         <div className="hidden items-center gap-3 md:flex">
           {user ? (
-            <Button variant="default" size="sm" asChild>
-              <Link to="/app">Dashboard</Link>
-            </Button>
+            <>
+              <Button variant="ghost" size="sm" onClick={handleSignOut}>
+                Sign out
+              </Button>
+              <Button variant="default" size="sm" asChild>
+                <Link to="/app">Dashboard</Link>
+              </Button>
+            </>
           ) : (
             <>
               <Button variant="ghost" size="sm" asChild>
@@ -82,9 +93,17 @@ export function Navbar() {
           ))}
           <div className="mt-3 flex flex-col gap-2">
             {user ? (
-              <Button variant="default" size="sm" asChild>
-                <Link to="/app" onClick={() => setMobileOpen(false)}>Dashboard</Link>
-              </Button>
+              <>
+                <Button variant="default" size="sm" asChild>
+                  <Link to="/app" onClick={() => setMobileOpen(false)}>Dashboard</Link>
+                </Button>
+                <Button variant="ghost" size="sm" onClick={async () => {
+                  setMobileOpen(false);
+                  await handleSignOut();
+                }}>
+                  Sign out
+                </Button>
+              </>
             ) : (
               <>
                 <Button variant="ghost" size="sm" asChild>

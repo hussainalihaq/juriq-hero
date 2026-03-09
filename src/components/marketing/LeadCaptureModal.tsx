@@ -14,17 +14,18 @@ export function LeadCaptureModal() {
         if (user) return;
 
         // Check if the user has already seen and dismissed the modal in this session
-        const hasSeenModal = sessionStorage.getItem("juriq-lead-modal-seen");
+        const hasSeenModal = sessionStorage.getItem("juriq-lead-modal-seen-v2");
         if (hasSeenModal) return;
 
         let timeoutId: NodeJS.Timeout;
 
-        const handleMouseLeave = (e: MouseEvent) => {
+        const handleMouseOut = (e: MouseEvent) => {
             // Trigger intent-to-leave (mouse leaves the top of the viewport)
-            if (e.clientY <= 0) {
+            // Increased to 50px to make it trigger more reliably before the mouse fully leaves
+            if (e.clientY <= 50) {
                 setIsOpen(true);
-                sessionStorage.setItem("juriq-lead-modal-seen", "true");
-                document.removeEventListener("mouseleave", handleMouseLeave);
+                sessionStorage.setItem("juriq-lead-modal-seen-v2", "true");
+                document.removeEventListener("mouseout", handleMouseOut);
                 clearTimeout(timeoutId);
             }
         };
@@ -32,17 +33,17 @@ export function LeadCaptureModal() {
         // Backup trigger: If they stay on the page for 45 seconds, pop it up anyway
         timeoutId = setTimeout(() => {
             setIsOpen(true);
-            sessionStorage.setItem("juriq-lead-modal-seen", "true");
-            document.removeEventListener("mouseleave", handleMouseLeave);
+            sessionStorage.setItem("juriq-lead-modal-seen-v2", "true");
+            document.removeEventListener("mouseout", handleMouseOut);
         }, 45000);
 
         // Only attach exit intent on desktop
         if (window.innerWidth > 768) {
-            document.addEventListener("mouseleave", handleMouseLeave);
+            document.addEventListener("mouseout", handleMouseOut);
         }
 
         return () => {
-            document.removeEventListener("mouseleave", handleMouseLeave);
+            document.removeEventListener("mouseout", handleMouseOut);
             clearTimeout(timeoutId);
         };
     }, [user]);
