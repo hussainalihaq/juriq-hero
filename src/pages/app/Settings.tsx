@@ -295,7 +295,8 @@ export default function Settings() {
                           <Button variant="ghost" size="sm" onClick={() => handleSetCurrentWorkspace(space)} disabled={updatingWorkspace}>
                             Switch
                           </Button>
-                        )}
+                        )
+                      )}
                     </div>
                   ))}
                 </div>
