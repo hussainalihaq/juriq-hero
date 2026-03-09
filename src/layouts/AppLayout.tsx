@@ -22,6 +22,22 @@ export default function AppLayout() {
   const { user, loading, signOut } = useAuth();
   const navigate = useNavigate();
   const [showAck, setShowAck] = useState(false);
+  const [activeWorkspace, setActiveWorkspace] = useState("");
+
+  useEffect(() => {
+    if (user) {
+      setActiveWorkspace(localStorage.getItem("juriq_current_workspace") || user.user_metadata?.currentWorkspace || user.user_metadata?.workspace || "Personal Workspace");
+    }
+  }, [user]);
+
+  useEffect(() => {
+    const handleWorkspaceChange = () => {
+      const stored = localStorage.getItem("juriq_current_workspace");
+      if (stored) setActiveWorkspace(stored);
+    };
+    window.addEventListener("juriq_workspace_changed", handleWorkspaceChange);
+    return () => window.removeEventListener("juriq_workspace_changed", handleWorkspaceChange);
+  }, []);
 
   useEffect(() => {
     if (!loading && user) {
@@ -62,7 +78,7 @@ export default function AppLayout() {
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <span className="font-display font-semibold text-foreground">Juriq</span>
               <span>/</span>
-              <span>{user.user_metadata?.workspace || "Workspace"}</span>
+              <span>{activeWorkspace}</span>
             </div>
             <div className="ml-auto flex items-center gap-4">
 
