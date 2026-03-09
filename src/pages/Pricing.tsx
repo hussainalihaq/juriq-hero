@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Check, GraduationCap } from "lucide-react";
 import { mockPricing, mockFAQ } from "@/data/mockData";
+import { useAuth } from "@/contexts/AuthContext";
 import {
   Accordion,
   AccordionContent,
@@ -33,6 +34,7 @@ const comparisonRows = [
 
 export default function Pricing() {
   const [yearly, setYearly] = useState(false);
+  const { user } = useAuth();
   const data = yearly ? mockPricing.yearly : mockPricing.monthly;
 
   return (
@@ -89,10 +91,10 @@ export default function Pricing() {
                 transition={{ duration: 0.5, delay: 0.2 + (index * 0.1), ease: "easeOut" }}
                 key={tier.key}
                 className={`relative rounded-2xl border p-8 transition-all duration-300 hover:-translate-y-1 flex flex-col h-full bg-background/40 backdrop-blur-sm ${tier.popular
-                    ? "border-primary/50 bg-gradient-to-b from-primary/10 to-transparent shadow-[0_0_30px_rgba(59,130,246,0.15)] ring-1 ring-primary/20 md:scale-105 z-10"
-                    : tier.key === "student"
-                      ? "border-emerald-500/30 bg-gradient-to-b from-emerald-500/5 to-transparent hover:border-emerald-500/50 hover:shadow-[0_0_20px_rgba(16,185,129,0.1)]"
-                      : "border-border/50 hover:border-border hover:shadow-xl hover:shadow-primary/5"
+                  ? "border-primary/50 bg-gradient-to-b from-primary/10 to-transparent shadow-[0_0_30px_rgba(59,130,246,0.15)] ring-1 ring-primary/20 md:scale-105 z-10"
+                  : tier.key === "student"
+                    ? "border-emerald-500/30 bg-gradient-to-b from-emerald-500/5 to-transparent hover:border-emerald-500/50 hover:shadow-[0_0_20px_rgba(16,185,129,0.1)]"
+                    : "border-border/50 hover:border-border hover:shadow-xl hover:shadow-primary/5"
                   }`}
               >
                 {tier.popular && (
@@ -123,7 +125,7 @@ export default function Pricing() {
                   className={`mt-8 w-full transition-transform active:scale-95 ${tier.key === "student" ? "border-emerald-500/50 text-emerald-500 hover:bg-emerald-500 hover:text-white" : ""}`}
                   asChild
                 >
-                  <Link to="/signup">{tier.cta}</Link>
+                  <Link to={user ? "/app/billing" : "/signup"}>{user ? "Subscribe" : tier.cta}</Link>
                 </Button>
                 <ul className="mt-8 space-y-4 flex-1">
                   {plan.features.map((f) => (

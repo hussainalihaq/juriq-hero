@@ -563,7 +563,7 @@ export default function Landing() {
               <div className="mb-6">
                 <h3 className="font-display text-2xl font-bold text-foreground">Student</h3>
                 <p className="text-muted-foreground mt-2">Discounted pro features for law students.</p>
-                <div className="mt-4 font-display text-4xl font-bold tracking-tight">$9 <span className="text-lg font-normal text-muted-foreground tracking-normal">/mo</span></div>
+                <div className="mt-4 font-display text-4xl font-bold tracking-tight">$5 <span className="text-lg font-normal text-muted-foreground tracking-normal">/mo</span></div>
                 <div className="mt-2 text-xs text-muted-foreground font-medium flex items-center gap-1">
                   Requires <span className="text-primary bg-primary/10 px-1.5 rounded">.edu</span> email
                 </div>
