@@ -60,9 +60,6 @@ export function Navbar() {
             </>
           ) : (
             <>
-              <Button variant="ghost" size="sm" asChild>
-                <Link to="/signin">Sign in</Link>
-              </Button>
               <Button variant="default" size="sm" onClick={() => setShowWaitlist(true)}>
                 Join Waitlist
               </Button>
@@ -108,9 +105,6 @@ export function Navbar() {
               </>
             ) : (
               <>
-                <Button variant="ghost" size="sm" asChild>
-                  <Link to="/signin" onClick={() => setMobileOpen(false)}>Sign in</Link>
-                </Button>
                 <Button variant="default" size="sm" onClick={() => {
                   setMobileOpen(false);
                   setShowWaitlist(true);
