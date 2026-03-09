@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { User, Building, CreditCard, AlertTriangle, LogOut, Loader2 } from "lucide-react";
+import { User, Building, CreditCard, AlertTriangle, LogOut, Loader2, Key, Settings as SettingsIcon } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/lib/supabaseClient";
 import { toast } from "sonner";
@@ -47,6 +47,27 @@ export default function Settings() {
       toast.error(err.message || "Failed to update workspace");
     } finally {
       setUpdatingWorkspace(false);
+    }
+  };
+
+  const [password, setPassword] = useState("");
+  const [updatingPassword, setUpdatingPassword] = useState(false);
+
+  const handleUpdatePassword = async () => {
+    if (!password || password.length < 6) {
+      toast.error("Password must be at least 6 characters.");
+      return;
+    }
+    setUpdatingPassword(true);
+    try {
+      const { error } = await supabase.auth.updateUser({ password });
+      if (error) throw error;
+      toast.success("Password updated successfully!");
+      setPassword("");
+    } catch (err: any) {
+      toast.error(err.message || "Failed to update password");
+    } finally {
+      setUpdatingPassword(false);
     }
   };
 
@@ -112,6 +133,51 @@ export default function Settings() {
               {updatingWorkspace && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               Update
             </Button>
+          </div>
+        </section>
+
+        {/* Security & Password */}
+        <section className="mb-8 rounded-xl border border-border/50 bg-card p-6">
+          <div className="flex items-center gap-3 mb-6">
+            <Key className="h-5 w-5 text-muted-foreground" />
+            <h2 className="font-display text-lg font-semibold text-foreground">Security</h2>
+          </div>
+          <div className="space-y-4">
+            <div>
+              <label className="mb-1.5 block text-sm font-medium text-foreground">New Password</label>
+              <input
+                type="password"
+                placeholder="Leave blank to keep current password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full rounded-lg border border-border bg-background px-4 py-2.5 text-sm text-foreground focus-accent"
+              />
+            </div>
+            <Button variant="default" size="sm" onClick={handleUpdatePassword} disabled={updatingPassword || !password}>
+              {updatingPassword && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              Update Password
+            </Button>
+          </div>
+        </section>
+
+        {/* Preferences */}
+        <section className="mb-8 rounded-xl border border-border/50 bg-card p-6">
+          <div className="flex items-center gap-3 mb-6">
+            <SettingsIcon className="h-5 w-5 text-muted-foreground" />
+            <h2 className="font-display text-lg font-semibold text-foreground">Preferences</h2>
+          </div>
+          <div className="space-y-4">
+            <div className="flex items-center justify-between p-4 rounded-lg border border-border/50 bg-secondary/10">
+              <div>
+                <p className="text-sm font-medium text-foreground">Theme</p>
+                <p className="text-xs text-muted-foreground">Adjust the appearance of Juriq.</p>
+              </div>
+              <select className="rounded-lg border border-border bg-background px-3 py-1.5 text-sm text-foreground">
+                <option value="system">System Default</option>
+                <option value="dark">Dark Mode</option>
+                <option value="light">Light Mode</option>
+              </select>
+            </div>
           </div>
         </section>
 

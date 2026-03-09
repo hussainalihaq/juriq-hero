@@ -312,15 +312,25 @@ export default function Landing() {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: "-100px" }}
-            className="grid gap-8 md:grid-cols-3"
+            className="relative grid gap-8 md:grid-cols-3"
           >
-            {steps.map((s) => (
-              <motion.div key={s.num} variants={itemVariants} className="text-center">
-                <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 font-display text-lg font-bold text-primary">
+            {/* Connecting Line behind steps (hidden on mobile) */}
+            <div className="absolute top-1/2 left-0 right-0 h-0.5 -translate-y-1/2 bg-gradient-to-r from-transparent via-border/50 to-transparent hidden md:block w-full z-0" />
+
+            {steps.map((s, i) => (
+              <motion.div
+                key={s.num}
+                variants={itemVariants}
+                whileHover={{ y: -8 }}
+                className="relative z-10 text-center group bg-card border border-border/50 p-8 rounded-2xl shadow-xl hover:shadow-[0_0_40px_rgba(59,130,246,0.1)] transition-all duration-300"
+              >
+                <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100 rounded-2xl" />
+
+                <div className="relative mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-background border-2 border-primary/20 font-display text-xl font-bold text-primary shadow-[0_0_20px_rgba(59,130,246,0.2)] group-hover:scale-110 group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-500">
                   {s.num}
                 </div>
-                <h3 className="font-display text-lg font-semibold text-foreground">{s.title}</h3>
-                <p className="mt-2 text-sm text-muted-foreground">{s.desc}</p>
+                <h3 className="font-display relative z-10 text-xl font-bold text-foreground mb-3">{s.title}</h3>
+                <p className="relative z-10 text-sm text-muted-foreground leading-relaxed">{s.desc}</p>
               </motion.div>
             ))}
           </motion.div>
