@@ -15,7 +15,11 @@ import {
   Check,
   FileText,
   X,
+  Lock,
+  AlertTriangle,
 } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
+import { Link } from "react-router-dom";
 import { chatSend, uploadFile, type ChatMessage } from "@/lib/apiClient";
 import {
   getChatHistory,
@@ -58,14 +62,51 @@ const suggestedPrompts = [
 ];
 
 /* ------------------------------------------------------------------ */
-/*  Markdown Renderer                                                  */
+/*  Markdown Renderer (With Paywall injection)                         */
 /* ------------------------------------------------------------------ */
-function renderMarkdown(text: string) {
+function renderMarkdown(text: string, isFreeTier: boolean) {
   const lines = text.split("\n");
   const elements: JSX.Element[] = [];
   let i = 0;
+
   while (i < lines.length) {
     const line = lines[i];
+
+    // Naive Paywall Detection: If the AI output mentions "High Risk" or "Red Flags" 
+    // and the user is on the Free Tier, we intercept that section and blur it.
+    if (isFreeTier && (line.toLowerCase().includes("high risk") || line.toLowerCase().includes("red flag"))) {
+      elements.push(
+        <div key={i} className="my-4 relative overflow-hidden rounded-xl border border-danger/30 bg-danger/5 p-4 sm:p-5">
+          <h4 className="flex items-center gap-2 font-display text-sm font-bold text-danger mb-2">
+            <AlertTriangle className="h-4 w-4" /> High Risk Clauses Detected
+          </h4>
+          <div className="blur-[4px] select-none opacity-60 space-y-2 pointer-events-none">
+            <div className="h-4 bg-foreground/20 rounded w-full" />
+            <div className="h-4 bg-foreground/20 rounded w-5/6" />
+            <div className="h-4 bg-foreground/20 rounded w-4/6" />
+          </div>
+
+          <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-background/20 backdrop-blur-[1px]">
+            <div className="flex flex-col items-center gap-2 rounded-xl border border-border/50 bg-card/95 p-4 shadow-xl backdrop-blur-md">
+              <div className="rounded-full bg-primary/10 p-2 text-primary">
+                <Lock className="h-4 w-4" />
+              </div>
+              <p className="text-center text-xs font-semibold text-foreground px-2">
+                Upgrade to Pro to view critical liabilities.
+              </p>
+              <Button variant="hero" size="sm" className="h-8 text-xs px-3" asChild>
+                <Link to="/app/billing">Unlock Premium Analysis</Link>
+              </Button>
+            </div>
+          </div>
+        </div>
+      );
+      // Skip the next few lines that would have detailed the risk
+      i += Math.min(3, lines.length - i - 1);
+      i++;
+      continue;
+    }
+
     if (line.startsWith("### ")) {
       elements.push(<h4 key={i} className="mt-4 mb-1 text-sm font-semibold text-foreground">{line.slice(4)}</h4>);
     } else if (line.startsWith("## ")) {
@@ -116,6 +157,11 @@ function inlineFormat(text: string): string {
 export default function Chat() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
+  const { user } = useAuth();
+
+  // Implicit Free Tier if not explicitly marked as pro/team
+  const isFreeTier = user?.user_metadata?.plan !== "pro" && user?.user_metadata?.plan !== "team";
+
   const [chatId, setChatId] = useState<string>("");
   const [messages, setMessages] = useState<UIMessage[]>([]);
   const [input, setInput] = useState("");
@@ -432,7 +478,7 @@ export default function Chat() {
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="rounded-xl border border-border/50 bg-card p-3 sm:p-5">
-                        <div className="prose-juriq">{renderMarkdown(msg.content)}</div>
+                        <div className="prose-juriq">{renderMarkdown(msg.content, isFreeTier)}</div>
                         <div className="mt-3 sm:mt-4 flex items-center gap-2 border-t border-border/30 pt-2 sm:pt-3">
                           <button
                             onClick={() => handleCopy(msg.id, msg.content)}

@@ -1,4 +1,5 @@
-import { Outlet, Navigate } from "react-router-dom";
+import { Outlet, Navigate, Link } from "react-router-dom";
+import { Button } from "@/components/ui/button";
 import {
   SidebarProvider,
   SidebarTrigger,
@@ -38,7 +39,23 @@ export default function AppLayout() {
               <span>/</span>
               <span>{user.user_metadata?.workspace || "Workspace"}</span>
             </div>
-            <div className="ml-auto flex items-center gap-2">
+            <div className="ml-auto flex items-center gap-4">
+
+              {/* MRR Optimization: Persistent Usage Nudge */}
+              <div className="hidden sm:flex items-center gap-3 mr-2">
+                <div className="flex flex-col items-end gap-1">
+                  <span className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground">Free Tier</span>
+                  <span className="text-xs font-semibold text-foreground">2 / 5 Documents</span>
+                </div>
+                <div className="h-2 w-20 overflow-hidden rounded-full bg-secondary">
+                  <div className="h-full w-[40%] bg-primary transition-all duration-500" />
+                </div>
+                <Button variant="default" size="sm" className="ml-2 h-8 text-xs bg-gradient-to-r from-primary to-primary/80" asChild>
+                  <Link to="/app/billing">Upgrade</Link>
+                </Button>
+              </div>
+
+              {/* User Avatar */}
               <div
                 className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/20 text-xs font-semibold text-primary-foreground"
                 title={user.email}

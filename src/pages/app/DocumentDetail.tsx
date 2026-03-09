@@ -7,16 +7,20 @@ import {
   MessageSquare,
   Edit3,
   Download,
-  FileText,
+  Users,
   Calendar,
   MapPin,
-  Users,
-  AlertTriangle,
+  Lock,
 } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function DocumentDetail() {
   const { id } = useParams();
+  const { user } = useAuth();
   const doc = mockDocumentDetail;
+
+  // Assuming user without 'pro' role is on the Free tier for this demo
+  const isFreeTier = user?.user_metadata?.plan !== "pro" && user?.user_metadata?.plan !== "team";
 
   return (
     <div className="p-6 sm:p-8">
@@ -75,9 +79,10 @@ export default function DocumentDetail() {
         </div>
 
         {/* Risk summary */}
-        <div className="mb-8 rounded-xl border border-border/50 bg-card p-5">
+        <div className="mb-8 rounded-xl border border-border/50 bg-card p-5 relative overflow-hidden">
           <h3 className="mb-4 font-display text-sm font-semibold text-foreground">Risk Summary</h3>
-          <div className="grid grid-cols-3 gap-3">
+
+          <div className={`grid grid-cols-3 gap-3 ${isFreeTier ? 'blur-sm select-none opacity-50' : ''}`}>
             <div className="rounded-lg bg-danger/10 p-4 text-center">
               <p className="font-display text-3xl font-bold text-danger">{doc.riskSummary.high}</p>
               <p className="text-xs text-danger mt-1">High Risk</p>
@@ -91,15 +96,33 @@ export default function DocumentDetail() {
               <p className="text-xs text-success mt-1">Low</p>
             </div>
           </div>
+
+          {/* Paywall Overlay */}
+          {isFreeTier && (
+            <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-background/40 backdrop-blur-[2px]">
+              <div className="flex flex-col items-center gap-2 rounded-xl border border-border/50 bg-card/90 p-6 shadow-xl backdrop-blur-md">
+                <div className="rounded-full bg-primary/10 p-3 text-primary">
+                  <Lock className="h-6 w-6" />
+                </div>
+                <h4 className="font-display text-lg font-bold text-foreground">Unlock Risk Analysis</h4>
+                <p className="text-center text-sm text-muted-foreground w-64 mb-2">
+                  Upgrade to Pro to reveal 2 High-Risk liability traps hidden in this contract.
+                </p>
+                <Button variant="hero" size="sm" asChild>
+                  <Link to="/app/billing">Upgrade to Pro</Link>
+                </Button>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Export buttons */}
         <div className="flex flex-wrap gap-3">
-          <Button variant="outline" onClick={() => {}}>
+          <Button variant="outline" onClick={() => { }}>
             <Download className="mr-2 h-4 w-4" />
             Export Summary (PDF)
           </Button>
-          <Button variant="outline" onClick={() => {}}>
+          <Button variant="outline" onClick={() => { }}>
             <Download className="mr-2 h-4 w-4" />
             Export Edited Text (DOCX)
           </Button>
