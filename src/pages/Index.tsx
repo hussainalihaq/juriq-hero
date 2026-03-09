@@ -120,7 +120,7 @@ export default function Landing() {
                 </Button>
               ) : (
                 <Button variant="hero" size="xl" asChild>
-                  <Link to="/signup">Sign Up</Link>
+                  <Link to="/signup">Join Waitlist</Link>
                 </Button>
               )}
               <Button variant="hero-secondary" size="xl" asChild>
@@ -637,7 +637,7 @@ export default function Landing() {
               </Button>
             ) : (
               <Button variant="hero" size="lg" asChild>
-                <Link to="/signup">Create Free Account</Link>
+                <Link to="/signup">Join Waitlist</Link>
               </Button>
             )}
           </div>

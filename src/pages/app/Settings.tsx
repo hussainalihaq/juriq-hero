@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { User, Building, CreditCard, AlertTriangle, LogOut, Loader2, Key, Settings as SettingsIcon, Download, Plus, Check } from "lucide-react";
+import { User, Building, CreditCard, AlertTriangle, LogOut, Loader2, Key, Settings as SettingsIcon, Download, Plus, Check, Pencil } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/lib/supabaseClient";
 import { toast } from "sonner";
@@ -12,6 +12,19 @@ export default function Settings() {
   const navigate = useNavigate();
 
   const [activeTab, setActiveTab] = useState<"account" | "workspaces" | "preferences" | "billing">("account");
+
+  // Theme State
+  const [theme, setTheme] = useState(localStorage.getItem("theme") || "system");
+
+  useEffect(() => {
+    const root = document.documentElement;
+    if (theme === "light") {
+      root.classList.add("light");
+    } else {
+      root.classList.remove("light");
+    }
+    localStorage.setItem("theme", theme);
+  }, [theme]);
 
   // Account State
   const [name, setName] = useState(user?.user_metadata?.name || "User");
@@ -26,6 +39,8 @@ export default function Settings() {
   const [currentWorkspace, setCurrentWorkspace] = useState(initialCurrent);
   const [newWorkspaceName, setNewWorkspaceName] = useState("");
   const [updatingWorkspace, setUpdatingWorkspace] = useState(false);
+  const [editingWorkspace, setEditingWorkspace] = useState<string | null>(null);
+  const [editWorkspaceName, setEditWorkspaceName] = useState("");
 
   // Security State
   const [password, setPassword] = useState("");
@@ -98,6 +113,27 @@ export default function Settings() {
   const handleSetCurrentWorkspace = async (space: string) => {
     if (space === currentWorkspace) return;
     await syncWorkspaces(workspaces, space);
+  };
+
+  const handleStartEditWorkspace = (space: string) => {
+    setEditingWorkspace(space);
+    setEditWorkspaceName(space);
+  };
+
+  const handleSaveEditWorkspace = async (oldName: string) => {
+    const trimmed = editWorkspaceName.trim();
+    if (!trimmed || trimmed === oldName) {
+      setEditingWorkspace(null);
+      return;
+    }
+    if (workspaces.includes(trimmed)) {
+      toast.error("Workspace already exists.");
+      return;
+    }
+    const newSpaces = workspaces.map((w) => (w === oldName ? trimmed : w));
+    const newCurrent = currentWorkspace === oldName ? trimmed : currentWorkspace;
+    await syncWorkspaces(newSpaces, newCurrent);
+    setEditingWorkspace(null);
   };
 
   const handleUpdatePassword = async () => {
@@ -227,16 +263,39 @@ export default function Settings() {
                 <div className="space-y-3 mb-6">
                   {workspaces.map((space) => (
                     <div key={space} className={`flex items-center justify-between p-4 rounded-lg border transition-all ${currentWorkspace === space ? "border-primary bg-primary/5 shadow-sm" : "border-border/50 bg-background hover:border-border"}`}>
-                      <span className="font-medium text-sm text-foreground">{space}</span>
-                      {currentWorkspace === space ? (
-                        <Badge variant="default" className="bg-primary/20 text-primary border-none pointer-events-none">
-                          <Check className="mr-1 h-3 w-3" /> Active
-                        </Badge>
+                      {editingWorkspace === space ? (
+                        <div className="flex items-center gap-2 flex-1 mr-4">
+                          <input
+                            type="text"
+                            value={editWorkspaceName}
+                            onChange={(e) => setEditWorkspaceName(e.target.value)}
+                            className="flex-1 rounded-md border border-border bg-background px-3 py-1.5 text-sm font-medium text-foreground focus-accent"
+                            autoFocus
+                            onKeyDown={(e) => e.key === "Enter" && handleSaveEditWorkspace(space)}
+                          />
+                          <Button variant="ghost" size="sm" onClick={() => handleSaveEditWorkspace(space)} disabled={updatingWorkspace} className="h-8 w-8 p-0">
+                            {updatingWorkspace ? <Loader2 className="h-4 w-4 animate-spin" /> : <Check className="h-4 w-4 text-success" />}
+                          </Button>
+                        </div>
                       ) : (
-                        <Button variant="ghost" size="sm" onClick={() => handleSetCurrentWorkspace(space)} disabled={updatingWorkspace}>
-                          Switch
-                        </Button>
+                        <div className="flex items-center gap-2">
+                          <span className="font-medium text-sm text-foreground">{space}</span>
+                          <Button variant="ghost" size="sm" onClick={() => handleStartEditWorkspace(space)} className="h-6 w-6 p-0 text-muted-foreground hover:text-foreground">
+                            <Pencil className="h-3 w-3" />
+                          </Button>
+                        </div>
                       )}
+
+                      {editingWorkspace !== space && (
+                        currentWorkspace === space ? (
+                          <Badge variant="default" className="bg-primary/20 text-primary border-none pointer-events-none">
+                            <Check className="mr-1 h-3 w-3" /> Active
+                          </Badge>
+                        ) : (
+                          <Button variant="ghost" size="sm" onClick={() => handleSetCurrentWorkspace(space)} disabled={updatingWorkspace}>
+                            Switch
+                          </Button>
+                        )}
                     </div>
                   ))}
                 </div>
@@ -274,7 +333,11 @@ export default function Settings() {
                       <p className="text-sm font-medium text-foreground">Theme</p>
                       <p className="text-xs text-muted-foreground">Adjust the appearance of Juriq.</p>
                     </div>
-                    <select className="rounded-md border border-border bg-card px-3 py-1.5 text-sm text-foreground focus-accent">
+                    <select
+                      value={theme}
+                      onChange={(e) => setTheme(e.target.value)}
+                      className="rounded-md border border-border bg-card px-3 py-1.5 text-sm text-foreground focus-accent"
+                    >
                       <option value="system">System Default</option>
                       <option value="dark">Dark Mode</option>
                       <option value="light">Light Mode</option>
@@ -314,6 +377,14 @@ export default function Settings() {
                   <Button variant="hero" asChild>
                     <Link to="/app/billing">Upgrade to Pro</Link>
                   </Button>
+                </div>
+                <div className="mt-6 flex flex-col sm:flex-row items-center gap-4 border-t border-border/50 pt-6">
+                  <Button variant="outline" className="text-danger border-danger/20 hover:bg-danger/10" asChild>
+                    <a href="mailto:support@juriq.com?subject=Plan%20Cancellation%20Request">Cancel Subscription</a>
+                  </Button>
+                  <Link to="/refunds" className="text-sm text-muted-foreground hover:text-foreground underline underline-offset-4">
+                    View Refund Policy
+                  </Link>
                 </div>
               </section>
 

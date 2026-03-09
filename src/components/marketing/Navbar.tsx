@@ -62,7 +62,7 @@ export function Navbar() {
                 <Link to="/signin">Sign in</Link>
               </Button>
               <Button variant="default" size="sm" asChild>
-                <Link to="/signup">Sign Up</Link>
+                <Link to="/signup">Join Waitlist</Link>
               </Button>
             </>
           )}
@@ -110,7 +110,7 @@ export function Navbar() {
                   <Link to="/signin" onClick={() => setMobileOpen(false)}>Sign in</Link>
                 </Button>
                 <Button variant="default" size="sm" asChild>
-                  <Link to="/signup" onClick={() => setMobileOpen(false)}>Sign Up</Link>
+                  <Link to="/signup" onClick={() => setMobileOpen(false)}>Join Waitlist</Link>
                 </Button>
               </>
             )}

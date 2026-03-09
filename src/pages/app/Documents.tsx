@@ -115,7 +115,7 @@ export default function Documents() {
         {/* Legal Disclaimer */}
         <div className="mb-8 rounded-lg bg-secondary/30 border border-border/50 p-4 text-center">
           <p className="text-xs text-muted-foreground">
-            <span className="font-semibold text-foreground">Notice:</span> Only upload documents you are authorized to share. Juriq is an AI tool and does not replace a lawyer.
+            <span className="font-semibold text-foreground">Notice:</span> Only upload documents you are authorized to share. Juriq is an AI tool and does not replace a lawyer. Your documents are processed via enterprise APIs that <strong>do not use your data for model training</strong>.
           </p>
         </div>
 
