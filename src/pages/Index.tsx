@@ -58,7 +58,7 @@ const scrollyFeatures = [
 ];
 
 const steps = [
-  { num: "01", title: "Upload & Scan", desc: "Drop your PDF or DOCX into the secure encrypted vault." },
+  { num: "01", title: "Upload & Scan", desc: "Drop your PDF or DOCX to begin secure processing." },
   { num: "02", title: "Instant Analysis", desc: "Juriq reads every line, summarizing terms and flagging risks." },
   { num: "03", title: "Act confidently", desc: "Use AI to redline, ask questions, or draft response emails." },
 ];
@@ -509,7 +509,7 @@ export default function Landing() {
           <h2 className="font-display text-2xl font-bold text-foreground">Your documents stay private</h2>
           <div className="mt-6 grid gap-4 text-left sm:grid-cols-3">
             {[
-              "Private by default — your legal documents are never shared or used for training.",
+              "Private processing — we do not sell your documents or use them to train our core AI.",
               "Encrypted in transit — all uploads are transmitted securely.",
               "Delete anytime — request full data deletion via support.",
             ].map((item, i) => (

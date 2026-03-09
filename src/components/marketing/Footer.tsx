@@ -12,7 +12,6 @@ const footerLinks = {
   Trust: [
     { label: "Security", href: "/security" },
     { label: "Refunds", href: "/refunds" },
-    { label: "Subprocessors", href: "/subprocessors" },
     { label: "Data Retention", href: "/data-retention" },
   ],
   Legal: [
