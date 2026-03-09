@@ -8,6 +8,7 @@ import MarketingLayout from "./layouts/MarketingLayout";
 import AppLayout from "./layouts/AppLayout";
 
 import Index from "./pages/Index";
+import LaunchAssets from "./pages/LaunchAssets";
 import Product from "./pages/Product";
 import Pricing from "./pages/Pricing";
 import Security from "./pages/Security";
@@ -34,7 +35,6 @@ import Billing from "./pages/app/Billing";
 import Upgrade from "./pages/app/Upgrade";
 
 import NotFound from "./pages/NotFound";
-import LaunchGraphics from "./pages/LaunchGraphics";
 
 import { AuthProvider } from "./contexts/AuthContext";
 
@@ -65,6 +65,7 @@ const App = () => (
               <Route path="/cookies" element={<Cookies />} />
               <Route path="/refunds" element={<Refunds />} />
               <Route path="/billing-policy" element={<Navigate to="/refunds" replace />} />
+              <Route path="/waitlist" element={<Navigate to="/?waitlist=true" replace />} />
             </Route>
 
             {/* Auth (no layout wrapper) */}
@@ -87,8 +88,8 @@ const App = () => (
               <Route path="upgrade" element={<Upgrade />} />
             </Route>
 
-            {/* Internal tools */}
-            <Route path="/launch-graphics" element={<LaunchGraphics />} />
+            {/* PR Assets (no layout) */}
+            <Route path="/linkedin-assets" element={<LaunchAssets />} />
 
             <Route path="*" element={<NotFound />} />
           </Routes>

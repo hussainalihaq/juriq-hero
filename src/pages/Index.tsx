@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -23,7 +23,7 @@ import {
   Minus,
   Plus
 } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { EarlyAccessModal } from "@/components/marketing/EarlyAccessModal";
 
@@ -92,6 +92,15 @@ export default function Landing() {
   const { user } = useAuth();
   const [activeStep, setActiveStep] = useState(0);
   const [showWaitlist, setShowWaitlist] = useState(false);
+  const location = useLocation();
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    if (params.get("waitlist") === "true") {
+      setShowWaitlist(true);
+      // Clean up the URL to prevent reopening on generic refresh, but not strictly necessary for this PR
+    }
+  }, [location]);
 
   return (
     <div>
