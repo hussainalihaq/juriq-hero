@@ -533,55 +533,75 @@ export default function Landing() {
         </motion.div>
       </section>
 
-      {/* Free vs Pro Comparison */}
+      {/* Pricing Section */}
       <section className="bg-background py-24 px-4 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-5xl">
+        <div className="mx-auto max-w-7xl">
           <div className="text-center mb-16">
             <h2 className="font-display text-3xl font-bold text-foreground sm:text-4xl">
-              Why upgrade to Pro?
+              Simple, <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-primary/60">transparent</span> pricing
             </h2>
             <p className="mt-4 text-muted-foreground max-w-2xl mx-auto">
-              Our free tier is great for quick reviews, but founders and legal professionals need the unthrottled power of Pro.
+              Start free. Upgrade when you need more.
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            {/* Free */}
-            <div className="rounded-2xl border border-border/50 bg-card p-8 flex flex-col">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8 items-start">
+            {/* Free / Starter */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+              className="rounded-2xl border border-border/50 bg-card p-8 flex flex-col h-full hover:-translate-y-1 transition-all duration-300 hover:shadow-xl hover:shadow-primary/5"
+            >
               <div className="mb-6">
-                <h3 className="font-display text-2xl font-bold text-foreground">Free</h3>
-                <p className="text-muted-foreground mt-2">Essential AI tools to understand what you sign.</p>
-                <div className="mt-4 font-display text-4xl font-bold tracking-tight">$0 <span className="text-lg font-normal text-muted-foreground tracking-normal">/mo</span></div>
+                <h3 className="font-display text-xl font-bold text-foreground">Starter</h3>
+                <p className="text-sm text-muted-foreground mt-2 min-h-[40px] leading-relaxed">Contract-first basics + limited research help.</p>
+                <div className="mt-6 font-display text-5xl font-bold tracking-tight">Free</div>
+                <p className="mt-2 text-sm text-muted-foreground">5 documents/month</p>
               </div>
               <ul className="space-y-4 flex-1 mb-8">
                 {[
                   "5 Document Uploads / mo",
-                  "Standard Plain-English Summaries",
+                  "Plain-English Summaries",
                   "Basic Risk Detection",
                   "Fair Use Chat Limits",
                   "Community Support"
                 ].map((feature, i) => (
                   <li key={i} className="flex items-start gap-3 text-sm text-muted-foreground">
-                    <CheckCircle className="h-5 w-5 text-muted-foreground/50 shrink-0" />
+                    <CheckCircle className="h-4 w-4 text-muted-foreground/50 shrink-0 mt-0.5" />
                     <span>{feature}</span>
                   </li>
                 ))}
               </ul>
-            </div>
+              <Button variant="outline" size="lg" className="w-full" asChild>
+                <Link to={user ? "/app/billing" : "/signup"}>Sign Up</Link>
+              </Button>
+            </motion.div>
 
             {/* Student */}
-            <div className="rounded-2xl border border-primary/30 bg-primary/5 p-8 flex flex-col">
-              <div className="mb-6">
-                <h3 className="font-display text-2xl font-bold text-foreground">Student</h3>
-                <p className="text-muted-foreground mt-2">Discounted pro features for law students.</p>
-                <div className="mt-4 font-display text-4xl font-bold tracking-tight">$5 <span className="text-lg font-normal text-muted-foreground tracking-normal">/mo</span></div>
-                <div className="mt-2 text-xs text-muted-foreground font-medium flex items-center gap-1">
-                  Requires <span className="text-primary bg-primary/10 px-1.5 rounded">.edu</span> email
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              className="rounded-2xl border border-emerald-500/30 bg-gradient-to-b from-emerald-500/5 to-transparent p-8 flex flex-col h-full hover:-translate-y-1 transition-all duration-300 hover:border-emerald-500/50 hover:shadow-xl hover:shadow-emerald-500/10 relative"
+            >
+              <div className="absolute -top-3 left-0 right-0 mx-auto w-max rounded-full bg-emerald-500 px-4 py-1.5 text-xs font-bold tracking-wide uppercase text-white shadow-sm">
+                🎓 Edu
+              </div>
+              <div className="mb-6 mt-2">
+                <div className="flex items-center gap-2">
+                  <h3 className="font-display text-xl font-bold text-foreground">Student</h3>
+                  <GraduationCap className="h-5 w-5 text-emerald-400" />
                 </div>
+                <p className="text-sm text-muted-foreground mt-2 min-h-[40px] leading-relaxed">Contract review + case law research for students.</p>
+                <div className="mt-6 font-display text-5xl font-bold tracking-tight">$5<span className="text-lg font-normal text-muted-foreground ml-1">/month</span></div>
+                <p className="mt-2 text-sm text-muted-foreground">15 documents/month</p>
               </div>
               <ul className="space-y-4 flex-1 mb-8">
                 {[
-                  "50 Document Uploads / mo",
+                  "15 Document Uploads / mo",
                   "Deep Contextual Analysis",
                   "Advanced Risk Radar",
                   "AI Clause Redlining",
@@ -589,28 +609,36 @@ export default function Landing() {
                   "Standard Support"
                 ].map((feature, i) => (
                   <li key={i} className="flex items-start gap-3 text-sm text-muted-foreground">
-                    <CheckCircle className="h-5 w-5 text-primary/70 shrink-0" />
+                    <CheckCircle className="h-4 w-4 text-emerald-500/70 shrink-0 mt-0.5" />
                     <span>{feature}</span>
                   </li>
                 ))}
               </ul>
-            </div>
+              <Button variant="outline" size="lg" className="w-full border-emerald-500/50 text-emerald-500 hover:bg-emerald-500 hover:text-white" asChild>
+                <Link to={user ? "/app/billing" : "/signup"}>Sign Up</Link>
+              </Button>
+            </motion.div>
 
             {/* Pro */}
-            <div className="rounded-2xl border-2 border-primary bg-primary/10 p-8 flex flex-col relative shadow-2xl shadow-primary/20 scale-105 z-10">
-              <div className="absolute top-0 right-8 -translate-y-1/2">
-                <span className="inline-block rounded-full bg-primary px-3 py-1 text-xs font-bold uppercase tracking-wider text-primary-foreground shadow-sm">
-                  Most Popular
-                </span>
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ duration: 0.5, delay: 0.3 }}
+              className="rounded-2xl border border-primary/50 bg-gradient-to-b from-primary/10 to-transparent p-8 flex flex-col h-full shadow-[0_0_30px_rgba(59,130,246,0.15)] ring-1 ring-primary/20 md:scale-105 z-10 relative hover:-translate-y-1 transition-all duration-300"
+            >
+              <div className="absolute -top-3 left-0 right-0 mx-auto w-max rounded-full bg-gradient-to-r from-primary to-primary/80 px-4 py-1.5 text-xs font-bold tracking-wide uppercase text-primary-foreground shadow-sm">
+                Most Popular
               </div>
-              <div className="mb-6">
-                <h3 className="font-display text-2xl font-bold text-primary">Pro</h3>
-                <p className="text-foreground/80 mt-2">Zero limits. Full legal intelligence at your fingertips.</p>
-                <div className="mt-4"><span className="text-sm font-medium text-muted-foreground mr-1">Starting at</span><span className="font-display text-4xl font-bold tracking-tight text-foreground">$29</span> <span className="text-lg font-normal text-muted-foreground tracking-normal">/mo</span></div>
+              <div className="mb-6 mt-2">
+                <h3 className="font-display text-xl font-bold text-primary">Pro</h3>
+                <p className="text-sm text-muted-foreground mt-2 min-h-[40px] leading-relaxed">Higher limits + better drafting + exports.</p>
+                <div className="mt-6"><span className="text-sm font-medium text-muted-foreground mr-1">Starting at</span><span className="font-display text-5xl font-bold tracking-tight text-foreground">$29</span> <span className="text-lg font-normal text-muted-foreground">/month</span></div>
+                <p className="mt-2 text-sm text-muted-foreground">50 documents/month</p>
               </div>
               <ul className="space-y-4 flex-1 mb-8">
                 {[
-                  "Unlimited Document Uploads",
+                  "50 Document Uploads / mo",
                   "Deep Contextual Analysis",
                   "Advanced Risk & Red-flag Radar",
                   "AI Clause Redlining & Suggestions",
@@ -618,12 +646,52 @@ export default function Landing() {
                   "Priority Email Support"
                 ].map((feature, i) => (
                   <li key={i} className="flex items-start gap-3 text-sm text-foreground font-medium">
-                    <CheckCircle className="h-5 w-5 text-primary shrink-0" />
+                    <CheckCircle className="h-4 w-4 text-primary shrink-0 mt-0.5" />
                     <span>{feature}</span>
                   </li>
                 ))}
               </ul>
-            </div>
+              <Button variant="hero" size="lg" className="w-full" asChild>
+                <Link to={user ? "/app/billing" : "/signup"}>Sign Up</Link>
+              </Button>
+            </motion.div>
+
+            {/* Team */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ duration: 0.5, delay: 0.4 }}
+              className="rounded-2xl border border-border/50 bg-card p-8 flex flex-col h-full hover:-translate-y-1 transition-all duration-300 hover:shadow-xl hover:shadow-primary/5 hover:border-border"
+            >
+              <div className="mb-6">
+                <div className="flex items-center gap-2">
+                  <h3 className="font-display text-xl font-bold text-foreground">Team</h3>
+                  <Users className="h-5 w-5 text-muted-foreground" />
+                </div>
+                <p className="text-sm text-muted-foreground mt-2 min-h-[40px] leading-relaxed">Shared workspace + higher limits for teams.</p>
+                <div className="mt-6 font-display text-5xl font-bold tracking-tight">$79<span className="text-lg font-normal text-muted-foreground ml-1">/month</span></div>
+                <p className="mt-2 text-sm text-muted-foreground">200 documents/month</p>
+              </div>
+              <ul className="space-y-4 flex-1 mb-8">
+                {[
+                  "200 Documents / mo",
+                  "Everything in Pro",
+                  "Team Workspace & Collaboration",
+                  "Shared Document Library",
+                  "Role-based Access Control",
+                  "Dedicated Account Manager"
+                ].map((feature, i) => (
+                  <li key={i} className="flex items-start gap-3 text-sm text-muted-foreground">
+                    <CheckCircle className="h-4 w-4 text-success shrink-0 mt-0.5" />
+                    <span>{feature}</span>
+                  </li>
+                ))}
+              </ul>
+              <Button variant="outline" size="lg" className="w-full" asChild>
+                <Link to={user ? "/app/billing" : "/signup"}>Sign Up</Link>
+              </Button>
+            </motion.div>
           </div>
         </div>
       </section>
