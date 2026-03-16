@@ -1,8 +1,27 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
-// Initialize Gemini
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
-const MODEL_NAME = "gemini-2.5-flash";
+// Multi-key rotation system — set GEMINI_API_KEY, GEMINI_API_KEY_2, GEMINI_API_KEY_3 in Vercel env vars
+const API_KEYS = [
+    process.env.GEMINI_API_KEY,
+    process.env.GEMINI_API_KEY_2,
+    process.env.GEMINI_API_KEY_3,
+].filter(Boolean) as string[];
+
+let currentKeyIndex = 0;
+
+function getGenAI() {
+    const key = API_KEYS[currentKeyIndex] || '';
+    return new GoogleGenerativeAI(key);
+}
+
+function rotateKey(): boolean {
+    if (API_KEYS.length > 1) {
+        currentKeyIndex = (currentKeyIndex + 1) % API_KEYS.length;
+        console.log(`[chat] Rotated to API key #${currentKeyIndex + 1} of ${API_KEYS.length}`);
+        return true;
+    }
+    return false;
+}
 
 // ==========================================
 // BASE SYSTEM PROMPT
@@ -167,7 +186,7 @@ export default async function handler(req: any, res: any) {
         for (const modelName of MODELS_TO_TRY) {
             try {
                 console.log(`Attempting with model: ${modelName}`);
-                const model = genAI.getGenerativeModel({ model: modelName });
+                const model = getGenAI().getGenerativeModel({ model: modelName });
 
                 // Temperature based on output style
                 const temperature = 0.9 - ((outputStyle || 50) / 100) * 0.6;
@@ -227,10 +246,12 @@ export default async function handler(req: any, res: any) {
                     error.message?.includes('not found');
 
                 if (!isRecoverable) {
-                    // Critical error (e.g. Auth failure), don't retry
                     break;
                 }
-                // If it IS recoverable, loop continues to next model
+                // Try rotating API key before moving to next model
+                if (error.message?.includes('429') || error.message?.includes('quota') || error.message?.includes('resource exhausted')) {
+                    rotateKey();
+                }
                 console.warn(`Model ${modelName} failed with recoverable error. Retrying next model...`);
             }
         }
