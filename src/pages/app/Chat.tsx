@@ -18,6 +18,7 @@ import {
   Lock,
   MessageSquare,
   Settings,
+  ChevronDown,
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { Link } from "react-router-dom";
@@ -176,6 +177,9 @@ export default function Chat() {
   const chatEndRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const lastAiRef = useRef<HTMLDivElement>(null);
+  const [showScrollDown, setShowScrollDown] = useState(false);
 
   const isEmpty = messages.length === 0;
 
@@ -211,10 +215,36 @@ export default function Chat() {
     localStorage.setItem(`juriq_chat_${chatId}`, JSON.stringify(toSave));
   }, [messages, chatId]);
 
-  // Scroll to bottom
+  // Scroll: when a new AI response arrives, scroll to show it from the top
   useEffect(() => {
-    chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    const lastMsg = messages[messages.length - 1];
+    if (!lastMsg) return;
+    // When user sends, scroll to bottom so they see loading indicator
+    if (lastMsg.role === 'user' || lastMsg.loading) {
+      chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
+      return;
+    }
+    // When AI response arrives, scroll to the start of it
+    if (lastMsg.role === 'ai' && !lastMsg.loading && lastAiRef.current) {
+      lastAiRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
   }, [messages]);
+
+  // Track scroll position for scroll-down button
+  useEffect(() => {
+    const el = scrollContainerRef.current;
+    if (!el) return;
+    const handleScroll = () => {
+      const distFromBottom = el.scrollHeight - el.scrollTop - el.clientHeight;
+      setShowScrollDown(distFromBottom > 150);
+    };
+    el.addEventListener('scroll', handleScroll);
+    return () => el.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const scrollToBottom = () => {
+    chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
 
   // Auto-resize textarea
   useEffect(() => {
@@ -393,7 +423,7 @@ export default function Chat() {
 
       {/* Main chat area */}
       <div className="flex flex-1 flex-col min-w-0">
-        <div className="flex-1 overflow-y-auto px-3 py-4 sm:px-6 sm:py-6">
+        <div ref={scrollContainerRef} className="flex-1 overflow-y-auto px-3 py-4 sm:px-6 sm:py-6 relative">
           <div className="mx-auto max-w-3xl">
             {/* Empty state */}
             {isEmpty && (
@@ -457,71 +487,81 @@ export default function Chat() {
             )}
 
             {/* Messages */}
-            {messages.map((msg) => (
-              <div key={msg.id} className="mb-4 sm:mb-6 animate-fade-in">
-                {msg.role === "user" ? (
-                  <div className="flex justify-end">
-                    <div className="max-w-[85%] sm:max-w-lg space-y-1">
-                      {msg.fileName && (
-                        <div className="flex items-center gap-1.5 justify-end text-xs text-muted-foreground mb-1">
-                          <FileText className="h-3 w-3" />
-                          {msg.fileName}
-                        </div>
-                      )}
-                      <div className="rounded-xl bg-primary/10 px-3 py-2.5 sm:px-4 sm:py-3 text-sm text-foreground">
-                        {msg.content}
-                      </div>
-                    </div>
-                  </div>
-                ) : msg.loading ? (
-                  <div className="flex items-start gap-2 sm:gap-3">
-                    <div className="rounded-full p-2 accent-soft-bg shrink-0">
-                      <Loader2 className="h-4 w-4 text-primary animate-spin" />
-                    </div>
-                    <div className="flex-1 space-y-2 py-2">
-                      {[1, 2, 3].map((j) => (
-                        <div key={j} className="h-3.5 rounded bg-secondary animate-pulse" style={{ width: `${90 - j * 20}%` }} />
-                      ))}
-                    </div>
-                  </div>
-                ) : msg.error ? (
-                  <div className="flex items-start gap-2 sm:gap-3">
-                    <div className="rounded-full p-2 bg-danger/10 shrink-0">
-                      <AlertTriangle className="h-4 w-4 text-danger" />
-                    </div>
-                    <div className="flex-1">
-                      <p className="text-sm text-danger">{msg.content}</p>
-                      <Button variant="outline" size="sm" className="mt-2" onClick={() => handleRetry(msg)}>
-                        <RefreshCw className="mr-1.5 h-3 w-3" />
-                        Retry
-                      </Button>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="flex items-start gap-2 sm:gap-3">
-                    <div className="rounded-full p-2 accent-soft-bg shrink-0 mt-0.5">
-                      <Sparkles className="h-4 w-4 text-primary" />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="rounded-xl border border-border/50 bg-card p-3 sm:p-5">
-                        <div className="prose-juriq">{renderMarkdown(msg.content, isFreeTier)}</div>
-                        <div className="mt-3 sm:mt-4 flex items-center gap-2 border-t border-border/30 pt-2 sm:pt-3">
-                          <button
-                            onClick={() => handleCopy(msg.id, msg.content)}
-                            className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-default"
-                          >
-                            {copiedId === msg.id ? <><Check className="h-3 w-3 text-success" /> Copied</> : <><Copy className="h-3 w-3" /> Copy</>}
-                          </button>
-                          <span className="text-[10px] text-muted-foreground/50 ml-auto">{msg.timestamp}</span>
+            {messages.map((msg, idx) => {
+              const isLastAi = msg.role === 'ai' && !msg.loading && idx === messages.length - 1;
+              return (
+                <div key={msg.id} ref={isLastAi ? lastAiRef : undefined} className="mb-4 sm:mb-6 animate-fade-in">
+                  {msg.role === "user" ? (
+                    <div className="flex justify-end">
+                      <div className="max-w-[85%] sm:max-w-lg space-y-1">
+                        {msg.fileName && (
+                          <div className="flex items-center gap-1.5 justify-end text-xs text-muted-foreground mb-1">
+                            <FileText className="h-3 w-3" />
+                            {msg.fileName}
+                          </div>
+                        )}
+                        <div className="rounded-2xl rounded-tr-sm bg-primary/10 px-4 py-3 text-sm text-foreground">
+                          {msg.content}
                         </div>
                       </div>
                     </div>
-                  </div>
-                )}
-              </div>
-            ))}
+                  ) : msg.loading ? (
+                    <div className="flex items-start gap-2 sm:gap-3">
+                      <div className="rounded-full p-2 accent-soft-bg shrink-0">
+                        <Loader2 className="h-4 w-4 text-primary animate-spin" />
+                      </div>
+                      <div className="flex-1 space-y-2 py-2">
+                        {[1, 2, 3].map((j) => (
+                          <div key={j} className="h-3.5 rounded bg-secondary animate-pulse" style={{ width: `${90 - j * 20}%` }} />
+                        ))}
+                      </div>
+                    </div>
+                  ) : msg.error ? (
+                    <div className="flex items-start gap-2 sm:gap-3">
+                      <div className="rounded-full p-2 bg-danger/10 shrink-0">
+                        <AlertTriangle className="h-4 w-4 text-danger" />
+                      </div>
+                      <div className="flex-1">
+                        <p className="text-sm text-danger">{msg.content}</p>
+                        <Button variant="outline" size="sm" className="mt-2" onClick={() => handleRetry(msg)}>
+                          <RefreshCw className="mr-1.5 h-3 w-3" />
+                          Retry
+                        </Button>
+                      </div>
+                    </div>
+                  ) : (
+                    /* AI response — inline, no card box */
+                    <div className="py-1">
+                      <div className="prose-juriq">{renderMarkdown(msg.content, isFreeTier)}</div>
+                      <div className="mt-3 flex items-center gap-3">
+                        <button
+                          onClick={() => handleCopy(msg.id, msg.content)}
+                          className="flex items-center gap-1 rounded-md p-1 text-xs text-muted-foreground/60 hover:text-foreground hover:bg-secondary/50 transition-default"
+                        >
+                          {copiedId === msg.id ? <><Check className="h-3.5 w-3.5 text-success" /></> : <Copy className="h-3.5 w-3.5" />}
+                        </button>
+                        <button className="flex items-center gap-1 rounded-md p-1 text-xs text-muted-foreground/60 hover:text-foreground hover:bg-secondary/50 transition-default">
+                          <RefreshCw className="h-3.5 w-3.5" />
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
             <div ref={chatEndRef} />
           </div>
+
+          {/* Floating scroll-down arrow */}
+          {showScrollDown && !isEmpty && (
+            <button
+              onClick={scrollToBottom}
+              className="absolute bottom-4 left-1/2 -translate-x-1/2 z-20 flex items-center justify-center h-9 w-9 rounded-full border border-border/50 bg-card/95 backdrop-blur-sm shadow-lg text-muted-foreground hover:text-foreground hover:bg-card transition-all duration-200 hover:scale-110"
+              aria-label="Scroll to bottom"
+            >
+              <ChevronDown className="h-5 w-5" />
+            </button>
+          )}
         </div>
 
         {/* Composer */}
