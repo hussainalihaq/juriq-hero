@@ -170,15 +170,12 @@ export default async function handler(req: any, res: any) {
             return res.status(500).json({ error: 'GEMINI_API_KEY not configured' });
         }
 
-        // Available models to try in order (Failover Strategy)
-        // Based on User's available quota list
-        // Available models to try in order (Failover Strategy)
-        // gemini-3.0-flash returned 404, but now we catch 404s. User requested 3.0 as primary.
+        // Available models in order (Failover Strategy)
+        // Updated March 2026 to use valid, currently available model names
         const MODELS_TO_TRY = [
-            "gemini-3.0-flash",                 // Primary (User Request)
-            "gemini-2.5-flash-lite",            // Secondary (User has quota)
-            "gemini-2.0-flash-lite-preview-02-05", // Tertiary
-            "gemini-1.5-flash"                  // Fallback
+            "gemini-2.5-flash",                 // Primary — fast, GA since June 2025
+            "gemini-2.0-flash",                 // Secondary — stable GA
+            "gemini-1.5-flash",                 // Tertiary — legacy but reliable
         ];
 
         let lastError: any = null;
