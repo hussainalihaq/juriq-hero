@@ -71,3 +71,55 @@ export async function uploadFile(file: File): Promise<UploadResponse> {
     }
     return res.json();
 }
+
+export interface DocumentMetadata {
+    parties: string[];
+    effectiveDate: string;
+    expirationDate: string;
+    governingLaw: string;
+    type: string;
+    riskSummary: {
+        high: number;
+        medium: number;
+        low: number;
+    };
+}
+
+/** Extract metadata from document text */
+export async function extractMetadata(text: string): Promise<DocumentMetadata> {
+    const res = await fetch(`${API_BASE}/api/metadata`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text }),
+    });
+    if (!res.ok) {
+        const err = await res.json().catch(() => ({ error: 'Metadata extraction failed' }));
+        throw new Error(err.error || `HTTP ${res.status}`);
+    }
+    return res.json();
+}
+
+export interface RedlineSuggestion {
+    id: string;
+    clause: string;
+    section: string;
+    original: string;
+    suggested: string;
+    severity: 'high' | 'medium' | 'low';
+    reason: string;
+}
+
+/** Get redline/edit suggestions for document text */
+export async function getRedlines(text: string, riskLevel = 'pro'): Promise<RedlineSuggestion[]> {
+    const res = await fetch(`${API_BASE}/api/redline`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text, riskLevel }),
+    });
+    if (!res.ok) {
+        const err = await res.json().catch(() => ({ error: 'Redline analysis failed' }));
+        throw new Error(err.error || `HTTP ${res.status}`);
+    }
+    const data = await res.json();
+    return data.suggestions || [];
+}

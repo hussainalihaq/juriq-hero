@@ -427,62 +427,75 @@ export default function Chat() {
           <div className="mx-auto max-w-3xl">
             {/* Empty state */}
             {isEmpty && (
-              <div className="flex flex-col items-center justify-center py-8 sm:py-16 text-center animate-fade-in">
-                <div className="rounded-full p-4 accent-soft-bg mb-4">
-                  <Sparkles className="h-8 w-8 text-primary" />
-                </div>
-                <h2 className="font-display text-lg sm:text-xl font-bold text-foreground mb-6">How can Juriq help you today?</h2>
-
-                {/* Toggle Box */}
-                <div className="flex items-center rounded-lg bg-secondary/80 p-1 mb-8 border border-border/50">
-                  <button
-                    onClick={() => setEmptyStateMode("upload")}
-                    className={`flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-all ${emptyStateMode === "upload"
-                      ? "bg-background text-foreground shadow-sm border border-border/50"
-                      : "text-muted-foreground hover:text-foreground hover:bg-background/50"
-                      }`}
-                  >
-                    <FileText className="h-4 w-4" />
-                    Analyze Document
-                  </button>
-                  <button
-                    onClick={() => setEmptyStateMode("chat")}
-                    className={`flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-all ${emptyStateMode === "chat"
-                      ? "bg-background text-foreground shadow-sm border border-border/50"
-                      : "text-muted-foreground hover:text-foreground hover:bg-background/50"
-                      }`}
-                  >
-                    <MessageSquare className="h-4 w-4" />
-                    Ask a Question
-                  </button>
-                </div>
-
-                {emptyStateMode === "upload" ? (
-                  <div
-                    className="w-full max-w-md cursor-pointer rounded-xl border-2 border-dashed border-border/50 bg-card/50 p-6 sm:p-8 text-center hover:border-primary/50 hover:bg-primary/5 transition-default animate-fade-in"
-                    onClick={() => fileInputRef.current?.click()}
-                  >
-                    <FileText className="mx-auto h-10 w-10 text-muted-foreground/50 mb-3" />
-                    <p className="text-sm font-medium text-foreground">Upload a contract or legal document</p>
-                    <p className="text-xs text-muted-foreground mt-1">PDF or DOCX · Drag & drop or click to browse</p>
+              <div className="flex flex-col min-h-[calc(100vh-14rem)] animate-fade-in relative px-4">
+                {/* Branding/Hero area (Top) */}
+                <div className="flex-1 flex flex-col items-center justify-center text-center py-12">
+                  <div className="rounded-full p-4 accent-soft-bg mb-4">
+                    <Sparkles className="h-10 w-10 text-primary" />
                   </div>
-                ) : (
-                  <div className="w-full max-w-md space-y-2 px-4 sm:px-0 text-left animate-fade-in">
-                    <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground/50 mb-3">Suggested topics</p>
-                    {suggestedPrompts.map((prompt) => (
-                      <button
-                        key={prompt}
-                        onClick={() => handleSend(prompt)}
-                        className="w-full rounded-xl border border-border/50 bg-card p-3 text-left text-sm text-foreground hover:border-primary/50 hover:bg-primary/5 transition-default flex items-center gap-3 group"
-                      >
-                        <div className="rounded-full bg-secondary p-1.5 group-hover:bg-primary/10 group-hover:text-primary transition-colors text-muted-foreground">
-                          <MessageSquare className="h-3 w-3" />
+                  <h2 className="font-display text-xl sm:text-2xl font-bold text-foreground">How can Juriq help you today?</h2>
+                  <p className="mt-2 text-sm text-muted-foreground max-w-md mx-auto">Analyze contracts, identify risks, and get legal insights powered by AI legal intelligence.</p>
+                </div>
+
+                {/* Sticky UI area - Toggle + suggestions/upload box */}
+                <div className="sticky bottom-0 z-10 bg-gradient-to-t from-background via-background/90 to-transparent pt-12 pb-2 mt-auto">
+                  <div className="mx-auto max-w-2xl w-full">
+                    {/* Mode Toggle */}
+                    <div className="flex items-center justify-center mb-6">
+                      <div className="flex items-center rounded-xl bg-secondary/80 p-1 border border-border/50 shadow-sm backdrop-blur-sm">
+                        <button
+                          onClick={() => setEmptyStateMode("upload")}
+                          className={`flex items-center gap-2 rounded-lg px-5 py-2 text-sm font-medium transition-all ${emptyStateMode === "upload"
+                            ? "bg-background text-foreground shadow-md border border-border/50"
+                            : "text-muted-foreground hover:text-foreground hover:bg-background/40"
+                            }`}
+                        >
+                          <FileText className="h-4 w-4" />
+                          Analyze Document
+                        </button>
+                        <button
+                          onClick={() => setEmptyStateMode("chat")}
+                          className={`flex items-center gap-2 rounded-lg px-5 py-2 text-sm font-medium transition-all ${emptyStateMode === "chat"
+                            ? "bg-background text-foreground shadow-md border border-border/50"
+                            : "text-muted-foreground hover:text-foreground hover:bg-background/40"
+                            }`}
+                        >
+                          <MessageSquare className="h-4 w-4" />
+                          Ask a Question
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Mode Specific content */}
+                    <div className="flex flex-col items-center pb-4">
+                      {emptyStateMode === "upload" ? (
+                        <div
+                          className="w-full cursor-pointer rounded-2xl border-2 border-dashed border-border/50 bg-card/50 p-6 sm:p-10 text-center hover:border-primary/50 hover:bg-primary/5 transition-default animate-fade-in shadow-sm"
+                          onClick={() => fileInputRef.current?.click()}
+                        >
+                          <FileText className="mx-auto h-12 w-12 text-muted-foreground/30 mb-4" />
+                          <p className="text-sm font-semibold text-foreground">Upload a contract or legal document</p>
+                          <p className="text-xs text-muted-foreground mt-2">PDF · Drag & drop or click to browse</p>
                         </div>
-                        {prompt}
-                      </button>
-                    ))}
+                      ) : (
+                        <div className="w-full grid grid-cols-1 sm:grid-cols-2 gap-2 animate-fade-in">
+                          {suggestedPrompts.slice(0, 4).map((prompt) => (
+                            <button
+                              key={prompt}
+                              onClick={() => handleSend(prompt)}
+                              className="w-full rounded-xl border border-border/40 bg-card/80 p-3.5 text-left text-sm text-foreground hover:border-primary/40 hover:bg-primary/5 transition-default flex items-center gap-3 group backdrop-blur-sm transition-all hover:scale-[1.02]"
+                            >
+                              <div className="rounded-full bg-secondary p-1.5 group-hover:bg-primary/10 group-hover:text-primary transition-colors text-muted-foreground">
+                                <MessageSquare className="h-3 w-3" />
+                              </div>
+                              <span className="flex-1 text-xs sm:text-sm line-clamp-1">{prompt}</span>
+                            </button>
+                          ))}
+                        </div>
+                      )}
+                    </div>
                   </div>
-                )}
+                </div>
               </div>
             )}
 

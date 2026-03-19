@@ -49,6 +49,11 @@ export default function Documents() {
         status: "analyzed",
       };
 
+      // Store extracted text in localStorage for other components (EditSuggestions, etc.)
+      if (result.extractedText) {
+        localStorage.setItem(`doc_text_${newDoc.id}`, result.extractedText);
+      }
+
       const limitDocs = [newDoc, ...documents].slice(0, 50);
       saveDocHistory(limitDocs);
       setDocuments(limitDocs);
