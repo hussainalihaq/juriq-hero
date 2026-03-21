@@ -59,17 +59,43 @@ export async function analyzeText(
 
 /** Upload a file */
 export async function uploadFile(file: File): Promise<UploadResponse> {
-    const formData = new FormData();
-    formData.append('file', file);
-    const res = await fetch(`${API_BASE}/api/upload`, {
-        method: 'POST',
-        body: formData,
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+
+        reader.onload = async () => {
+            try {
+                // reader.result is something like "data:application/pdf;base64,JVBERi..."
+                const base64String = (reader.result as string).split(',')[1];
+
+                const res = await fetch(`${API_BASE}/api/upload`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        filename: file.name,
+                        action: 'extract',
+                        file: {
+                            data: base64String,
+                            mimeType: file.type || 'application/pdf',
+                        }
+                    })
+                });
+
+                if (!res.ok) {
+                    const err = await res.json().catch(() => ({ error: 'Upload failed' }));
+                    throw new Error(err.error || `HTTP ${res.status}`);
+                }
+
+                resolve(res.json());
+            } catch (err) {
+                reject(err);
+            }
+        };
+
+        reader.onerror = (error) => {
+            reject(new Error("File reading failed"));
+        };
     });
-    if (!res.ok) {
-        const err = await res.json().catch(() => ({ error: 'Upload failed' }));
-        throw new Error(err.error || `HTTP ${res.status}`);
-    }
-    return res.json();
 }
 
 export interface DocumentMetadata {

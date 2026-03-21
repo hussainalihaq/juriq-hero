@@ -63,94 +63,121 @@ const suggestedPrompts = [
   "Rewrite the limit of liability clause to be more protective.",
 ];
 
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+
 /* ------------------------------------------------------------------ */
 /*  Markdown Renderer (With Paywall injection)                         */
 /* ------------------------------------------------------------------ */
-function renderMarkdown(text: string, isFreeTier: boolean) {
-  const lines = text.split("\n");
-  const elements: JSX.Element[] = [];
-  let i = 0;
+function CustomMarkdown({ content, isFreeTier }: { content: string, isFreeTier: boolean }) {
+  // Naive Free Tier Blur Interception
+  // If we detect high risk sections and the user is free, we blur a portion of the text
+  // To keep it simple, if isFreeTier and text contains "High Risk", we split it.
 
-  while (i < lines.length) {
-    const line = lines[i];
+  let processedContent = content;
+  let showPaywall = false;
 
-    // Naive Paywall Detection: If the AI output mentions "High Risk" or "Red Flags" 
-    // and the user is on the Free Tier, we intercept that section and blur it.
-    if (isFreeTier && (line.toLowerCase().includes("high risk") || line.toLowerCase().includes("red flag"))) {
-      elements.push(
-        <div key={i} className="my-4 relative overflow-hidden rounded-xl border border-danger/30 bg-danger/5 p-4 sm:p-5">
-          <h4 className="flex items-center gap-2 font-display text-sm font-bold text-danger mb-2">
+  if (isFreeTier && (content.toLowerCase().includes("high risk") || content.toLowerCase().includes("red flag"))) {
+    showPaywall = true;
+    // We just truncate the content to simulate a paywall if it's too long
+    const lines = content.split('\n');
+    const riskIndex = lines.findIndex(l => l.toLowerCase().includes("high risk") || l.toLowerCase().includes("red flag"));
+    if (riskIndex !== -1 && riskIndex < lines.length - 2) {
+      processedContent = lines.slice(0, riskIndex + 1).join('\n') + '\n\n...';
+    }
+  }
+
+  return (
+    <div className="prose-juriq relative">
+      <ReactMarkdown
+        remarkPlugins={[remarkGfm]}
+        components={{
+          table: ({ node, ...props }) => (
+            <div className="my-6 w-full overflow-hidden rounded-xl border border-border/50 bg-card/30 shadow-sm">
+              <table className="w-full text-sm text-left" {...props} />
+            </div>
+          ),
+          thead: ({ node, ...props }) => (
+            <thead className="border-b border-border/50 bg-secondary/50 text-xs font-bold uppercase tracking-widest text-muted-foreground" {...props} />
+          ),
+          th: ({ node, ...props }) => <th className="px-5 py-4" {...props} />,
+          tr: ({ node, ...props }) => <tr className="border-b border-border/30 last:border-0 hover:bg-secondary/20 transition-colors" {...props} />,
+          td: ({ node, children, ...props }) => {
+            // Style cells based on content e.g "High", "Medium", "Low"
+            const text = String(children);
+            let colorClass = "";
+            if (text.includes("High -") || text === "High") colorClass = "text-danger font-semibold";
+            else if (text.includes("Medium -") || text === "Medium") colorClass = "text-warning font-semibold";
+            else if (text.includes("Low -") || text === "Low") colorClass = "text-success font-semibold";
+
+            return <td className={`px-5 py-3.5 leading-relaxed ${colorClass}`} {...props}>{children}</td>
+          },
+          blockquote: ({ node, children, ...props }) => {
+            const text = String(children).toLowerCase();
+            if (text.includes("honest take") || text.includes("high-risk") || text.includes("warning")) {
+              return (
+                <blockquote className="my-6 rounded-xl border border-warning/40 bg-[#332200]/20 p-5 shadow-sm text-warning/90">
+                  <div className="flex items-start gap-3">
+                    <AlertTriangle className="h-5 w-5 text-warning shrink-0 mt-0.5" />
+                    <div className="text-sm font-medium leading-relaxed">{children}</div>
+                  </div>
+                </blockquote>
+              );
+            }
+            return (
+              <blockquote className="my-4 border-l-4 border-primary/50 pl-4 italic text-muted-foreground" {...props}>
+                {children}
+              </blockquote>
+            );
+          },
+          h1: ({ node, ...props }) => <h1 className="mt-6 mb-4 text-xl font-bold text-foreground font-display" {...props} />,
+          h2: ({ node, ...props }) => <h2 className="mt-6 mb-3 text-lg font-bold text-foreground font-display" {...props} />,
+          h3: ({ node, ...props }) => <h3 className="mt-5 mb-2 text-base font-semibold text-foreground font-display uppercase tracking-wide opacity-90" {...props} />,
+          h4: ({ node, ...props }) => <h4 className="mt-4 mb-2 text-sm font-semibold text-foreground tracking-wide" {...props} />,
+          p: ({ node, ...props }) => <p className="leading-relaxed text-muted-foreground my-2" {...props} />,
+          ul: ({ node, ...props }) => <ul className="my-3 ml-4 space-y-2 text-muted-foreground list-disc marker:text-primary/50" {...props} />,
+          ol: ({ node, ...props }) => <ol className="my-3 ml-4 space-y-2 text-muted-foreground list-decimal marker:text-primary/50" {...props} />,
+          li: ({ node, ...props }) => <li className="pl-1" {...props} />,
+          code: ({ node, className, children, ...props }) => {
+            const isInline = !className?.includes('language-');
+            return isInline
+              ? <code className="rounded bg-secondary/80 px-1.5 py-0.5 text-xs font-mono text-foreground border border-border/50" {...props}>{children}</code>
+              : <div className="rounded-lg overflow-hidden border border-border/50 my-4"><pre className="bg-[#0d1117] p-4 overflow-x-auto text-xs font-mono text-gray-300"><code {...props}>{children}</code></pre></div>
+          },
+          hr: ({ node, ...props }) => <hr className="my-6 border-border/50" {...props} />
+        }}
+      >
+        {processedContent}
+      </ReactMarkdown>
+
+      {showPaywall && (
+        <div className="mt-4 relative overflow-hidden rounded-xl border border-danger/30 bg-danger/5 p-5">
+          <h4 className="flex items-center gap-2 font-display text-sm font-bold text-danger mb-3">
             <AlertTriangle className="h-4 w-4" /> High Risk Clauses Detected
           </h4>
-          <div className="blur-[4px] select-none opacity-60 space-y-2 pointer-events-none">
+          <div className="blur-[4px] select-none opacity-50 space-y-2.5 pointer-events-none">
             <div className="h-4 bg-foreground/20 rounded w-full" />
             <div className="h-4 bg-foreground/20 rounded w-5/6" />
             <div className="h-4 bg-foreground/20 rounded w-4/6" />
           </div>
 
-          <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-background/20 backdrop-blur-[1px]">
-            <div className="flex flex-col items-center gap-2 rounded-xl border border-border/50 bg-card/95 p-4 shadow-xl backdrop-blur-md">
-              <div className="rounded-full bg-primary/10 p-2 text-primary">
-                <Lock className="h-4 w-4" />
+          <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-background/30 backdrop-blur-[2px]">
+            <div className="flex flex-col items-center gap-2 rounded-xl border border-border/50 bg-card/95 p-5 shadow-xl backdrop-blur-md">
+              <div className="rounded-full bg-primary/10 p-2.5 text-primary">
+                <Lock className="h-5 w-5" />
               </div>
-              <p className="text-center text-xs font-semibold text-foreground px-2">
+              <p className="text-center text-sm font-semibold text-foreground px-2">
                 Upgrade to Pro to view critical liabilities.
               </p>
-              <Button variant="hero" size="sm" className="h-8 text-xs px-3" asChild>
+              <Button variant="hero" size="sm" className="mt-1" asChild>
                 <Link to="/app/billing">Unlock Premium Analysis</Link>
               </Button>
             </div>
           </div>
         </div>
-      );
-      // Skip the next few lines that would have detailed the risk
-      i += Math.min(3, lines.length - i - 1);
-      i++;
-      continue;
-    }
-
-    if (line.startsWith("### ")) {
-      elements.push(<h4 key={i} className="mt-4 mb-1 text-sm font-semibold text-foreground">{line.slice(4)}</h4>);
-    } else if (line.startsWith("## ")) {
-      elements.push(<h3 key={i} className="mt-5 mb-2 text-sm font-bold text-foreground">{line.slice(3)}</h3>);
-    } else if (line.startsWith("# ")) {
-      elements.push(<h2 key={i} className="mt-5 mb-2 text-base font-bold text-foreground">{line.slice(2)}</h2>);
-    } else if (line.match(/^[-_*]{3,}$/)) {
-      elements.push(<hr key={i} className="my-3 border-border/50" />);
-    } else if (line.match(/^\s*[-*•]\s/)) {
-      elements.push(
-        <div key={i} className="flex gap-2 text-sm text-muted-foreground ml-2 my-0.5">
-          <span className="text-primary shrink-0">•</span>
-          <span dangerouslySetInnerHTML={{ __html: inlineFormat(line.replace(/^\s*[-*•]\s/, "")) }} />
-        </div>
-      );
-    } else if (line.match(/^\s*\d+\.\s/)) {
-      const num = line.match(/^\s*(\d+)\./)?.[1];
-      elements.push(
-        <div key={i} className="flex gap-2 text-sm text-muted-foreground ml-2 my-0.5">
-          <span className="text-primary shrink-0 font-medium">{num}.</span>
-          <span dangerouslySetInnerHTML={{ __html: inlineFormat(line.replace(/^\s*\d+\.\s/, "")) }} />
-        </div>
-      );
-    } else if (line.trim() === "") {
-      elements.push(<div key={i} className="h-2" />);
-    } else {
-      elements.push(
-        <p key={i} className="text-sm leading-relaxed text-muted-foreground my-0.5">
-          <span dangerouslySetInnerHTML={{ __html: inlineFormat(line) }} />
-        </p>
-      );
-    }
-    i++;
-  }
-  return <>{elements}</>;
-}
-
-function inlineFormat(text: string): string {
-  return text
-    .replace(/\*\*(.+?)\*\*/g, '<strong class="text-foreground font-semibold">$1</strong>')
-    .replace(/\*(.+?)\*/g, '<em>$1</em>')
-    .replace(/`(.+?)`/g, '<code class="rounded bg-secondary px-1.5 py-0.5 text-xs font-mono text-foreground">$1</code>');
+      )}
+    </div>
+  );
 }
 
 /* ------------------------------------------------------------------ */
@@ -545,7 +572,7 @@ export default function Chat() {
                   ) : (
                     /* AI response — inline, no card box */
                     <div className="py-1">
-                      <div className="prose-juriq">{renderMarkdown(msg.content, isFreeTier)}</div>
+                      <CustomMarkdown content={msg.content} isFreeTier={isFreeTier} />
                       <div className="mt-3 flex items-center gap-3">
                         <button
                           onClick={() => handleCopy(msg.id, msg.content)}
