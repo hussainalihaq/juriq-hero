@@ -448,7 +448,7 @@ export default function Chat() {
 
   return (
     <div
-      className="flex h-[calc(100vh-3.5rem)]"
+      className="flex h-[calc(100dvh-3.5rem)]"
       onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
       onDragLeave={() => setDragOver(false)}
       onDrop={handleDrop}
@@ -511,7 +511,23 @@ export default function Chat() {
 
                     {/* Mode Specific content */}
                     <div className="flex flex-col items-center pb-4">
-                      {emptyStateMode === "upload" ? (
+                      {uploadedFileName ? (
+                        <div className="w-full rounded-2xl border-2 border-primary/20 bg-primary/5 p-6 sm:p-10 text-center animate-fade-in shadow-sm">
+                          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 mb-4 shadow-sm border border-primary/20">
+                            <FileText className="h-8 w-8 text-primary" />
+                          </div>
+                          <p className="text-base sm:text-lg font-bold text-foreground mb-2">Document Ready for Analysis</p>
+                          <p className="text-sm text-foreground/80 font-medium mb-4 truncate max-w-sm mx-auto px-4" title={uploadedFileName}>{uploadedFileName}</p>
+                          <p className="text-xs text-muted-foreground max-w-sm mx-auto px-4 leading-relaxed">
+                            Your document is securely loaded. Select an AI Quick Action below or type a custom query to begin analysis.
+                          </p>
+                          <div className="mt-6 flex items-center justify-center">
+                            <Button variant="outline" size="sm" onClick={() => { setUploadedFileName(null); setUploadedFileText(null); }} className="text-xs hover:bg-danger/10 hover:text-danger hover:border-danger/30 transition-colors">
+                              Remove Document
+                            </Button>
+                          </div>
+                        </div>
+                      ) : emptyStateMode === "upload" ? (
                         <div
                           className="w-full cursor-pointer rounded-2xl border-2 border-dashed border-border/50 bg-card/50 p-6 sm:p-10 text-center hover:border-primary/50 hover:bg-primary/5 transition-default animate-fade-in shadow-sm"
                           onClick={() => fileInputRef.current?.click()}
