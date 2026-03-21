@@ -50,19 +50,19 @@ interface UIMessage {
 /*  Constants                                                          */
 /* ------------------------------------------------------------------ */
 const quickActions = [
-  "Summarize",
-  "Risk analysis",
-  "Extract clauses",
-  "Find obligations",
-  "Rewrite clause",
+  "Extract Defined Terms",
+  "Find Hidden Liabilities",
+  "Extract Dates & Deadlines",
+  "Pro-Party Risk Analysis",
+  "Summarize Obligations",
 ];
 
 const suggestedPrompts = [
-  "Summarize this document in plain English.",
-  "Identify the top risks and red flags.",
-  "Extract all confidentiality and indemnification clauses.",
-  "List all upcoming obligations and hard deadlines.",
-  "Rewrite the limit of liability clause to be more protective.",
+  "Extract a glossary of all capitalized Defined Terms in this document.",
+  "Identify hidden indemnification traps and caps on liability.",
+  "Build a timeline of all hard deadlines and notice periods.",
+  "Highlight clauses that are significantly off-market.",
+  "Rewrite the limitation of liability to be aggressively pro-vendor.",
 ];
 
 import ReactMarkdown from 'react-markdown';
@@ -196,6 +196,7 @@ export default function Chat() {
   const [chatId, setChatId] = useState<string>("");
   const [messages, setMessages] = useState<UIMessage[]>([]);
   const [input, setInput] = useState("");
+  const [perspective, setPerspective] = useState<string>("Neutral");
   const [emptyStateMode, setEmptyStateMode] = useState<"upload" | "chat">("upload");
   const [rightPanel, setRightPanel] = useState(false);
   const [sending, setSending] = useState(false);
@@ -318,8 +319,12 @@ export default function Chat() {
     }
 
     let fullMessage = text;
+    if (perspective !== "Neutral") {
+      fullMessage = `[INSTRUCTION: Review this and answer STRICTLY from the perspective of the ${perspective}. Fiercely flag clauses detrimental to the ${perspective} and suggest aggressively pro-${perspective} revisions.]\n\n${fullMessage}`;
+    }
+
     if (uploadedFileText) {
-      fullMessage = `[Attached document: ${uploadedFileName}]\n\nDocument text:\n${uploadedFileText}\n\n---\n\nUser question: ${text}`;
+      fullMessage = `[Attached document: ${uploadedFileName}]\n\nDocument text:\n${uploadedFileText}\n\n---\n\n${fullMessage}`;
     }
 
     const userMsg: UIMessage = {
@@ -648,33 +653,51 @@ export default function Chat() {
               ))}
             </div>
 
-            <div className="flex items-end gap-1.5 sm:gap-2 rounded-xl border border-border/50 bg-card p-1.5 sm:p-2">
-              <input ref={fileInputRef} type="file" accept=".pdf,.docx" className="hidden" onChange={handleFileUpload} />
-              <button
-                onClick={() => fileInputRef.current?.click()}
-                disabled={uploading}
-                className="shrink-0 rounded-lg p-2 text-muted-foreground hover:bg-secondary hover:text-foreground transition-default disabled:opacity-50"
-              >
-                {uploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Paperclip className="h-4 w-4" />}
-              </button>
-              <textarea
-                ref={textareaRef}
-                value={input}
-                onChange={e => setInput(e.target.value)}
-                onKeyDown={e => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); handleSend(); } }}
-                placeholder="Ask about your document or legal question…"
-                rows={1}
-                className="flex-1 resize-none bg-transparent py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none"
-              />
-              <Button
-                variant="default"
-                size="icon"
-                className="shrink-0 h-9 w-9"
-                onClick={() => handleSend()}
-                disabled={(!input.trim() && !uploadedFileName) || sending}
-              >
-                {sending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
-              </Button>
+            <div className="flex flex-col gap-2">
+              <div className="flex items-center gap-2 px-1">
+                <span className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">Perspective Bias:</span>
+                <select
+                  value={perspective}
+                  onChange={e => setPerspective(e.target.value)}
+                  className="bg-transparent text-xs font-semibold text-foreground cursor-pointer focus:outline-none border-b border-dashed border-primary/50 pb-0.5 appearance-none pr-1 transition-colors hover:text-primary"
+                >
+                  <option value="Neutral" className="bg-background text-foreground">Neutral Analysis</option>
+                  <option value="Pro-Founder" className="bg-background text-foreground">Pro-Founder</option>
+                  <option value="Pro-Investor" className="bg-background text-foreground">Pro-Investor</option>
+                  <option value="Pro-Employee" className="bg-background text-foreground">Pro-Employee</option>
+                  <option value="Pro-Employer" className="bg-background text-foreground">Pro-Employer</option>
+                  <option value="Pro-Vendor" className="bg-background text-foreground">Pro-Vendor</option>
+                  <option value="Pro-Buyer" className="bg-background text-foreground">Pro-Buyer</option>
+                </select>
+              </div>
+              <div className="flex items-end gap-1.5 sm:gap-2 rounded-xl border border-border/50 bg-card p-1.5 sm:p-2 shadow-sm transition-all focus-within:border-primary/50 focus-within:ring-1 focus-within:ring-primary/20">
+                <input ref={fileInputRef} type="file" accept=".pdf,.docx" className="hidden" onChange={handleFileUpload} />
+                <button
+                  onClick={() => fileInputRef.current?.click()}
+                  disabled={uploading}
+                  className="shrink-0 rounded-lg p-2 text-muted-foreground hover:bg-secondary hover:text-foreground transition-default disabled:opacity-50"
+                >
+                  {uploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Paperclip className="h-4 w-4" />}
+                </button>
+                <textarea
+                  ref={textareaRef}
+                  value={input}
+                  onChange={e => setInput(e.target.value)}
+                  onKeyDown={e => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); handleSend(); } }}
+                  placeholder="Ask about your document or legal question…"
+                  rows={1}
+                  className="flex-1 resize-none bg-transparent py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none"
+                />
+                <Button
+                  variant="default"
+                  size="icon"
+                  className="shrink-0 h-9 w-9"
+                  onClick={() => handleSend()}
+                  disabled={(!input.trim() && !uploadedFileName) || sending}
+                >
+                  {sending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
+                </Button>
+              </div>
             </div>
             <p className="mt-1.5 text-center text-[10px] text-muted-foreground/60">
               Juriq provides informational assistance, not legal advice. AI models can make mistakes.
