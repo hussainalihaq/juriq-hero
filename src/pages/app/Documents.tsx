@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -14,9 +14,11 @@ import {
 import { uploadFile } from "@/lib/apiClient";
 import { getDocHistory, saveDocHistory, type DocHistoryItem } from "@/components/app/AppSidebar";
 import { toast } from "sonner";
-import { useRef, useEffect } from "react";
+import { useAuth } from "@/contexts/AuthContext";
+import { getUserPlanDetails } from "@/lib/utils";
 
 export default function Documents() {
+  const { user } = useAuth();
   const [search, setSearch] = useState("");
   const [documents, setDocuments] = useState<DocHistoryItem[]>([]);
   const [uploading, setUploading] = useState(false);
@@ -35,6 +37,13 @@ export default function Documents() {
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
+
+    const { docLimit, name: planName } = getUserPlanDetails(user);
+    if (documents.length >= docLimit) {
+      toast.error(`You've reached your ${docLimit} document limit on the ${planName} plan. Please upgrade to upload more.`);
+      if (fileInputRef.current) fileInputRef.current.value = "";
+      return;
+    }
 
     setUploading(true);
     const loadingToast = toast.loading("Uploading document...");

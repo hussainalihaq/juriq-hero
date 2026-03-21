@@ -21,8 +21,10 @@ import {
   ChevronDown,
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
+import { getUserPlanDetails } from "@/lib/utils";
 import { Link } from "react-router-dom";
 import { chatSend, uploadFile, type ChatMessage } from "@/lib/apiClient";
+import { toast } from "sonner";
 import {
   getChatHistory,
   saveChatHistory,
@@ -188,8 +190,8 @@ export default function Chat() {
   const navigate = useNavigate();
   const { user } = useAuth();
 
-  // Implicit Free Tier if not explicitly marked as pro/team
-  const isFreeTier = user?.user_metadata?.plan !== "pro" && user?.user_metadata?.plan !== "team";
+  // Pull plan details to enforce chat limits
+  const { isFreeTier, name: planName } = getUserPlanDetails(user);
 
   const [chatId, setChatId] = useState<string>("");
   const [messages, setMessages] = useState<UIMessage[]>([]);
@@ -305,6 +307,15 @@ export default function Chat() {
   const handleSend = async (overrideText?: string) => {
     const text = (overrideText || input).trim();
     if (!text || sending) return;
+
+    // --- Message Limit Enforcer ---
+    if (isFreeTier) {
+      const userMessageCount = messages.filter(m => m.role === "user").length;
+      if (userMessageCount >= 5) {
+        toast.error(`You've reached your chat limit on the ${planName} plan. Please upgrade to continue analyzing.`);
+        return;
+      }
+    }
 
     let fullMessage = text;
     if (uploadedFileText) {

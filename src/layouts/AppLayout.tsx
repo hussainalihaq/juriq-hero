@@ -15,8 +15,9 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
-import { AppSidebar } from "@/components/app/AppSidebar";
+import { AppSidebar, getDocHistory } from "@/components/app/AppSidebar";
 import { useAuth } from "@/contexts/AuthContext";
+import { getUserPlanDetails } from "@/lib/utils";
 
 export default function AppLayout() {
   const { user, loading, signOut } = useAuth();
@@ -68,6 +69,10 @@ export default function AppLayout() {
     .substring(0, 2)
     .toUpperCase();
 
+  const { name: planName, docLimit, isFreeTier } = getUserPlanDetails(user);
+  const currentDocs = getDocHistory().length;
+  const progressPercent = Math.min((currentDocs / docLimit) * 100, 100);
+
   return (
     <SidebarProvider>
       <div className="flex min-h-screen w-full">
@@ -82,18 +87,20 @@ export default function AppLayout() {
             </div>
             <div className="ml-auto flex items-center gap-4">
 
-              {/* MRR Optimization: Persistent Usage Nudge */}
+              {/* Dynamic Usage Bar */}
               <div className="hidden sm:flex items-center gap-3 mr-2">
                 <div className="flex flex-col items-end gap-1">
-                  <span className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground">Free Tier</span>
-                  <span className="text-xs font-semibold text-foreground">2 / 5 Documents</span>
+                  <span className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground">{planName} Tier</span>
+                  <span className="text-xs font-semibold text-foreground">{currentDocs} / {docLimit} Documents</span>
                 </div>
                 <div className="h-2 w-20 overflow-hidden rounded-full bg-secondary">
-                  <div className="h-full w-[40%] bg-primary transition-all duration-500" />
+                  <div className="h-full bg-primary transition-all duration-500" style={{ width: `${progressPercent}%` }} />
                 </div>
-                <Button variant="default" size="sm" className="ml-2 h-8 text-xs bg-gradient-to-r from-primary to-primary/80" asChild>
-                  <Link to="/app/billing">Upgrade</Link>
-                </Button>
+                {planName !== "Team" && (
+                  <Button variant="default" size="sm" className="ml-2 h-8 text-xs bg-gradient-to-r from-primary to-primary/80" asChild>
+                    <Link to="/app/billing">Upgrade</Link>
+                  </Button>
+                )}
               </div>
 
               {/* User Avatar Dropdown */}
