@@ -74,6 +74,12 @@ When providing a bottom-line, pragmatic, or critical warning about a course of a
 // JURISDICTION-SPECIFIC CONTEXTS
 // ==========================================
 const JURISDICTION_CONTEXTS: Record<string, string> = {
+    global: `
+JURISDICTION: GLOBAL / DOCUMENT-INFERRED
+- Analyze the user's text or attached document to infer the applicable jurisdiction.
+- DO NOT default to Pakistan law unless explicitly requested by the user or clearly indicated by the context/document.
+- If no specific jurisdiction is apparent, provide general common/civil law principles and state that the answer depends on the local jurisdiction.`,
+
     pak: `
 JURISDICTION: PAKISTAN LAW
     - Common law system(inherited from British colonial law)
@@ -195,7 +201,7 @@ export default async function handler(req: any, res: any) {
 
                 // Temperature based on output style
                 const temperature = 0.9 - ((outputStyle || 50) / 100) * 0.6;
-                const primaryJurisdiction = jurisdictions?.[0] || 'pak';
+                const primaryJurisdiction = jurisdictions?.[0] || 'global';
                 const systemPrompt = generateSystemPrompt(primaryJurisdiction, role || 'general');
 
                 const chat = model.startChat({
@@ -273,7 +279,7 @@ export default async function handler(req: any, res: any) {
 
                 // Helper to format messages for Groq (OpenAI format)
                 const groqMessages = [
-                    { role: 'system', content: generateSystemPrompt(req.body.jurisdictions?.[0] || 'pak', req.body.role || 'general') },
+                    { role: 'system', content: generateSystemPrompt(req.body.jurisdictions?.[0] || 'global', req.body.role || 'general') },
                     ...(req.body.history || []).map((m: any) => ({
                         role: m.role === 'ai' ? 'assistant' : 'user',
                         content: m.text
